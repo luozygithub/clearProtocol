@@ -55,9 +55,7 @@
               Leverage
             </div>
             <div class="progress-box">
-              <div class="progress" @dragover.prevent @drop="onDrop">
-                <div class="progress-bar" :style="{ width: progress + '%' }"></div>
-              </div>
+              <a-slider v-model="slideValue"  style="width: 100%"/>
               <div class="reset">
                 reset
               </div>
@@ -390,6 +388,7 @@ export default {
   },
   data() {
     return {
+      slideValue:0,
       progress: 10,
       widgetId: 'tradingview_8c9b3',
       widgetHeight: 500,
