@@ -4,7 +4,25 @@
       <div class="left-content-box">
         <div class="left-header">
           <div class="name">
-            BTC/USDC
+            <a-dropdown>
+              <template #overlay>
+                <a-menu @click="handleMenuClick">
+                  <a-menu-item key="1">
+                    <UserOutlined />
+                    BTCUSDT
+                  </a-menu-item>
+                  <a-menu-item key="2">
+                    <UserOutlined />
+                    ETHUSDT
+                  </a-menu-item>
+
+                </a-menu>
+              </template>
+              <a-button>
+                {{curSymbol}}
+                <DownOutlined />
+              </a-button>
+            </a-dropdown>
           </div>
           <div class="select-box">
             Contract
@@ -363,17 +381,40 @@
 </template>
 
 <script>
+import { UserOutlined, DownOutlined } from '@ant-design/icons-vue';
 export default {
   name: 'HomeView',
+  components:{
+    UserOutlined,
+    DownOutlined,
+  },
   data() {
     return {
       progress: 10,
       widgetId: 'tradingview_8c9b3',
       widgetHeight: 500,
-      activeNav: 0
+      activeNav: 0,
+      curTVSymbol:"BINANCE:BTCUSDT",
+      curSymbol:"BTC/USDT"
+    //  BINANCE:ETHUSDT
     }
   },
   methods: {
+    handleMenuClick(e){
+      let curTVSymbol="",curSymbol=""
+      if(e.key==1){
+        curTVSymbol="BINANCE:BTCUSDT"
+        curSymbol="BTC/USDT"
+      }else if(e.key==2){
+        curTVSymbol="BINANCE:ETHUSDT"
+        curSymbol="ETH/USDT"
+      }
+      if(curTVSymbol!=this.curTVSymbol){
+        this.curTVSymbol = curTVSymbol
+        this.curSymbol = curSymbol
+        this.createWidget()
+      }
+    },
     loadTradingViewScript() {
       if (document.getElementById('tradingview-widget-loading-script')) {
         this.createWidget();
@@ -392,7 +433,7 @@ export default {
       if (document.getElementById(this.widgetId) && window.TradingView) {
         new window.TradingView.widget({
           autosize: true,
-          symbol: 'BINANCE:BTCUSDT',
+          symbol:  this.curTVSymbol,
           interval: 'D',
           timezone: 'Etc/UTC',
           theme: 'light',
@@ -402,6 +443,8 @@ export default {
           enable_publishing: false,
           container_id: this.widgetId,
         });
+        // symbol: "CME:ETH1!",
+
       }
     },
     onDrop(e) {
