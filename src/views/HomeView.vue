@@ -457,11 +457,11 @@ export default {
     min-height: 100vh;
     width: 100%;
     display: flex;
-    padding: 16px;
+    padding: 10px;
 
     .operate {
       cursor: pointer;
-      width: 156px;
+      width: 40%;
       height: 36px;
       background: #63CE63;
       border-radius: 19px;
@@ -481,8 +481,7 @@ export default {
     }
 
     .left-content-box {
-      width: 370px;
-      height: 638px;
+      height: 640px;
       background: #FFFFFF;
       box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.1);
       border-radius: 8px;
@@ -493,6 +492,183 @@ export default {
         border: 1px solid #ECECEE;
         display: flex;
         justify-content: space-between;
+      }
+      .left-content {
+        padding: 20px 15px;
+      }
+
+      .left-bottom {
+        border-top: 1px solid #ECECEE;
+        padding: 20px 15px;
+
+        .operate {
+          margin-top: 20px;
+          width: 100%;
+        }
+      }
+
+      .left-content-item {
+        margin-top: 16px;
+        width: 100%;
+
+        .box-title {
+          font-size: 14px;
+          font-family: AvertaStd-Regular, AvertaStd, sans-serif;
+          font-weight: 400;
+          color: #8F97AA;
+          line-height: 17px;
+          padding-bottom: 6px;
+        }
+
+        .input-box {
+          width: 100%;
+          height: 72px;
+          background: #F2F2F3;
+          border-radius: 18px;
+          overflow: hidden;
+          opacity: 0.7;
+          border: 1px solid #0E1D51;
+
+          .input-part {
+            width: 100%;
+            position: relative;
+            height: 50%;
+
+            input {
+              height: 100%;
+
+              width: 100%;
+              padding: 0 20px;
+            }
+
+            &:nth-child(1) {
+              input {
+                border-radius: 18px 18px 0 0;
+                border-bottom: 1px solid #0E1D51;;
+              }
+            }
+
+            &:nth-child(2) {
+              input {
+                border-radius: 0 0 18px 18px;
+              }
+            }
+
+            span {
+              position: absolute;
+              right: 10px;
+              font-size: 14px;
+              font-family: AvertaStd-Regular, AvertaStd, sans-serif;
+              top: 10px;
+              font-weight: 400;
+              color: #0E1D51;
+              line-height: 17px;
+            }
+          }
+        }
+
+        .progress-box {
+          display: flex;
+
+          .progress {
+            width: 100%;
+            height: 20px;
+            background-color: #f0f0f0;
+            border-radius: 10px;
+            cursor: pointer;
+          }
+
+          .progress-bar {
+            height: 100%;
+            background-color: #00aaff;
+            border-radius: 10px;
+          }
+
+          .reset {
+            margin-left: 6px;
+            width: 52px;
+            height: 20px;
+            border-radius: 13px;
+            border: 1px solid #0E1D51;
+            font-weight: 400;
+            color: #0E1D51;
+            line-height: 15px;
+            text-align: center;
+            cursor: pointer;
+          }
+        }
+
+        .slippage-box {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+
+          .slippage-input {
+            position: relative;
+            width: 100%;
+            height: 34px;
+            background: #F6F6F7;
+            border-radius: 18px;
+            opacity: 0.7;
+            border: 1px solid #0E1D51;
+
+            input {
+              border-radius: 18px;
+              width: 100%;
+              height: 100%;
+            }
+
+            span {
+              position: absolute;
+              right: 10px;
+              font-size: 14px;
+              font-family: AvertaStd-Regular, AvertaStd, sans-serif;
+              top: 10px;
+              font-weight: 400;
+              color: #0E1D51;
+              line-height: 17px;
+              cursor: pointer;
+
+            }
+          }
+
+          .rate-btn {
+            padding: 0 6px;
+            height: 24px;
+            margin-left: 6px;
+            border-radius: 5px;
+            border: 1px solid #0E1D51;
+            font-size: 14px;
+            font-family: AvertaStd-Regular, AvertaStd;
+            font-weight: 400;
+            color: #0E1D51;
+            text-align: center;
+            line-height: 24px;
+            cursor: pointer;
+          }
+        }
+
+        .transaction-info {
+          .flex-box {
+            padding: 4px 0;
+
+            .name {
+              font-size: 12px;
+              font-family: AvertaStd-Regular, AvertaStd;
+              font-weight: 400;
+              color: #8F97AA;
+              line-height: 15px;
+            }
+
+            .value {
+              font-size: 12px;
+              font-family: AvertaStd-Regular, AvertaStd;
+              font-weight: 400;
+              color: #0E1D51;
+              line-height: 20px;
+            }
+          }
+        }
       }
     }
 
@@ -599,7 +775,7 @@ export default {
 
         .nav1-content, .nav2-content, .nav3-content, .nav4-content {
           .col {
-            padding: 0 15px;
+            padding: 0 0px;
             text-align: center;
 
             &:nth-child(1) {
@@ -820,181 +996,7 @@ export default {
       }
     }
 
-    .left-content {
-      padding: 20px 15px;
-    }
 
-    .left-bottom {
-      border-top: 1px solid #ECECEE;
-      padding: 20px 15px;
-
-      .operate {
-        margin-top: 20px;
-        width: 100%;
-      }
-    }
-
-    .left-content-item {
-      margin-top: 16px;
-      width: 100%;
-
-      .box-title {
-        font-size: 14px;
-        font-family: AvertaStd-Regular, AvertaStd, sans-serif;
-        font-weight: 400;
-        color: #8F97AA;
-        line-height: 17px;
-        padding-bottom: 6px;
-      }
-
-      .input-box {
-        width: 100%;
-        height: 72px;
-        background: #F2F2F3;
-        border-radius: 18px;
-        overflow: hidden;
-        opacity: 0.7;
-        border: 1px solid #0E1D51;
-
-        .input-part {
-          width: 100%;
-          position: relative;
-          height: 50%;
-
-          input {
-            height: 100%;
-
-            width: 100%;
-            padding: 0 20px;
-          }
-
-          &:nth-child(1) {
-            input {
-              border-radius: 18px 18px 0 0;
-              border-bottom: 1px solid #0E1D51;;
-            }
-          }
-
-          &:nth-child(2) {
-            input {
-              border-radius: 0 0 18px 18px;
-            }
-          }
-
-          span {
-            position: absolute;
-            right: 10px;
-            font-size: 14px;
-            font-family: AvertaStd-Regular, AvertaStd, sans-serif;
-            top: 10px;
-            font-weight: 400;
-            color: #0E1D51;
-            line-height: 17px;
-          }
-        }
-      }
-
-      .progress-box {
-        display: flex;
-
-        .progress {
-          width: 300px;
-          height: 20px;
-          background-color: #f0f0f0;
-          border-radius: 10px;
-          cursor: pointer;
-        }
-
-        .progress-bar {
-          height: 100%;
-          background-color: #00aaff;
-          border-radius: 10px;
-        }
-
-        .reset {
-          width: 52px;
-          height: 20px;
-          border-radius: 13px;
-          border: 1px solid #0E1D51;
-          font-weight: 400;
-          color: #0E1D51;
-          line-height: 15px;
-          text-align: center;
-          cursor: pointer;
-        }
-      }
-
-      .slippage-box {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-
-        .slippage-input {
-          position: relative;
-          width: 196px;
-          height: 34px;
-          background: #F6F6F7;
-          border-radius: 18px;
-          opacity: 0.7;
-          border: 1px solid #0E1D51;
-
-          input {
-            border-radius: 18px;
-            width: 100%;
-            height: 100%;
-          }
-
-          span {
-            position: absolute;
-            right: 10px;
-            font-size: 14px;
-            font-family: AvertaStd-Regular, AvertaStd, sans-serif;
-            top: 10px;
-            font-weight: 400;
-            color: #0E1D51;
-            line-height: 17px;
-            cursor: pointer;
-
-          }
-        }
-
-        .rate-btn {
-          padding: 0 6px;
-          height: 24px;
-          border-radius: 5px;
-          border: 1px solid #0E1D51;
-          font-size: 14px;
-          font-family: AvertaStd-Regular, AvertaStd;
-          font-weight: 400;
-          color: #0E1D51;
-          text-align: center;
-          line-height: 24px;
-          cursor: pointer;
-        }
-      }
-
-      .transaction-info {
-        .flex-box {
-          padding: 4px 0;
-
-          .name {
-            font-size: 12px;
-            font-family: AvertaStd-Regular, AvertaStd;
-            font-weight: 400;
-            color: #8F97AA;
-            line-height: 15px;
-          }
-
-          .value {
-            font-size: 12px;
-            font-family: AvertaStd-Regular, AvertaStd;
-            font-weight: 400;
-            color: #0E1D51;
-            line-height: 20px;
-          }
-        }
-      }
-    }
   }
 }
 </style>
