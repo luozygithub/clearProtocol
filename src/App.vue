@@ -41,16 +41,16 @@
   width: 100%;
   overflow-x: hidden;
   .layout {
-    display: flex;
-    padding-left: 200px;
-    width: 100vw;
+
+    width: 100%;
     overflow: hidden;
     .content {
+      position: relative;
+      left: 200px;
       font-family: AvertaStd-Bold, AvertaStd;
       flex-shrink: 0;
       flex-grow: 1;
-      width: calc(100vw - 200px);
-      overflow: auto;
+      width: calc(100% - 200px);
     }
   }
 

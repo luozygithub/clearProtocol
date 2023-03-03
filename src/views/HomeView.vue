@@ -547,6 +547,7 @@ export default {
 }
 
 .home {
+  overflow: auto;
   background: #F3F7FF;
   --font-size12: 12px;
   --font-size16: 16px;
@@ -753,10 +754,13 @@ export default {
 
   /*end reset antdv*/
   .content-box {
+    min-width: 1200px;
+
+
     min-height: 100vh;
     width: 100%;
     display: flex;
-    padding: 10px;
+    padding: 10px 0;
     justify-content: center;
 
     .operate {
@@ -1099,7 +1103,6 @@ export default {
 
         .nav1-content, .nav2-content, .nav3-content, .nav4-content {
           .col {
-            padding: 0 0px;
             text-align: center;
 
             &:nth-child(1) {
@@ -1112,19 +1115,19 @@ export default {
             }
 
             &:nth-child(1) {
-              width: 70px;
+              width: 60px;
             }
 
             &:nth-child(2) {
-              width: 60px;
+              width: 50px;
             }
 
             &:nth-child(3) {
-              width: 60px;
+              width: 50px;
             }
 
             &:nth-child(4) {
-              width: 60px;
+              width: 50px;
             }
 
             &:nth-child(5) {
@@ -1132,19 +1135,19 @@ export default {
             }
 
             &:nth-child(6) {
-              width: 128px;
+              width: 126px;
             }
 
             &:nth-child(7) {
-              width: 155px;
+              width: 152px;
             }
 
             &:nth-child(8) {
-              width: 120px;
+              width: 110px;
             }
 
             &:nth-child(9) {
-              min-width: 120px;
+              min-width: 110px;
             }
           }
 
