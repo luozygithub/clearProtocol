@@ -36,6 +36,7 @@
 }
 
 #app {
+  font-family: AvertaStd-Regular, AvertaStd;
   background: #F3F7FF;
   width: 100%;
   overflow-x: hidden;
@@ -45,6 +46,7 @@
     width: 100vw;
     overflow: hidden;
     .content {
+      font-family: AvertaStd-Bold, AvertaStd;
       flex-shrink: 0;
       flex-grow: 1;
       width: calc(100vw - 200px);
@@ -82,7 +84,7 @@
     line-height: 30px;
     text-align: center;
     margin-right: 20px;
-
+    font-family: AvertaStd-Bold, AvertaStd;
     &:active {
       transform: translate(1px, 1px);
     }

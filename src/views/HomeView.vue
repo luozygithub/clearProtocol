@@ -100,7 +100,7 @@
             <div class="progress-box">
               <a-slider v-model="slideValue" style="width: 100%"/>
               <div class="reset" @click="slideValue=0">
-                reset
+                Reset
               </div>
             </div>
 
@@ -117,10 +117,10 @@
               <div class="rate-btn" @click="slipValue=1">
                 1%
               </div>
-              <div class="rate-btn"  @click="slipValue=1.5">
+              <div class="rate-btn" @click="slipValue=1.5">
                 1.5%
               </div>
-              <div class="rate-btn"  @click="slipValue=2">
+              <div class="rate-btn" @click="slipValue=2">
                 2%
               </div>
             </div>
@@ -176,7 +176,7 @@
       <div class="right-content-box">
         <div class="right-part1">
           <div class="price">
-            {{parseInt(coinInfo.index_price).toFixed(2)}}
+            {{ coinInfo.index_price ? parseInt(coinInfo.index_price).toFixed(2) : 0 }}
           </div>
           <div class="funding">
             <div class="name">
@@ -184,10 +184,10 @@
             </div>
             <div class="value">
               <div class="rate">
-                {{parseInt(coinInfo.funding_rate[0]).toFixed(2)}}%
+                {{ coinInfo.funding_rate ? parseInt(coinInfo.funding_rate[0]).toFixed(2) : 0 }}%
               </div>
               <div class="time">
-                {{coinInfo.funding_time }}
+                {{ coinInfo.funding_time ? coinInfo.funding_time : "0" }}
               </div>
             </div>
           </div>
@@ -196,7 +196,8 @@
               24h Change
             </div>
             <div class="value">
-              {{ parseInt(coinInfo.chg_24h).toFixed(2) }} + {{parseInt(coinInfo.chg_24h_percent).toFixed(2)}}%
+              {{ coinInfo.chg_24h ? parseInt(coinInfo.chg_24h).toFixed(2) : 0 }} +
+              {{ coinInfo.chg_24h_percent ? parseInt(coinInfo.chg_24h_percent).toFixed(2) : 0 }}%
             </div>
           </div>
         </div>
@@ -419,7 +420,7 @@
       </div>
     </div>
     <MarginManage v-show="isShowMarginManage" @closeMarginManage="isShowMarginManage = false"/>
-    <ClosePositions  v-show="isShowClosePosition" @closeClosePosition="isShowClosePosition = false"/>
+    <ClosePositions v-show="isShowClosePosition" @closeClosePosition="isShowClosePosition = false"/>
   </div>
 </template>
 
@@ -427,7 +428,8 @@
 
 import MarginManage from "@/components/MarginManage";
 import ClosePositions from "@/components/ClosePositions";
-import { getTokenInfo} from "@/api/coinApi";
+import {getTokenInfo} from "@/api/coinApi";
+
 let getPriceInterval = null
 export default {
   name: 'HomeView',
@@ -437,27 +439,25 @@ export default {
   },
   data() {
     return {
-      tokenInfo:{},
-      isShowClosePosition:false,
-      isShowMarginManage:false,
+      tokenInfo: {},
+      isShowClosePosition: false,
+      isShowMarginManage: false,
       slideValue: 0,
-      slipValue:undefined,
+      slipValue: undefined,
       progress: 10,
       widgetId: 'tradingview_8c9b3',
       widgetHeight: 500,
       activeNav: 0,
       curTVSymbol: "BINANCE:BTCUSDT",
       curSymbol: "BTC/USDT",
-      activeTokenName:"BTC",
-      coinInfo: {
-
-      }
+      activeTokenName: "BTC",
+      coinInfo: {}
       //  BINANCE:ETHUSDT
     }
   },
   methods: {
     handleMenuClick(e) {
-      let curTVSymbol = "", curSymbol = "",coinName=""
+      let curTVSymbol = "", curSymbol = "", coinName = ""
       if (e.key == 1) {
         curTVSymbol = "BINANCE:BTCUSDT"
         curSymbol = "BTC/USDT"
@@ -470,7 +470,7 @@ export default {
       if (curTVSymbol != this.curTVSymbol) {
         this.curTVSymbol = curTVSymbol
         this.curSymbol = curSymbol
-        this.activeTokenName =coinName
+        this.activeTokenName = coinName
 
         this.createWidget()
       }
@@ -507,22 +507,22 @@ export default {
 
       }
     },
-    async getData(){
-      try{
+    async getData() {
+      try {
         // let priceRes = await getTokenPrices()
         // let priceArr = priceRes.data.data
         // console.log(priceArr)
         let tokenInfoRes = await getTokenInfo()
         let tokenInfo = tokenInfoRes.data.data
         this.tokenInfo = tokenInfo
-        if(tokenInfo&&tokenInfo.tokens){
-          tokenInfo.tokens.forEach(token=>{
-            if(token.name==this.activeTokenName){
-              this.coinInfo=token
+        if (tokenInfo && tokenInfo.tokens) {
+          tokenInfo.tokens.forEach(token => {
+            if (token.name == this.activeTokenName) {
+              this.coinInfo = token
             }
           })
         }
-      }catch (e) {
+      } catch (e) {
         console.log(e)
       }
 
@@ -532,9 +532,9 @@ export default {
   mounted() {
     this.loadTradingViewScript();
     this.getData()
-    getPriceInterval = setInterval(()=>{
+    getPriceInterval = setInterval(() => {
       this.getData()
-    },3000)
+    }, 3000)
   },
   beforeDestroy() {
     clearInterval(getPriceInterval)
@@ -573,12 +573,15 @@ export default {
   ::v-deep .ant-slider-track {
     background-color: #0E1D51 !important;
   }
+
   ::v-deep .ant-slider-handle {
     border: solid 2px #0E1D51;
   }
+
   ::v-deep .ant-slider:hover .ant-slider-handle:not(.ant-tooltip-open) {
     border-color: #0E1D51;
   }
+
   /*end reset antdv*/
   .content-box {
     min-height: 100vh;
@@ -594,7 +597,7 @@ export default {
       border-radius: 19px;
       color: #fff;
       border: none;
-
+      font-family: AvertaStd-Bold, AvertaStd;
       &:active {
         transform: translate(1px, 1px);
       }
@@ -741,7 +744,7 @@ export default {
             border: 1px solid #0E1D51;
             font-weight: 400;
             color: #0E1D51;
-            line-height: 15px;
+            line-height: 18px;
             text-align: center;
             cursor: pointer;
           }
@@ -838,6 +841,7 @@ export default {
         align-items: center;
 
         .price {
+
           font-size: 20px;
           font-family: AvertaStd-Bold, AvertaStd;
           font-weight: bold;
