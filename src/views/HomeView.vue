@@ -543,8 +543,177 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+:root {
+}
+
 .home {
   background: #F3F7FF;
+  --font-size12: 12px;
+  --font-size16: 16px;
+  --font-size14: 14px;
+  --font-size20: 20px;
+  --line-height17:17px;
+  @media only screen and (-webkit-min-device-pixel-ratio: 2),
+  only screen and (min--moz-device-pixel-ratio: 2),
+  only screen and (min-resolution: 192dpi) {
+    /* 这里设置 Retina 屏幕下的样式 */
+    --font-size12: 16px !important;
+    --font-size16: 24px !important;
+    --font-size14: 18px!important;
+    --font-size20: 30px !important;
+    --line-height17: 24px;
+    .icon{
+      width: 32px;
+      height: 32px;
+      font-size: 30px;
+    }
+    .table-header{
+      padding: 16px 15px!important;
+    }
+    .row{
+      padding: 12px 15px!important;
+    }
+    .nav1-content {
+      .col {
+        &:nth-child(1) {
+          width: 80px !important;
+        }
+
+        &:nth-child(2) {
+          width: 80px !important;
+        }
+
+        &:nth-child(3) {
+          width: 80px !important;
+        }
+
+        &:nth-child(4) {
+          width: 80px !important;
+        }
+
+        &:nth-child(5) {
+          width: 120px !important;
+        }
+
+        &:nth-child(6) {
+          width: 160px !important;
+        }
+
+        &:nth-child(7) {
+          width: 220px !important;
+        }
+
+        &:nth-child(8) {
+          width: 160px !important;
+        }
+
+        &:nth-child(9) {
+          min-width: 180px !important;
+        }
+      }
+
+    }
+    .nav2-content {
+      .col {
+        &:nth-child(1) {
+          width: 120px !important;
+        }
+
+        &:nth-child(2) {
+          width: 100px !important;
+        }
+
+        &:nth-child(3) {
+          width: 100px !important;
+        }
+
+        &:nth-child(4) {
+          width: 160px !important;
+        }
+
+        &:nth-child(5) {
+          width: 160px !important;
+        }
+
+        &:nth-child(6) {
+          width: 180px !important;
+        }
+
+        &:nth-child(7) {
+          width: 220px !important;
+        }
+
+        &:nth-child(8) {
+          width: 160px !important;
+        }
+
+        &:nth-child(9) {
+          min-width: 230px !important;
+        }
+      }
+    }
+
+    .nav3-content {
+      .col {
+        &:nth-child(1) {
+          width: 300px !important;
+        }
+
+        &:nth-child(2) {
+          width: 120px !important;
+        }
+
+        &:nth-child(3) {
+          width: 120px !important;
+        }
+
+        &:nth-child(4) {
+          width: 120px !important;
+        }
+
+        &:nth-child(5) {
+          width: 120px !important;
+        }
+
+        &:nth-child(6) {
+          width: 160px !important;
+        }
+
+        &:nth-child(7) {
+          width: 180px !important;
+        }
+
+        &:nth-child(8) {
+          width: 160px !important;
+        }
+
+        &:nth-child(9) {
+          min-width: 180px !important;
+        }
+      }
+    }
+
+    .nav4-content {
+      .col {
+        &:nth-child(1) {
+          width: 120px !important;
+        }
+
+        &:nth-child(2) {
+          width: 150px !important;
+        }
+
+        &:nth-child(3) {
+          width: 200px !important;
+        }
+
+        &:nth-child(4) {
+          width: 300px;
+        }
+
+      }
+    }
+  }
 
   button {
     user-select: none;
@@ -588,6 +757,7 @@ export default {
     width: 100%;
     display: flex;
     padding: 10px;
+    justify-content: center;
 
     .operate {
       cursor: pointer;
@@ -598,6 +768,7 @@ export default {
       color: #fff;
       border: none;
       font-family: AvertaStd-Bold, AvertaStd;
+
       &:active {
         transform: translate(1px, 1px);
       }
@@ -628,7 +799,9 @@ export default {
         border: 1px solid #ECECEE;
         display: flex;
         justify-content: space-between;
-
+        .icon{
+          margin-right: 6px;
+        }
         .ant-dropdown-link {
           width: 100%;
           display: flex;
@@ -637,10 +810,10 @@ export default {
           justify-content: space-between;
 
           .contract {
-            font-size: 14px;
+            font-size: var(--font-size14);
             font-weight: 400;
             color: #0E1D51;
-            line-height: 17px;
+            line-height: var(--line-height17);
           }
         }
 
@@ -649,7 +822,7 @@ export default {
           border: none;
           display: flex !important;
           align-items: center !important;
-          font-size: 20px;
+          font-size: var(--font-size20);
           font-family: AvertaStd-Regular, AvertaStd;
           font-weight: 400;
           color: #0E1D51;
@@ -677,11 +850,11 @@ export default {
         width: 100%;
 
         .box-title {
-          font-size: 14px;
+          font-size: var(--font-size14);
           font-family: AvertaStd-Regular, AvertaStd, sans-serif;
           font-weight: 400;
           color: #8F97AA;
-          line-height: 17px;
+          line-height: var(--line-height17);
           padding-bottom: 6px;
         }
 
@@ -721,12 +894,12 @@ export default {
             span {
               position: absolute;
               right: 10px;
-              font-size: 14px;
+              font-size: var(--font-size14);
               font-family: AvertaStd-Regular, AvertaStd, sans-serif;
               top: 10px;
               font-weight: 400;
               color: #0E1D51;
-              line-height: 17px;
+              line-height: var(--line-height17);
             }
           }
         }
@@ -744,7 +917,7 @@ export default {
             border: 1px solid #0E1D51;
             font-weight: 400;
             color: #0E1D51;
-            line-height: 18px;
+            line-height: var(--font-size14);
             text-align: center;
             cursor: pointer;
           }
@@ -773,12 +946,12 @@ export default {
             span {
               position: absolute;
               right: 10px;
-              font-size: 14px;
+              font-size: var(--font-size14);
               font-family: AvertaStd-Regular, AvertaStd, sans-serif;
               top: 10px;
               font-weight: 400;
               color: #0E1D51;
-              line-height: 17px;
+              line-height: var(--line-height17);
               cursor: pointer;
 
             }
@@ -790,7 +963,7 @@ export default {
             margin-left: 6px;
             border-radius: 5px;
             border: 1px solid #0E1D51;
-            font-size: 14px;
+            font-size: var(--font-size14);
             font-family: AvertaStd-Regular, AvertaStd;
             font-weight: 400;
             color: #0E1D51;
@@ -805,15 +978,15 @@ export default {
             padding: 4px 0;
 
             .name {
-              font-size: 12px;
+              font-size: var(--font-size12);
               font-family: AvertaStd-Regular, AvertaStd;
               font-weight: 400;
               color: #8F97AA;
-              line-height: 15px;
+              line-height: var(--line-height17);
             }
 
             .value {
-              font-size: 12px;
+              font-size: var(--font-size12);
               font-family: AvertaStd-Regular, AvertaStd;
               font-weight: 400;
               color: #0E1D51;
@@ -841,8 +1014,7 @@ export default {
         align-items: center;
 
         .price {
-
-          font-size: 20px;
+          font-size: var(--font-size20);
           font-family: AvertaStd-Bold, AvertaStd;
           font-weight: bold;
           color: #63CE63;
@@ -855,11 +1027,11 @@ export default {
           padding-left: 30px;
 
           .name {
-            font-size: 14px;
+            font-size: var(--font-size14);
             font-family: AvertaStd-Regular, AvertaStd;
             font-weight: 400;
             color: #8F97AA;
-            line-height: 16px;
+            line-height: var(--line-height17);
           }
 
           .value {
@@ -867,7 +1039,7 @@ export default {
             margin-top: 4px;
 
             .rate {
-              font-size: 16px;
+              font-size: var(--font-size16);
               font-family: AvertaStd-Regular, AvertaStd;
               font-weight: 400;
               color: #3D5ECB;
@@ -879,7 +1051,7 @@ export default {
 
         .change {
           .value {
-            font-size: 16px;
+            font-size: var(--font-size16);
             font-family: AvertaStd-Regular, AvertaStd;
             font-weight: 400;
             color: #63CE63;
@@ -907,11 +1079,11 @@ export default {
 
           .nav-item {
             padding: 6px 15px;
-            font-size: 14px;
+            font-size: var(--font-size14);
             font-family: AvertaStd-Regular, AvertaStd, sans-serif;
             font-weight: 400;
             color: rgba(14, 29, 81, 0.5);
-            line-height: 17px;
+            line-height: var(--line-height17);
             cursor: pointer;
 
             &:first-child {
@@ -921,7 +1093,6 @@ export default {
             &.active {
               font-weight: bold;
               color: #0E1D51;
-              line-height: 17px;
             }
           }
         }
@@ -981,7 +1152,8 @@ export default {
             border-bottom: 1px solid #ECECEE;
             padding: 6px 15px;
             display: flex;
-            font-size: 12px;
+            align-items: center;
+            font-size: var(--font-size12);
             font-family: AvertaStd-Regular, AvertaStd, sans-serif;
             font-weight: 400;
             color: #0E1D51;
@@ -992,9 +1164,10 @@ export default {
             }
 
             .side {
-              width: 28px;
+              width: 32px;
+              margin: 0 auto;
               text-align: center;
-              height: 16px;
+              padding: 2px 4px;
               background: #63CE63;
               border-radius: 2px;
               color: #fff;
@@ -1013,7 +1186,7 @@ export default {
                 height: auto;
                 border-radius: 10px;
                 border: 1px solid #0E1D51;
-                font-size: 12px;
+                font-size: var(--font-size12) !important;
                 font-family: AvertaStd-Regular, AvertaStd;
                 font-weight: 400;
                 color: #0E1D51;
@@ -1034,7 +1207,7 @@ export default {
             border-bottom: 1px solid #ECECEE;
 
             .col {
-              font-size: 12px;
+              font-size: var(--font-size12);
               font-family: AvertaStd-Regular, AvertaStd, sans-serif;
               font-weight: 400;
               color: #9CA3B4;
@@ -1152,5 +1325,9 @@ export default {
 
 
   }
+
 }
+
+/* 针对 Retina 屏幕 */
+
 </style>
