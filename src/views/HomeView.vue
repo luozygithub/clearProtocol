@@ -3,7 +3,6 @@
     <div class="content-box">
       <div class="left-content-box">
         <div class="left-header">
-
           <a-dropdown>
             <template #overlay>
               <a-menu @click="handleMenuClick">
@@ -68,8 +67,6 @@
             </a>
 
           </a-dropdown>
-
-
         </div>
         <div class="left-content">
           <div class="flex-box">
@@ -559,8 +556,8 @@ export default {
   only screen and (min-resolution: 192dpi) {
     /* 这里设置 Retina 屏幕下的样式 */
     --font-size12: 16px !important;
-    --font-size16: 24px !important;
     --font-size14: 18px!important;
+    --font-size16: 24px !important;
     --font-size20: 30px !important;
     --line-height17: 24px;
     .icon{
@@ -914,15 +911,18 @@ export default {
 
 
           .reset {
+            display: flex;
+            align-items: center;
             margin-left: 6px;
-            width: 52px;
+            text-align: center;
+            justify-content: center;
+            width: 54px;
             height: 20px;
             border-radius: 13px;
             border: 1px solid #0E1D51;
             font-weight: 400;
             color: #0E1D51;
-            line-height: var(--font-size14);
-            text-align: center;
+            line-height: var(--font-size12);
             cursor: pointer;
           }
         }
