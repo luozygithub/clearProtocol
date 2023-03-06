@@ -163,7 +163,7 @@ export default {
   display: flex;
   justify-content: space-between;
   padding: 10px 20px;
-  min-width: 800px;
+  min-width: 860px;
   overflow: hidden;
 
   .menu {

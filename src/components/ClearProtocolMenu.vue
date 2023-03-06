@@ -91,11 +91,13 @@ export default {
         margin-right: 20px;
       }
     }
+
     .ant-menu {
       width: 66px;
-      .ant-menu-item{
-        width: 100% ;
-        padding: 0 20px!important;
+
+      .ant-menu-item {
+        width: 100%;
+        padding: 0 20px !important;
       }
     }
   }
@@ -103,7 +105,7 @@ export default {
   .menu-item-icon {
     width: 30px;
     height: 30px;
-    font-size: 20px!important;
+    font-size: 20px !important;
   }
 
   .line2 {
@@ -120,13 +122,18 @@ export default {
     height: 100%;
     align-items: center;
     min-width: 100px;
+    color: rgba(255, 255, 255, 0.65);
 
     .menu-item-icon {
       flex-shrink: 0;
     }
   }
 
-
+  .ant-menu-item-selected {
+    .menu-item-box{
+      color: rgba(255, 255, 255, 1);
+    }
+  }
 
   .menu-item-name {
     font-size: 16px !important;
