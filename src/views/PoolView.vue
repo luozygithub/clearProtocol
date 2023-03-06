@@ -335,6 +335,10 @@ export default {
       }
     }
   }
+  @media only screen and (-webkit-min-device-pixel-ratio: 2),
+  only screen and (min--moz-device-pixel-ratio: 2),
+  only screen and (min-resolution: 192dpi) {
 
+  }
 }
 </style>

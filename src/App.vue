@@ -13,6 +13,7 @@
 <script>
 import ClearProtocolMenu from "@/components/ClearProtocolMenu";
 import CloearProtocolHeader from "@/components/CloearProtocolHeader";
+
 export default {
   name: "APP",
   components: {
@@ -47,6 +48,7 @@ export default {
     overflow: hidden;
 
     .content {
+      transition: 0.5s;
       position: relative;
       font-family: AvertaStd-Bold, AvertaStd;
       flex-shrink: 0;
