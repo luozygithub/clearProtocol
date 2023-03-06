@@ -2,7 +2,7 @@
   <div id="app">
     <div class="layout">
       <ClearProtocolMenu/>
-      <div class="content" :style="'left:'+(!collapsed? 200 : 66) +'px;'+ 'calc(100vw - '+(!collapsed?200:66)+'px)'">
+      <div class="content" :style="'left:'+(!collapsed? 200 : 66) +'px;'+ 'width:calc(100vw - '+(collapsed?66:200)+'px)'">
         <CloearProtocolHeader></CloearProtocolHeader>
         <router-view/>
 

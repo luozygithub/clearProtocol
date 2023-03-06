@@ -1,0 +1,22 @@
+#app{
+  --font-size12: 12px;
+  --font-size16: 16px;
+  --font-size14: 14px;
+  --font-size20: 20px;
+  --line-height15:15px;
+  --line-height17:17px;
+  --line-height18:18px;
+  @media only screen and (-webkit-min-device-pixel-ratio: 2),
+  only screen and (min--moz-device-pixel-ratio: 2),
+  only screen and (min-resolution: 192dpi) {
+    /* 这里设置 Retina 屏幕下的样式 */
+    --font-size12: 16px !important;
+    --font-size14: 18px !important;
+    --font-size16: 24px !important;
+    --font-size20: 30px !important;
+    --line-height15:18px;
+    --line-height17: 24px;
+    --line-height18:26px;
+  }
+}
+

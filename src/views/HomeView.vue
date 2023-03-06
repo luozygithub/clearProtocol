@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
+  <div class="home" :style="'left:'+(!collapsed? 200 : 66) +'px;'+ 'width:calc(100vw - '+(collapsed?66:200)+'px)'">
     <div class="content-box">
       <div class="left-content-box">
         <div class="left-header">
@@ -452,6 +452,11 @@ export default {
       //  BINANCE:ETHUSDT
     }
   },
+  computed: {
+    collapsed() {
+      return this.$store.state.collapsed
+    }
+  },
   methods: {
     handleMenuClick(e) {
       let curTVSymbol = "", curSymbol = "", coinName = ""
@@ -546,19 +551,11 @@ export default {
 .home {
   overflow: auto;
   background: #F3F7FF;
-  --font-size12: 12px;
-  --font-size16: 16px;
-  --font-size14: 14px;
-  --font-size20: 20px;
-  --line-height17:17px;
+
   @media only screen and (-webkit-min-device-pixel-ratio: 2),
   only screen and (min--moz-device-pixel-ratio: 2),
   only screen and (min-resolution: 192dpi) {
-    /* 这里设置 Retina 屏幕下的样式 */
-    --font-size12: 16px !important;
-    --font-size14: 18px!important;
-    --font-size16: 24px !important;
-    --font-size20: 30px !important;
+
     --line-height17: 24px;
     .icon{
       width: 32px;

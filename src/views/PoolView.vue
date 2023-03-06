@@ -129,9 +129,11 @@ export default {
 .pool-view {
   width: 100%;
   min-height: 100vh;
-  button{
+
+  button {
     user-select: none;
   }
+
   input::-webkit-outer-spin-button,
   input::-webkit-inner-spin-button {
     -webkit-appearance: none !important;
@@ -158,31 +160,34 @@ export default {
     box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.1);
     border-radius: 15px;
   }
+
   .operate {
     cursor: pointer;
     width: 156px;
     height: 36px;
-    background: rgba(14,29,81,0.8);
+    background: rgba(14, 29, 81, 0.8);
     border-radius: 19px;
     color: #fff;
     border: none;
     text-align: center;
     line-height: 30px;
-    font-size: 14px;
+    font-size: var(--font-size14);
+
     &:active {
       transform: translate(1px, 1px);
     }
   }
+
   .pool-view-header {
     padding: 15px 20px;
     border-bottom: 1px solid #ECECEE;
 
     .title {
-      font-size: 14px;
+      font-size: var(--font-size14);
       font-family: AvertaStd-Semibold, AvertaStd, sans-serif;
       font-weight: 600;
       color: #0E1D51;
-      line-height: 17px;
+      line-height: var(--line-height17);
     }
   }
 
@@ -190,29 +195,32 @@ export default {
     padding: 0 20px;
     height: 100%;
     display: flex;
+
     .pool-content-left {
       height: 100%;
       overflow: hidden;
       width: 520px;
-      border-right:1px solid #ECECEE;
+      border-right: 1px solid #ECECEE;
 
-      .operate{
+      .operate {
         margin-top: 36px;
         width: 260px;
       }
+
       .input-name {
         margin-top: 20px;
         padding-bottom: 10px;
-        font-size: 14px;
+        font-size: var(--font-size14);
         font-family: AvertaStd-Regular, AvertaStd, sans-serif;
         font-weight: 400;
         color: #8F97AA;
-        line-height: 17px;
+        line-height: var(--font-size14);
       }
 
       .input-box {
         position: relative;
         width: 260px;
+
         input {
           width: 260px;
           height: 36px;
@@ -223,7 +231,8 @@ export default {
           padding: 0 20px;
 
         }
-        .max-btn{
+
+        .max-btn {
           border: none;
           position: absolute;
           right: 70px;
@@ -236,62 +245,73 @@ export default {
           border-radius: 5px;
           color: #fff;
         }
-        span{
+
+        span {
           position: absolute;
-          right: 20px ;
+          right: 20px;
           top: 10px;
-          font-size: 14px;
-          font-family: AvertaStd-Regular, AvertaStd,sans-serif;
+          font-size: var(--font-size14);
+          font-family: AvertaStd-Regular, AvertaStd, sans-serif;
           font-weight: 400;
           color: #0E1D51;
-          line-height: 17px;
+          line-height: var(--font-size14);
         }
       }
-      .input-bottom{
+
+      .input-bottom {
         width: 260px;
         display: flex;
         justify-content: space-between;
         padding: 10px 0;
-        font-size: 14px;
+        font-size: var(--font-size14);
         font-family: AvertaStd-Regular, AvertaStd;
         font-weight: 400;
         color: #8F97AA;
-        line-height: 17px;
-        span{
+        line-height: var(--font-size14);
+
+        span {
           color: #0E1D51;
         }
       }
     }
-    .pool-content-right{
+
+    .pool-content-right {
       padding: 20px;
       flex-grow: 1;
-      .info-box{
+
+      .info-box {
         display: flex;
-        .info-item{
+
+        .info-item {
           width: 50%;
-          .name{
-            font-size: 14px;
+
+          .name {
+            font-size: var(--font-size14);
             font-family: AvertaStd-Regular, AvertaStd;
             font-weight: 400;
             color: #8F97AA;
-            line-height: 17px;
+            line-height: var(--font-size17);
           }
-          span{
+
+          span {
             color: #0E1D51;
-            line-height: 17px;
+            line-height: var(--font-size14);
           }
-          .add{
+
+          .add {
             color: #4363CC;
           }
         }
       }
-      .info-list{
+
+      .info-list {
         display: flex;
         flex-wrap: wrap;
         justify-content: space-between;
         margin-top: 30px;
         width: 100%;
-        .list-item{
+
+        .list-item {
           margin-top: 15px;
           display: flex;
           flex-direction: column;
@@ -300,44 +320,73 @@ export default {
           height: 122px;
           padding: 20px;
           background: #FFFFFF;
-          box-shadow: 0px 2px 15px 10px rgba(229,237,240,0.33);
-          border-radius: 12px;
-          .name{
-            font-size: 14px;
+          box-shadow: 0px 2px 15px 10px rgba(229, 237, 240, 0.33);
+          border-radius: var(--font-size12);
+
+          .name {
+            font-size: var(--font-size14);
             font-weight: 400;
             color: #8F97AA;
-            line-height: 17px;
+            line-height: var(--font-size14);
           }
+
           .item-content {
             height: 40px;
-            font-size: 12px;
+            font-size: var(--font-size12);
             color: #8F97AA;
-            line-height: 15px;
-            span{
+            line-height: var(--line-height15);
+            position: relative;
+
+            span {
               color: #0E1D51;
             }
-            .info{
+
+            .info {
               margin-top: 8px;
             }
-            .operate{
+
+            .operate {
               width: 79px;
               height: 20px;
-              border-radius: 12px;
+              border-radius: var(--font-size12);
               border: 1px solid #E6E7F0;
               background: none;
               color: #0E1D51;
-              font-size: 12px;
-              line-height: 18px;
+              font-size: var(--font-size12);
+              line-height: var(--line-height18);
               margin-top: 8px;
+              position: absolute;
+              right: 0;
             }
           }
         }
       }
     }
   }
+
   @media only screen and (-webkit-min-device-pixel-ratio: 2),
   only screen and (min--moz-device-pixel-ratio: 2),
-  only screen and (min-resolution: 192dpi) {
+  only screen and (min-resolution: 192dpi){
+    .pool-contain {
+      width: 1000px;
+      height: 500px;
+    }
+    .input-box {
+      width: 360px;
+    }
+    .info-list {
+      .list-item {
+        width: 300px !important;
+        height: 130px !important;
+
+        .operate {
+          width: 100px !important;
+          height: 34px !important;
+          bottom: 6px;
+
+        }
+      }
+    }
 
   }
 }

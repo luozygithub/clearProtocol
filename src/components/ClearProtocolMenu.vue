@@ -1,5 +1,19 @@
 <template>
-  <div class="menu" :style="'width:' +(!collapsed?200:66)+'px;'">
+  <a-layout-sider
+      class="menu"
+      :collapsed="collapsed"
+      :collapsedWidth="66"
+      :width="200"
+      :class="{'isCollapsed':collapsed}"
+      :style="{
+          overflow: 'auto',
+          height: '100vh',
+          position: 'fixed',
+          left: 0,
+          zIndex: 100,
+          background: '#0E1D51',
+       }"
+  >
     <div class="logo-box">
       <img class="logo" src="../assets/logo.svg" alt="" v-show="!collapsed">
       <img class="logo-s" src="../assets/logo_s.png" alt="" v-show="collapsed">
@@ -9,6 +23,7 @@
         :default-open-keys="['sub1']"
         mode="inline"
         theme="dark"
+
         :inline-collapsed="collapsed"
     >
       <a-menu-item key="2">
@@ -32,11 +47,12 @@
       </a-menu-item>
 
       <a-menu-item key="4">
-          <a-icon class="menu-item-icon" type="pie-chart"/>
-          <span class="menu-item-name">Overview</span>
+        <a-icon class="menu-item-icon" type="pie-chart"/>
+        <span class="menu-item-name">Overview</span>
       </a-menu-item>
     </a-menu>
-  </div>
+
+  </a-layout-sider>
 </template>
 
 <script>
@@ -68,12 +84,29 @@ export default {
   background: #0E1D51;
   left: 0;
   top: 0;
-  .menu-item-icon{
+
+  &.isCollapsed {
+    .ant-menu-inline-collapsed {
+      .menu-item-icon {
+        margin-right: 20px;
+      }
+    }
+    .ant-menu {
+      width: 66px;
+      .ant-menu-item{
+        width: 100% ;
+        padding: 0 20px!important;
+      }
+    }
+  }
+
+  .menu-item-icon {
     width: 30px;
     height: 30px;
-    font-size: 20px;
+    font-size: 20px!important;
   }
-  .line2{
+
+  .line2 {
     height: 56px;
     font-size: 16px;
     font-family: AvertaStd-Regular, AvertaStd;
@@ -81,25 +114,36 @@ export default {
     color: #FFFFFF;
     line-height: 20px;
   }
-  .menu-item-box{
+
+  .menu-item-box {
     display: flex;
     height: 100%;
     align-items: center;
+    min-width: 100px;
 
+    .menu-item-icon {
+      flex-shrink: 0;
+    }
   }
-  .menu-item-name{
-    font-size: 16px!important;
+
+
+
+  .menu-item-name {
+    font-size: 16px !important;
     line-height: 18px;
 
   }
-  .logo-box{
+
+  .logo-box {
     padding: 20px 0;
     text-align: center;
-    .logo{
+
+    .logo {
       width: 120px;
       margin: 0 auto;
     }
-    .logo-s{
+
+    .logo-s {
       width: 50px;
     }
   }
