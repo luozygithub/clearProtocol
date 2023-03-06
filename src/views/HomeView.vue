@@ -759,7 +759,6 @@ export default {
 
     .operate {
       cursor: pointer;
-      width: 40%;
       height: 36px;
       background: #63CE63;
       border-radius: 19px;
@@ -777,6 +776,9 @@ export default {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      .operate{
+        width: 45%;
+      }
     }
 
     .left-content-box {
@@ -859,7 +861,6 @@ export default {
         .input-box {
           width: 100%;
           height: 72px;
-          background: #F2F2F3;
           border-radius: 18px;
           overflow: hidden;
           border: 1px solid #0E1D51;
@@ -871,6 +872,7 @@ export default {
 
             input {
               height: 100%;
+              background: #F2F2F3;
 
               width: 100%;
               padding: 0 20px;

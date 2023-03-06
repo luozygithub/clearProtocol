@@ -16,7 +16,7 @@
       <a-dropdown :trigger="['click']">
 
         <button class="operate choose-chain" @click="e => e.preventDefault()">
-          Arbitrum Rinkeby
+          {{ curChainName }}
           <a-icon type="down"/>
 
         </button>
@@ -43,7 +43,8 @@ export default {
   name: "CloearProtocolHeader",
   data() {
     return {
-      chainId: 421613
+      chainId: 0,
+      curChainName: "Unsupported"
     }
   },
   methods: {
@@ -78,7 +79,7 @@ export default {
                   method: 'wallet_addEthereumChain',
                   params: [
                     {
-                      chainId: "0x"+ parseInt(this.chainId).toString(16),
+                      chainId: "0x" + parseInt(this.chainId).toString(16),
                       chainName: 'Binance Smart Chain Testnet',
                       nativeCurrency: {
                         name: 'tBNB',
@@ -117,6 +118,42 @@ export default {
         console.log(e)
       }
     }
+  },
+  watch: {
+    chainId(chainId) {
+      if (chainId == 421613) {
+        this.curChainName = "Arbitrum Goerli"
+      } else if (chainId == 97) {
+        this.curChainName = "Binance Smart Chain Mainnet"
+      }else{
+        this.curChainName = "Unsupported"
+      }
+    }
+  },
+  async mounted() {
+    if (window.ethereum) {
+      const chainId = (await window.ethereum.request({method: 'eth_chainId'}))
+
+      if (parseInt(chainId).toString(10) == 421613) {
+        this.curChainName = "Arbitrum Goerli"
+      } else if (parseInt(chainId).toString(10) == 97) {
+        this.curChainName = "Binance Smart Chain Mainnet"
+      }
+      let _this = this
+      setTimeout(async () => {
+        const chainId = (await window.ethereum.request({method: 'eth_chainId'}))
+
+        if (parseInt(chainId).toString(10) == 421613) {
+          _this.curChainName = "Arbitrum Goerli"
+        } else if (parseInt(chainId).toString(10) == 97) {
+          _this.curChainName = "Binance Smart Chain Mainnet"
+        }
+      },100)
+      window.ethereum.on('chainChanged', (netWarkId) => {
+          this.chainId = parseInt(netWarkId).toString(10)
+      });
+    }
+
   }
 }
 </script>
@@ -183,7 +220,6 @@ export default {
   font-weight: 600;
   color: #0E1D51;
   border: 1px solid #0E1D51;
-  width: 191px;
 }
 
 .connect {
