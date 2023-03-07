@@ -37,8 +37,12 @@
   }
 
   input {
-    border: none;
     padding: 0 20px;
+    border: none;
+    &:focus{
+      border: 1px solid #0E1D51;
+
+    }
   }
 }
 

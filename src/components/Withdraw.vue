@@ -11,12 +11,14 @@
       <div class="content">
 
         <div class="input-box">
-          <input type="number" placeholder="0.000">
-          <div class="max-btn">
+          <input type="number" v-model="amount" placeholder="0.000">
+          <div class="max-btn" @click="amount=balance">
             MAX
           </div>
         </div>
-
+        <div class="balance">
+          Max:{{ balance }}
+        </div>
         <button class="operate confim">
           Confirm
         </button>
@@ -27,7 +29,13 @@
 
 <script>
 export default {
-  name: "withdrawView"
+  name: "withdrawView",
+  data(){
+    return {
+      amount:undefined,
+      balance:0
+    }
+  }
 }
 </script>
 
@@ -78,7 +86,6 @@ export default {
         background: #F2F2F3;
         border-radius: 18px;
         color: #111;
-        border: 1px solid #0E1D51;
         width: 100%;
       }
       .max-btn{
@@ -98,10 +105,19 @@ export default {
         line-height: 24px;
       }
     }
+    .balance{
+      text-align: right;
+      font-family: AvertaStd-Regular, AvertaStd;
+      font-weight: 400;
+      color: #0E1D51;
+      padding-top: 6px;
+      line-height: 17px;
+      font-size: var(--font-size14);
+    }
     .operate.confim {
       width: 100%;
       cursor: pointer;
-      margin-top: 50px;
+      margin-top: 30px;
       height: 36px;
       background: #0E1D51;
       border-radius: 19px;

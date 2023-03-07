@@ -29,7 +29,7 @@
           </div>
           <div class="input-bottom">
             <div class="left">
-              Balance
+              Wallet
             </div>
             <div class="right">
               546345.8796
@@ -249,6 +249,7 @@ export default {
           cursor: pointer;
           width: 44px;
           height: 24px;
+          font-size: var(--font-size14);
           background: #0E1D51;
           border-radius: 5px;
           color: #fff;
@@ -276,10 +277,11 @@ export default {
         font-weight: 400;
         color: #8F97AA;
         line-height: var(--font-size14);
-
-        span {
+        .right{
           color: #0E1D51;
+
         }
+
       }
     }
 
@@ -292,18 +294,17 @@ export default {
 
         .info-item {
           width: 50%;
-
+          font-size: var(--font-size14);
+          font-family: AvertaStd-Regular, AvertaStd;
           .name {
-            font-size: var(--font-size14);
-            font-family: AvertaStd-Regular, AvertaStd;
             font-weight: 400;
             color: #8F97AA;
-            line-height: var(--font-size17);
+            line-height: var(--line-height18);
           }
 
           span {
+            margin-right: 5px;
             color: #0E1D51;
-            line-height: var(--font-size14);
           }
 
           .add {
