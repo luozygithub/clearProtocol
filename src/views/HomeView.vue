@@ -881,7 +881,7 @@ export default {
             &:nth-child(1) {
               input {
                 border-radius: 18px 18px 0 0;
-                border-bottom: 1px solid #0E1D51;;
+                border-bottom: 1px solid #0E1D51!important;
               }
             }
 
@@ -921,7 +921,7 @@ export default {
             border: 1px solid #0E1D51;
             font-weight: 400;
             color: #0E1D51;
-            line-height: var(--font-size12);
+            font-size: var(--font-size12);
             cursor: pointer;
           }
         }

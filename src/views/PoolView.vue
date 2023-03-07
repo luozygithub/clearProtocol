@@ -106,7 +106,7 @@
                 <span>0.0000</span>
                 USDC
                 <div class="info">
-                  <button class="operate">
+                  <button class="operate" @click="isShowWithdraw=true">
                     Withdraw
                   </button>
                 </div>
@@ -116,12 +116,20 @@
         </div>
       </div>
     </div>
+    <Withdraw  v-show="isShowWithdraw" @closeWithdraw="isShowWithdraw = false"> </Withdraw>
   </div>
 </template>
 
 <script>
+import Withdraw from "@/components/Withdraw";
 export default {
-  name: "PoolView"
+  name: "PoolView",
+  components:{Withdraw},
+  data(){
+    return {
+      isShowWithdraw:false
+    }
+  }
 }
 </script>
 

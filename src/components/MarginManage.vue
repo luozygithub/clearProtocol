@@ -99,27 +99,7 @@ export default {
     box-shadow: 0px 1px 3px 0px rgba(0,0,0,0.1);
     border-radius: 18px;
   }
-  button {
-    user-select: none;
-  }
 
-  input::-webkit-outer-spin-button,
-  input::-webkit-inner-spin-button {
-    -webkit-appearance: none !important;
-  }
-
-  input[type='number'] {
-    -moz-appearance: textfield;
-  }
-
-  input:focus-visible {
-    outline: none;
-  }
-
-  input {
-    border: none;
-    padding: 0 20px;
-  }
   .header{
     display: flex;
     justify-content: space-between;

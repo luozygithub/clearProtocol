@@ -26,16 +26,16 @@
 
         :inline-collapsed="collapsed"
     >
-      <a-menu-item key="2">
+      <a-menu-item key="2" @click="$router.push({path:'/'})">
         <a-icon class="menu-item-icon" type="appstore"/>
         <span class="menu-item-name">Options</span>
       </a-menu-item>
-      <a-menu-item key="1">
+      <a-menu-item key="1" @click="$router.push({path:'/note'})">
         <a-icon class="menu-item-icon" type="pie-chart"/>
         <span class="menu-item-name">Notes</span>
       </a-menu-item>
 
-      <a-menu-item key="3" class="line2">
+      <a-menu-item key="3" class="line2" @click="$router.push({path:'/perp'})">
         <div class="menu-item-box">
           <a-icon class="menu-item-icon" type="inbox"/>
           <div class="menu-item-name">
@@ -46,7 +46,7 @@
 
       </a-menu-item>
 
-      <a-menu-item key="4">
+      <a-menu-item key="4"  @click="$router.push({path:'/overview'})">
         <a-icon class="menu-item-icon" type="pie-chart"/>
         <span class="menu-item-name">Overview</span>
       </a-menu-item>
