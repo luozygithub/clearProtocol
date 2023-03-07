@@ -2,178 +2,188 @@
   <div class="home" :style="'left:'+(!collapsed? 200 : 66) +'px;'+ 'width:calc(100vw - '+(collapsed?66:200)+'px)'">
     <div class="content-box">
       <div class="left-content-box">
-        <div class="left-header">
-          <a-dropdown>
-            <template #overlay>
-              <a-menu @click="handleMenuClick">
-                <a-menu-item key="1">
-                  <div>
-                    <svg t="1677824350805" class="icon" viewBox="0 0 1029 1024" version="1.1"
-                         xmlns="http://www.w3.org/2000/svg" p-id="2818" width="20" height="20">
-                      <path
-                          d="M1024.727025 511.98976c0 282.771945-229.217816 511.98976-511.98976 511.98976-282.766825 0-511.98976-229.217816-511.98976-511.98976 0-282.766825 229.222936-511.98976 511.98976-511.98976 282.771945 0 511.98976 229.222936 511.98976 511.98976"
-                          fill="#F7931A" p-id="2819"></path>
-                      <path
-                          d="M637.048379 661.623888a55.842723 55.842723 0 0 1-27.145697 33.417571 55.858083 55.858083 0 0 1-42.827943 4.444071l-144.181437-42.940581 32.122238-107.840403 144.171196 42.945701h0.00512c29.726125 8.852303 46.713946 40.242395 37.856523 69.973641m48.628787-221.00038a55.929761 55.929761 0 0 1 4.438952 42.833063c-8.857423 29.721006-40.262875 46.698586-69.973641 37.861643h-0.00512l-144.176316-42.940582 32.111998-107.840403 144.181436 42.940581a55.888802 55.888802 0 0 1 33.422691 27.145698m64.54143-34.917702c-16.48095-30.458271-43.836563-52.678626-77.01862-62.560029l-19.076738-5.677966 26.705385-89.669887-68.519589-20.407912-26.705386 89.669887-58.49995-17.423012 26.710506-89.669886-16.414392-4.889503-66.49723-19.803763-25.742845 86.434111-81.037739-24.135197-22.870583 76.798464 81.037739 24.140317-83.254655 279.536169-81.037739-24.135197-22.870583 76.803584 81.03262 24.130077-21.723726 72.953421 16.409272 4.889502 66.49723 19.803764 22.691386-76.189196 58.638188 17.463971-22.691387 76.194316 68.243116 20.325993 22.691386-76.194316 19.209856 5.718926a130.255315 130.255315 0 0 0 37.185816 5.452691c21.247575 0 42.295474-5.278614 61.51045-15.677127 30.458271-16.48095 52.673507-43.831443 62.560028-77.023739 10.393392-34.912582 5.263255-70.777464-11.268894-100.298794 30.01284-15.661767 53.927881-42.935461 64.331513-77.863403 9.886522-33.192296 6.251395-68.243115-10.224435-98.696266"
-                          fill="#FFFFFF" p-id="2820"></path>
-                    </svg>
-                    <span>
+        <div class="left-content-container">
+          <div class="left-header">
+            <a-dropdown>
+              <template #overlay>
+                <a-menu @click="handleMenuClick">
+                  <a-menu-item key="1">
+                    <div>
+                      <svg t="1677824350805" class="icon" viewBox="0 0 1029 1024" version="1.1"
+                           xmlns="http://www.w3.org/2000/svg" p-id="2818" width="20" height="20">
+                        <path
+                            d="M1024.727025 511.98976c0 282.771945-229.217816 511.98976-511.98976 511.98976-282.766825 0-511.98976-229.217816-511.98976-511.98976 0-282.766825 229.222936-511.98976 511.98976-511.98976 282.771945 0 511.98976 229.222936 511.98976 511.98976"
+                            fill="#F7931A" p-id="2819"></path>
+                        <path
+                            d="M637.048379 661.623888a55.842723 55.842723 0 0 1-27.145697 33.417571 55.858083 55.858083 0 0 1-42.827943 4.444071l-144.181437-42.940581 32.122238-107.840403 144.171196 42.945701h0.00512c29.726125 8.852303 46.713946 40.242395 37.856523 69.973641m48.628787-221.00038a55.929761 55.929761 0 0 1 4.438952 42.833063c-8.857423 29.721006-40.262875 46.698586-69.973641 37.861643h-0.00512l-144.176316-42.940582 32.111998-107.840403 144.181436 42.940581a55.888802 55.888802 0 0 1 33.422691 27.145698m64.54143-34.917702c-16.48095-30.458271-43.836563-52.678626-77.01862-62.560029l-19.076738-5.677966 26.705385-89.669887-68.519589-20.407912-26.705386 89.669887-58.49995-17.423012 26.710506-89.669886-16.414392-4.889503-66.49723-19.803763-25.742845 86.434111-81.037739-24.135197-22.870583 76.798464 81.037739 24.140317-83.254655 279.536169-81.037739-24.135197-22.870583 76.803584 81.03262 24.130077-21.723726 72.953421 16.409272 4.889502 66.49723 19.803764 22.691386-76.189196 58.638188 17.463971-22.691387 76.194316 68.243116 20.325993 22.691386-76.194316 19.209856 5.718926a130.255315 130.255315 0 0 0 37.185816 5.452691c21.247575 0 42.295474-5.278614 61.51045-15.677127 30.458271-16.48095 52.673507-43.831443 62.560028-77.023739 10.393392-34.912582 5.263255-70.777464-11.268894-100.298794 30.01284-15.661767 53.927881-42.935461 64.331513-77.863403 9.886522-33.192296 6.251395-68.243115-10.224435-98.696266"
+                            fill="#FFFFFF" p-id="2820"></path>
+                      </svg>
+                      <span>
                         BTCUSDT
                       </span>
-                  </div>
+                    </div>
 
-                </a-menu-item>
-                <a-menu-item key="2">
-                  <div>
-                    <svg t="1677824451359" class="icon" viewBox="0 0 1024 1024" version="1.1"
-                         xmlns="http://www.w3.org/2000/svg" p-id="3915" width="20" height="20">
-                      <path
-                          d="M512.099961 0.399844c282.689574 0 511.800078 229.110504 511.800078 511.800078s-229.110504 511.800078-511.800078 511.800078S0.299883 794.889496 0.299883 512.199922 229.510348 0.399844 512.099961 0.399844z"
-                          fill="#3E5BF2" p-id="3916"></path>
-                      <path
-                          d="M512.199922 147.242483v510.000781l224.112456-134.34752zM512.199922 877.15736l224.112456-321.774307-224.112456 135.547052zM512.199922 147.242483v510.000781L287.987505 522.895744z"
-                          fill="#FFFFFF" p-id="3917"></path>
-                      <path d="M512.199922 690.930105v186.227255L287.987505 555.383053z" fill="#FFFFFF"
-                            p-id="3918"></path>
-                    </svg>
-                    <span>
+                  </a-menu-item>
+                  <a-menu-item key="2">
+                    <div>
+                      <svg t="1677824451359" class="icon" viewBox="0 0 1024 1024" version="1.1"
+                           xmlns="http://www.w3.org/2000/svg" p-id="3915" width="20" height="20">
+                        <path
+                            d="M512.099961 0.399844c282.689574 0 511.800078 229.110504 511.800078 511.800078s-229.110504 511.800078-511.800078 511.800078S0.299883 794.889496 0.299883 512.199922 229.510348 0.399844 512.099961 0.399844z"
+                            fill="#3E5BF2" p-id="3916"></path>
+                        <path
+                            d="M512.199922 147.242483v510.000781l224.112456-134.34752zM512.199922 877.15736l224.112456-321.774307-224.112456 135.547052zM512.199922 147.242483v510.000781L287.987505 522.895744z"
+                            fill="#FFFFFF" p-id="3917"></path>
+                        <path d="M512.199922 690.930105v186.227255L287.987505 555.383053z" fill="#FFFFFF"
+                              p-id="3918"></path>
+                      </svg>
+                      <span>
                         ETHUSDT
                       </span>
+                    </div>
+
+                  </a-menu-item>
+
+                </a-menu>
+              </template>
+              <a class="ant-dropdown-link " @click.prevent>
+                <div class="coin-box">
+                  <svg t="1677824350805" class="icon" viewBox="0 0 1029 1024" version="1.1"
+                       xmlns="http://www.w3.org/2000/svg" p-id="2818" width="20" height="20">
+                    <path
+                        d="M1024.727025 511.98976c0 282.771945-229.217816 511.98976-511.98976 511.98976-282.766825 0-511.98976-229.217816-511.98976-511.98976 0-282.766825 229.222936-511.98976 511.98976-511.98976 282.771945 0 511.98976 229.222936 511.98976 511.98976"
+                        fill="#F7931A" p-id="2819"></path>
+                    <path
+                        d="M637.048379 661.623888a55.842723 55.842723 0 0 1-27.145697 33.417571 55.858083 55.858083 0 0 1-42.827943 4.444071l-144.181437-42.940581 32.122238-107.840403 144.171196 42.945701h0.00512c29.726125 8.852303 46.713946 40.242395 37.856523 69.973641m48.628787-221.00038a55.929761 55.929761 0 0 1 4.438952 42.833063c-8.857423 29.721006-40.262875 46.698586-69.973641 37.861643h-0.00512l-144.176316-42.940582 32.111998-107.840403 144.181436 42.940581a55.888802 55.888802 0 0 1 33.422691 27.145698m64.54143-34.917702c-16.48095-30.458271-43.836563-52.678626-77.01862-62.560029l-19.076738-5.677966 26.705385-89.669887-68.519589-20.407912-26.705386 89.669887-58.49995-17.423012 26.710506-89.669886-16.414392-4.889503-66.49723-19.803763-25.742845 86.434111-81.037739-24.135197-22.870583 76.798464 81.037739 24.140317-83.254655 279.536169-81.037739-24.135197-22.870583 76.803584 81.03262 24.130077-21.723726 72.953421 16.409272 4.889502 66.49723 19.803764 22.691386-76.189196 58.638188 17.463971-22.691387 76.194316 68.243116 20.325993 22.691386-76.194316 19.209856 5.718926a130.255315 130.255315 0 0 0 37.185816 5.452691c21.247575 0 42.295474-5.278614 61.51045-15.677127 30.458271-16.48095 52.673507-43.831443 62.560028-77.023739 10.393392-34.912582 5.263255-70.777464-11.268894-100.298794 30.01284-15.661767 53.927881-42.935461 64.331513-77.863403 9.886522-33.192296 6.251395-68.243115-10.224435-98.696266"
+                        fill="#FFFFFF" p-id="2820"></path>
+                  </svg>
+                  {{ curSymbol }}
+
+
+                </div>
+                <div class="contract">
+                  Contract
+                  <a-icon type="down"/>
+                </div>
+              </a>
+
+            </a-dropdown>
+          </div>
+          <div class="left-content">
+            <div class="flex-box">
+              <button class="operate " :class="{'sell':operateNav!=0}" @click="operateNav=0">
+                Buy (Long)
+              </button>
+              <button class="operate  " :class="{'sell':operateNav!=1}" @click="operateNav=1">
+                Sell (Short)
+              </button>
+            </div>
+            <div class="left-content-item">
+              <div class="box-title">Amount</div>
+              <div class="input-box">
+                <div class="input-part">
+                  <input type="number" v-model="amount"  @change="updateUSDCAmount" placeholder="0.0000">
+                  <span>BTC</span>
+                </div>
+                <div class="input-part">
+                  <input type="number" v-model="usdcAmount" @change="updateAmount" placeholder="0.0000">
+                  <span>USDC</span>
+                </div>
+              </div>
+            </div>
+            <div class="left-content-item">
+              <div class="box-title">
+                Leverage
+              </div>
+              <div class="progress-box" style="position: relative">
+                <a-slider  style="position: relative;width: 100%" :tipFormatter="formatTip"
+                          tooltipPlacement="bottom"  v-model="slideValue" />
+                <div class="reset" @click="slideValue=0">
+                  Reset
+                </div>
+                <div class="multi">
+                  {{slideValue}}x
+                </div>
+              </div>
+
+            </div>
+            <div class="left-content-item">
+              <div class="box-title">
+                Slippage Tolerance
+              </div>
+              <div class="slippage-box">
+                <div class="slippage-input">
+                  <input type="number" v-model="slipValue">
+                  <span>%</span>
+                </div>
+                <div class="rate-btn" @click="slipValue=1">
+                  1%
+                </div>
+                <div class="rate-btn" @click="slipValue=1.5">
+                  1.5%
+                </div>
+                <div class="rate-btn" @click="slipValue=2">
+                  2%
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+          <div class="left-bottom">
+            <div class="left-content-item">
+              <div class="box-title">
+                Transaction
+              </div>
+              <div class="transaction-info">
+                <div class="flex-box">
+                  <div class="name">
+                    Entry Price
                   </div>
-
-                </a-menu-item>
-
-              </a-menu>
-            </template>
-            <a class="ant-dropdown-link " @click.prevent>
-              <div class="coin-box">
-                <svg t="1677824350805" class="icon" viewBox="0 0 1029 1024" version="1.1"
-                     xmlns="http://www.w3.org/2000/svg" p-id="2818" width="20" height="20">
-                  <path
-                      d="M1024.727025 511.98976c0 282.771945-229.217816 511.98976-511.98976 511.98976-282.766825 0-511.98976-229.217816-511.98976-511.98976 0-282.766825 229.222936-511.98976 511.98976-511.98976 282.771945 0 511.98976 229.222936 511.98976 511.98976"
-                      fill="#F7931A" p-id="2819"></path>
-                  <path
-                      d="M637.048379 661.623888a55.842723 55.842723 0 0 1-27.145697 33.417571 55.858083 55.858083 0 0 1-42.827943 4.444071l-144.181437-42.940581 32.122238-107.840403 144.171196 42.945701h0.00512c29.726125 8.852303 46.713946 40.242395 37.856523 69.973641m48.628787-221.00038a55.929761 55.929761 0 0 1 4.438952 42.833063c-8.857423 29.721006-40.262875 46.698586-69.973641 37.861643h-0.00512l-144.176316-42.940582 32.111998-107.840403 144.181436 42.940581a55.888802 55.888802 0 0 1 33.422691 27.145698m64.54143-34.917702c-16.48095-30.458271-43.836563-52.678626-77.01862-62.560029l-19.076738-5.677966 26.705385-89.669887-68.519589-20.407912-26.705386 89.669887-58.49995-17.423012 26.710506-89.669886-16.414392-4.889503-66.49723-19.803763-25.742845 86.434111-81.037739-24.135197-22.870583 76.798464 81.037739 24.140317-83.254655 279.536169-81.037739-24.135197-22.870583 76.803584 81.03262 24.130077-21.723726 72.953421 16.409272 4.889502 66.49723 19.803764 22.691386-76.189196 58.638188 17.463971-22.691387 76.194316 68.243116 20.325993 22.691386-76.194316 19.209856 5.718926a130.255315 130.255315 0 0 0 37.185816 5.452691c21.247575 0 42.295474-5.278614 61.51045-15.677127 30.458271-16.48095 52.673507-43.831443 62.560028-77.023739 10.393392-34.912582 5.263255-70.777464-11.268894-100.298794 30.01284-15.661767 53.927881-42.935461 64.331513-77.863403 9.886522-33.192296 6.251395-68.243115-10.224435-98.696266"
-                      fill="#FFFFFF" p-id="2820"></path>
-                </svg>
-                {{ curSymbol }}
-
-
+                  <div class="value">
+                    ${{ dealNum(coinInfo.index_price) }}
+                  </div>
+                </div>
+                <div class="flex-box">
+                  <div class="name">
+                    Est. Liquidation Price
+                  </div>
+                  <div class="value">
+                    $65,378.91
+                  </div>
+                </div>
+                <div class="flex-box">
+                  <div class="name">
+                    Fee
+                  </div>
+                  <div class="value">
+                    $65,378.91
+                  </div>
+                </div>
+                <div class="flex-box">
+                  <div class="name">
+                    Total Amount
+                  </div>
+                  <div class="value">
+                    $65,378.91
+                  </div>
+                </div>
               </div>
-              <div class="contract">
-                Contract
-                <a-icon type="down"/>
-              </div>
-            </a>
-
-          </a-dropdown>
-        </div>
-        <div class="left-content">
-          <div class="flex-box">
-            <button class="operate " :class="{'sell':operateNav!=0}"  @click="operateNav=0">
-              Buy (Long)
+            </div>
+            <button class="operate approve"  @click="approve">
+              Approve
             </button>
-            <button class="operate  " :class="{'sell':operateNav!=1}"    @click="operateNav=1">
-              Sell (Short)
+<!--            :disabled="!tradeActive"-->
+            <button class="operate trade" :class="{'active':tradeActive}"  @click="trade">
+              Trade
             </button>
           </div>
-          <div class="left-content-item">
-            <div class="box-title">Amount</div>
-            <div class="input-box">
-              <div class="input-part">
-                <input type="number" v-model="amount" placeholder="0.0000">
-                <span>BTC</span>
-              </div>
-              <div class="input-part">
-                <input type="number" placeholder="0.0000">
-                <span>USDC</span>
-              </div>
-            </div>
-          </div>
-          <div class="left-content-item">
-            <div class="box-title">
-              Leverage
-            </div>
-            <div class="progress-box">
-              <a-slider v-model="slideValue" style="width: 100%"/>
-              <div class="reset" @click="slideValue=0">
-                Reset
-              </div>
-            </div>
-
-          </div>
-          <div class="left-content-item">
-            <div class="box-title">
-              Slippage Tolerance
-            </div>
-            <div class="slippage-box">
-              <div class="slippage-input">
-                <input type="number" v-model="slipValue">
-                <span>%</span>
-              </div>
-              <div class="rate-btn" @click="slipValue=1">
-                1%
-              </div>
-              <div class="rate-btn" @click="slipValue=1.5">
-                1.5%
-              </div>
-              <div class="rate-btn" @click="slipValue=2">
-                2%
-              </div>
-            </div>
-
-          </div>
-
-        </div>
-        <div class="left-bottom">
-          <div class="left-content-item">
-            <div class="box-title">
-              Transaction
-            </div>
-            <div class="transaction-info">
-              <div class="flex-box">
-                <div class="name">
-                  Entry Price
-                </div>
-                <div class="value">
-                  $65,378.91
-                </div>
-              </div>
-              <div class="flex-box">
-                <div class="name">
-                  Est. Liquidation Price
-                </div>
-                <div class="value">
-                  $65,378.91
-                </div>
-              </div>
-              <div class="flex-box">
-                <div class="name">
-                  Fee
-                </div>
-                <div class="value">
-                  $65,378.91
-                </div>
-              </div>
-              <div class="flex-box">
-                <div class="name">
-                  Total Amount
-                </div>
-                <div class="value">
-                  $65,378.91
-                </div>
-              </div>
-            </div>
-          </div>
-          <button class="operate trade" :class="{'active':tradeActive}" :disabled="!tradeActive" @click="trade">
-            Trade
-          </button>
         </div>
       </div>
       <div class="right-content-box">
         <div class="right-part1">
           <div class="price">
-            {{ coinInfo.index_price ? parseInt(coinInfo.index_price).toFixed(2) : 0 }}
+            {{ dealNum(coinInfo.index_price ) }}
           </div>
           <div class="funding">
             <div class="name">
@@ -181,10 +191,10 @@
             </div>
             <div class="value">
               <div class="rate">
-                {{ coinInfo.funding_rate ? parseInt(coinInfo.funding_rate[0]).toFixed(2) : 0 }}%
+                {{ coinInfo.funding_rate?dealNum(coinInfo.funding_rate[0]):0 }}%
               </div>
               <div class="time">
-                {{ coinInfo.funding_time ? coinInfo.funding_time : "0" }}
+                {{  dealNum(coinInfo.funding_time) }}
               </div>
             </div>
           </div>
@@ -193,8 +203,8 @@
               24h Change
             </div>
             <div class="value">
-              {{ coinInfo.chg_24h ? parseInt(coinInfo.chg_24h).toFixed(2) : 0 }} +
-              {{ coinInfo.chg_24h_percent ? parseInt(coinInfo.chg_24h_percent).toFixed(2) : 0 }}%
+              {{ dealNum(coinInfo.chg_24h) }} +
+              {{ dealNum(coinInfo.chg_24h_percent) }}%
             </div>
           </div>
         </div>
@@ -425,7 +435,9 @@
 
 import MarginManage from "@/components/MarginManage";
 import ClosePositions from "@/components/ClosePositions";
-import {getTokenInfo} from "@/api/coinApi";
+import {getTokenInfo,} from "@/api/coinApi";
+import addressMap from "@/abi/addressMap";
+import {mapGetters} from "vuex";
 
 let getPriceInterval = null
 export default {
@@ -436,7 +448,7 @@ export default {
   },
   data() {
     return {
-      amount:undefined,
+      amount: undefined,
       tokenInfo: {},
       isShowClosePosition: false,
       isShowMarginManage: false,
@@ -446,31 +458,94 @@ export default {
       widgetId: 'tradingview_8c9b3',
       widgetHeight: 500,
       activeNav: 0,
-      operateNav:0,
+      operateNav: 0,
       curTVSymbol: "BINANCE:BTCUSDT",
       curSymbol: "BTC/USDT",
       activeTokenName: "BTC",
-      coinInfo: {}
+      coinInfo: {},
+      usdcAmount:undefined
       //  BINANCE:ETHUSDT
     }
+  },
+  filters: {
+
+  },
+  watch:{
+
   },
   computed: {
     collapsed() {
       return this.$store.state.collapsed
     },
-    tradeActive(){
-      if(!this.amount||this.amount<=0){
+    tradeActive() {
+      if (!this.amount || this.amount <= 0) {
         return false
       }
       return true
-    }
+    },
+    ...mapGetters([
+      'isConnected',
+      'account'
+    ]),
   },
   methods: {
-    trade(){
-      if(!this.amount||this.amount<=0){
-          this.$message.info('Please input amount');
-          return
+    dealNum: function (val) {
+      if((val)){
+        return  val ? (parseInt(Number(val)*100)/100) : 0
       }
+    },
+    formatTip(value){
+      return (
+          <span style="position: 'absolute';top: '-24px'; left: '50%'; transform: 'translateX(-50%)' ">
+             {value} x
+          </span>
+      )
+    },
+    updateUSDCAmount(){
+      this.usdcAmount =  this.amount * this.coinInfo.index_price
+    },
+    updateAmount(){
+      this.amount =  this.usdcAmount / this.coinInfo.index_price
+    },
+    approve(){
+      if(!this.isConnected){
+        this.$message.info('Please connect');
+        return
+      }
+      this.$store.dispatch("erc20/approve", {
+        address: addressMap.usdt,
+        spender: addressMap.vault,
+        amount:this.$store.state.app.web3.utils.toWei((10**10).toString()).toString()
+      })
+    },
+    async trade() {
+      if(!this.isConnected){
+        this.$message.info('Please connect');
+        return
+      }
+      if (!this.amount || this.amount <= 0) {
+        this.$message.info('Please input amount');
+        return
+      }
+      if (!this.slideValue || this.slideValue <= 0) {
+        this.$message.info('Please input slideValue');
+        return
+      }
+
+      /*eslint-disable*/
+      let price = await this.$store.dispatch("vault/getPrice", {
+        _indexToken: this.coinInfo.contract_address
+      })
+      let sizeDelta = this.amount / this.slideValue
+      this.$store.dispatch("vault/updatePosition", {
+        _indexToken: this.coinInfo.contract_address,
+        _leverage: this.slideValue ,
+        _sizeDelta: 10*10**6,
+        _collateralDelta: sizeDelta,
+        _indexPrice: price,
+        _direction:true,
+        _collateralDeltaInIO:true
+      })
     },
     handleMenuClick(e) {
       let curTVSymbol = "", curSymbol = "", coinName = ""
@@ -529,11 +604,14 @@ export default {
         // let priceArr = priceRes.data.data
         // console.log(priceArr)
         let tokenInfoRes = await getTokenInfo()
+        // let price = await getTokenPrices()
+        // console.log(price.data.data)
         let tokenInfo = tokenInfoRes.data.data
         this.tokenInfo = tokenInfo
         if (tokenInfo && tokenInfo.tokens) {
           tokenInfo.tokens.forEach(token => {
             if (token.name == this.activeTokenName) {
+              console.log(token)
               this.coinInfo = token
             }
           })
@@ -569,16 +647,16 @@ export default {
   only screen and (min-resolution: 192dpi) {
 
     --line-height17: 24px;
-    .icon{
+    .icon {
       width: 32px;
       height: 32px;
       font-size: 30px;
     }
-    .table-header{
-      padding: 16px 15px!important;
+    .table-header {
+      padding: 16px 15px !important;
     }
-    .row{
-      padding: 12px 15px!important;
+    .row {
+      padding: 12px 15px !important;
     }
     .nav1-content {
       .col {
@@ -783,30 +861,38 @@ export default {
         transform: translate(1px, 1px);
       }
     }
-    .trade{
-      background: rgba(99,206,99,0.7);
-      &.active{
+
+    .trade {
+      background: rgba(99, 206, 99, 0.7);
+
+      &.active {
         background: #63CE63;
       }
     }
+
     .flex-box {
       width: 100%;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      .operate{
+
+      .operate {
         width: 45%;
       }
     }
 
     .left-content-box {
-      height: 650px;
-      background: #FFFFFF;
-      box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.1);
-      border-radius: 8px;
-      .operate{
+      display: flex;
+      flex-direction: column;
+      .left-content-container{
+        box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        background: #FFFFFF;
+      }
+      .operate {
         font-family: AvertaStd-Regular, AvertaStd;
       }
+
       .sell.operate {
         background: #FFFFFF;
         color: #E32A20;
@@ -819,9 +905,11 @@ export default {
         border: 1px solid #ECECEE;
         display: flex;
         justify-content: space-between;
-        .icon{
+
+        .icon {
           margin-right: 6px;
         }
+
         .ant-dropdown-link {
           width: 100%;
           display: flex;
@@ -890,10 +978,11 @@ export default {
             position: relative;
             height: 50%;
             font-family: AvertaStd-Regular, AvertaStd;
+
             input {
               height: 100%;
               background: #F2F2F3;
-              border: 1px solid #0E1D51!important;
+              border: 1px solid #0E1D51 !important;
 
               width: 100%;
               padding: 0 20px;
@@ -902,7 +991,7 @@ export default {
             &:nth-child(1) {
               input {
                 border-radius: 18px 18px 0 0;
-                border-bottom: 1px solid #0E1D51!important;
+                border-bottom: 1px solid #0E1D51 !important;
               }
             }
 
@@ -928,8 +1017,17 @@ export default {
 
         .progress-box {
           display: flex;
+          position: relative;
+          padding-bottom: 30px;
           align-items: center;
+          ::v-deep .ant-tooltip-content{
 
+          }
+          .multi{
+            position: absolute;
+            left: 2px;
+            bottom: 10px;
+          }
 
           .reset {
             display: flex;

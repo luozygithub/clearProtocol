@@ -248,7 +248,6 @@ export default {
           opacity: 0.7;
           border: 1px solid rgba(205, 208, 227, 0.65);
           padding: 0 20px;
-
         }
 
         .max-btn {

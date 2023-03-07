@@ -1,6 +1,13 @@
 
-
+import addressMap from "@/abi/addressMap";
 const CONTRACTS = {
+    vault:{
+        abi:require("./data/vault.json"),
+        address:addressMap.vault
+    },
+    erc20:{
+        abi:require("./data/erc20.json"),
+    }
 };
 
 function getContractByName(name, web3) {
