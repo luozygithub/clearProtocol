@@ -19,7 +19,7 @@
         <div class="balance">
           Max:{{ balance }}
         </div>
-        <button class="operate confim">
+        <button class="operate confim" @click="withdraw">
           Confirm
         </button>
       </div>
@@ -35,6 +35,14 @@ export default {
       amount:undefined,
       balance:0
     }
+  },
+  methods:{
+    withdraw(){
+      if(!this.amount||this.amount<=0){
+        this.$message.info('Please input amount');
+        return
+      }
+    },
   }
 }
 </script>

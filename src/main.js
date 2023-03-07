@@ -4,6 +4,7 @@ import router from './router'
 import store from './store'
 import 'ant-design-vue/dist/antd.css';
 import './styles/common.scss'
+import './styles/overrideAntd.scss'
 Vue.config.productionTip = false
 import Antd from 'ant-design-vue'
 Vue.use(Antd)

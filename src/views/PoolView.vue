@@ -13,13 +13,13 @@
             Asset
           </div>
           <div class="input-box">
-            <input type="text">
+            <input type="number"  >
           </div>
           <div class="input-name">
             Amount
           </div>
           <div class="input-box">
-            <input type="number" placeholder="0.00">
+            <input type="number" v-model="amount" placeholder="0.00">
             <button class="max-btn">
               MAX
             </button>
@@ -36,7 +36,7 @@
               <span>USDC</span>
             </div>
           </div>
-          <button class="operate">
+          <button class="operate" @click="add">
             Add
           </button>
         </div>
@@ -127,7 +127,16 @@ export default {
   components:{Withdraw},
   data(){
     return {
+      amount:undefined,
       isShowWithdraw:false
+    }
+  },
+  methods:{
+    add(){
+      if(!this.amount||this.amount<=0){
+        this.$message.info('Please input amount');
+        return
+      }
     }
   }
 }

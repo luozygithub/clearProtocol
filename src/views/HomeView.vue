@@ -70,10 +70,10 @@
         </div>
         <div class="left-content">
           <div class="flex-box">
-            <button class="operate buy">
+            <button class="operate " :class="{'sell':operateNav!=0}"  @click="operateNav=0">
               Buy (Long)
             </button>
-            <button class="operate  sell">
+            <button class="operate  " :class="{'sell':operateNav!=1}"    @click="operateNav=1">
               Sell (Short)
             </button>
           </div>
@@ -81,11 +81,11 @@
             <div class="box-title">Amount</div>
             <div class="input-box">
               <div class="input-part">
-                <input type="number">
+                <input type="number" v-model="amount" placeholder="0.0000">
                 <span>BTC</span>
               </div>
               <div class="input-part">
-                <input type="number">
+                <input type="number" placeholder="0.0000">
                 <span>USDC</span>
               </div>
             </div>
@@ -165,7 +165,7 @@
               </div>
             </div>
           </div>
-          <button class="operate">
+          <button class="operate" @click="trade">
             Trade
           </button>
         </div>
@@ -436,15 +436,17 @@ export default {
   },
   data() {
     return {
+      amount:undefined,
       tokenInfo: {},
       isShowClosePosition: false,
       isShowMarginManage: false,
       slideValue: 0,
-      slipValue: undefined,
+      slipValue: 1,
       progress: 10,
       widgetId: 'tradingview_8c9b3',
       widgetHeight: 500,
       activeNav: 0,
+      operateNav:0,
       curTVSymbol: "BINANCE:BTCUSDT",
       curSymbol: "BTC/USDT",
       activeTokenName: "BTC",
@@ -458,6 +460,12 @@ export default {
     }
   },
   methods: {
+    trade(){
+      if(!this.amount||this.amount<=0){
+          this.$message.info('Please input amount');
+          return
+      }
+    },
     handleMenuClick(e) {
       let curTVSymbol = "", curSymbol = "", coinName = ""
       if (e.key == 1) {

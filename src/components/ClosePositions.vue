@@ -29,7 +29,7 @@
               Account Balance
             </div>
             <div class="value">
-              1599.00
+              {{balance}}
             </div>
           </div>
         </div>
@@ -82,7 +82,7 @@
             2%
           </div>
         </div>
-        <button class="operate confim">
+        <button class="operate confim" @click="close">
           Close
         </button>
       </div>
@@ -95,8 +95,18 @@ export default {
   name: "ClosePosition",
   data() {
     return {
-      slipValue: undefined
+      slipValue: undefined,
+      amount:undefined,
     }
+  },
+
+  methods:{
+    close(){
+      if(!this.slipValue||this.slipValue<=0){
+        this.$message.info('Please input slip value');
+        return
+      }
+    },
   }
 }
 </script>

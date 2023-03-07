@@ -6,17 +6,23 @@
         <div class="title">
           Margin Manage
         </div>
-        <svg t="1677826899914" @click="$emit('closeMarginManage')" class="icon close" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="5251" id="mx_n_1677826899918" width="14" height="14"><path d="M570.514286 512l292.571428-292.571429c14.628571-14.628571 14.628571-43.885714 0-58.514285-14.628571-14.628571-43.885714-14.628571-58.514285 0l-292.571429 292.571428-292.571429-292.571428c-14.628571-14.628571-43.885714-14.628571-58.514285 0-21.942857 14.628571-21.942857 43.885714 0 58.514285l292.571428 292.571429-292.571428 292.571429c-14.628571 14.628571-14.628571 43.885714 0 58.514285 14.628571 14.628571 43.885714 14.628571 58.514285 0l292.571429-292.571428 292.571429 292.571428c14.628571 14.628571 43.885714 14.628571 58.514285 0 14.628571-14.628571 14.628571-43.885714 0-58.514285l-292.571428-292.571429z" fill="#0E1D51" p-id="5252"></path></svg>
+        <svg t="1677826899914" @click="$emit('closeMarginManage')" class="icon close" viewBox="0 0 1024 1024"
+             version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="5251" id="mx_n_1677826899918" width="14"
+             height="14">
+          <path
+              d="M570.514286 512l292.571428-292.571429c14.628571-14.628571 14.628571-43.885714 0-58.514285-14.628571-14.628571-43.885714-14.628571-58.514285 0l-292.571429 292.571428-292.571429-292.571428c-14.628571-14.628571-43.885714-14.628571-58.514285 0-21.942857 14.628571-21.942857 43.885714 0 58.514285l292.571428 292.571429-292.571428 292.571429c-14.628571 14.628571-14.628571 43.885714 0 58.514285 14.628571 14.628571 43.885714 14.628571 58.514285 0l292.571429-292.571428 292.571429 292.571428c14.628571 14.628571 43.885714 14.628571 58.514285 0 14.628571-14.628571 14.628571-43.885714 0-58.514285l-292.571428-292.571429z"
+              fill="#0E1D51" p-id="5252"></path>
+        </svg>
       </div>
       <div class="content">
         <div class="title">
           Margin
         </div>
         <div class="flex-box">
-          <button class="operate">
+          <button class="operate" :class="{'remove':activeNav!=0}" @click="activeNav=0">
             Add Margin
           </button>
-          <button class="operate remove">
+          <button class="operate " :class="{'remove':activeNav!=1}" @click="activeNav=1">
             Remove Margint
           </button>
         </div>
@@ -30,7 +36,7 @@
           Margin Amount
         </div>
         <div class="input-box">
-          <input type="number" placeholder="0.000">
+          <input type="number" v-model="amount" placeholder="0.000">
           <div class="max-btn">
             MAX
           </div>
@@ -64,7 +70,7 @@
             </div>
           </div>
         </div>
-        <button class="operate confim">
+        <button class="operate confim" @click="confirm">
           Confirm
         </button>
       </div>
@@ -74,21 +80,37 @@
 
 <script>
 export default {
-  name: "MarginManage"
+  name: "MarginManage",
+  data() {
+    return {
+      amount: undefined,
+      balance: 0,
+      activeNav: 0
+    }
+  },
+  methods: {
+    confirm() {
+      if (!this.amount || this.amount <= 0) {
+        this.$message.info('Please input amount');
+        return
+      }
+    },
+  }
 }
 </script>
 
 <style lang="scss" scoped>
-.MarginManage{
-  .mask{
+.MarginManage {
+  .mask {
     width: 100vw;
     height: 100vh;
     position: fixed;
     left: 0;
     top: 0;
-    background: rgba(0,0,0,0.3);
+    background: rgba(0, 0, 0, 0.3);
   }
-  .margin-content{
+
+  .margin-content {
     width: 400px;
     height: 424px;
     position: fixed;
@@ -96,64 +118,73 @@ export default {
     top: 20%;
     left: calc(50% - 200px);
     background: #FFFFFF;
-    box-shadow: 0px 1px 3px 0px rgba(0,0,0,0.1);
+    box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.1);
     border-radius: 18px;
   }
 
-  .header{
+  .header {
     display: flex;
     justify-content: space-between;
     padding: 18px 20px;
     border-bottom: 1px solid #ECECEE;
-    .close{
+
+    .close {
       cursor: pointer;
     }
-    .title{
+
+    .title {
       font-weight: 600;
       color: #0E1D51;
       line-height: 17px;
       font-size: 14px
     }
-    .balance{
+
+    .balance {
       font-size: 14px;
       font-weight: 400;
       color: #0E1D51;
       line-height: 17px;
     }
   }
-  .content{
+
+  .content {
     padding: 10px 20px;
-    .info-list{
-      .row{
+
+    .info-list {
+      .row {
         display: flex;
         justify-content: space-between;
         line-height: 20px;
 
-        .name{
+        .name {
           font-size: 12px;
-          font-family: AvertaStd-Regular, AvertaStd,sans-serif;
+          font-family: AvertaStd-Regular, AvertaStd, sans-serif;
           font-weight: 400;
           color: #8F97AA;
         }
-        .value{
+
+        .value {
           font-size: 12px;
-          font-family: AvertaStd-Regular, AvertaStd,sans-serif;
+          font-family: AvertaStd-Regular, AvertaStd, sans-serif;
           font-weight: 400;
           color: #0E1D51;
         }
       }
     }
-    .title{
+
+    .title {
       font-size: 14px;
-      font-family: AvertaStd-Regular, AvertaStd,sans-serif;
+      font-family: AvertaStd-Regular, AvertaStd, sans-serif;
       font-weight: 400;
       color: #8F97AA;
       line-height: 17px;
       padding: 10px 0;
     }
-    .input-box{
+
+    .input-box {
       position: relative;
-      input{
+
+      input {
         height: 34px;
         background: #F2F2F3;
         border-radius: 18px;
@@ -161,7 +192,8 @@ export default {
         border: 1px solid #0E1D51;
         width: 100%;
       }
-      .max-btn{
+
+      .max-btn {
         position: absolute;
         width: 44px;
         right: 10px;
@@ -178,10 +210,12 @@ export default {
         line-height: 24px;
       }
     }
-    .flex-box{
+
+    .flex-box {
       display: flex;
       justify-content: space-between;
-      .operate{
+
+      .operate {
         cursor: pointer;
         width: 40%;
         height: 36px;
@@ -189,18 +223,21 @@ export default {
         border-radius: 19px;
         color: #fff;
         border: none;
-        &.remove{
+
+        &.remove {
           border: 1px solid #0E1D51;
           background: none;
           color: #0E1D51;
         }
+
         &:active {
           transform: translate(1px, 1px);
         }
       }
     }
   }
-  .operate.confim{
+
+  .operate.confim {
     width: 100%;
     cursor: pointer;
     margin-top: 10px;
@@ -209,11 +246,13 @@ export default {
     border-radius: 19px;
     color: #fff;
     border: none;
-    &.remove{
+
+    &.remove {
       border: 1px solid #0E1D51;
       background: none;
       color: #0E1D51;
     }
+
     &:active {
       transform: translate(1px, 1px);
     }
