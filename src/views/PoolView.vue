@@ -222,6 +222,8 @@ export default {
       .operate {
         margin-top: 36px;
         width: 260px;
+        font-family: AvertaStd-Bold, AvertaStd;
+        font-weight: bold;
       }
 
       .input-name {
@@ -262,6 +264,7 @@ export default {
           background: #0E1D51;
           border-radius: 5px;
           color: #fff;
+          font-family: AvertaStd-Regular, AvertaStd;
         }
 
         span {
@@ -346,6 +349,7 @@ export default {
             font-weight: 400;
             color: #8F97AA;
             line-height: var(--font-size14);
+            font-family: AvertaStd-Regular, AvertaStd;
           }
 
           .item-content {
@@ -354,13 +358,14 @@ export default {
             color: #8F97AA;
             line-height: var(--line-height15);
             position: relative;
-
+            font-family: AvertaStd-Regular, AvertaStd;
             span {
               color: #0E1D51;
             }
 
             .info {
               margin-top: 8px;
+
             }
 
             .operate {
@@ -369,12 +374,16 @@ export default {
               border-radius: var(--font-size12);
               border: 1px solid #E6E7F0;
               background: none;
-              color: #0E1D51;
+
               font-size: var(--font-size12);
               line-height: var(--line-height18);
               margin-top: 8px;
               position: absolute;
               right: 0;
+              color: #E6E7F0;
+              &.active{
+                color: #0E1D51;
+              }
             }
           }
         }

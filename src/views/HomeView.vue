@@ -165,7 +165,7 @@
               </div>
             </div>
           </div>
-          <button class="operate" @click="trade">
+          <button class="operate trade" :class="{'active':tradeActive}" :disabled="!tradeActive" @click="trade">
             Trade
           </button>
         </div>
@@ -457,6 +457,12 @@ export default {
   computed: {
     collapsed() {
       return this.$store.state.collapsed
+    },
+    tradeActive(){
+      if(!this.amount||this.amount<=0){
+        return false
+      }
+      return true
     }
   },
   methods: {
@@ -535,8 +541,6 @@ export default {
       } catch (e) {
         console.log(e)
       }
-
-
     }
   },
   mounted() {
@@ -774,11 +778,17 @@ export default {
       border: none;
       font-family: AvertaStd-Bold, AvertaStd;
 
+
       &:active {
         transform: translate(1px, 1px);
       }
     }
-
+    .trade{
+      background: rgba(99,206,99,0.7);
+      &.active{
+        background: #63CE63;
+      }
+    }
     .flex-box {
       width: 100%;
       display: flex;
@@ -794,7 +804,9 @@ export default {
       background: #FFFFFF;
       box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.1);
       border-radius: 8px;
-
+      .operate{
+        font-family: AvertaStd-Regular, AvertaStd;
+      }
       .sell.operate {
         background: #FFFFFF;
         color: #E32A20;
@@ -818,6 +830,7 @@ export default {
           justify-content: space-between;
 
           .contract {
+            font-family: AvertaStd-Regular, AvertaStd;
             font-size: var(--font-size14);
             font-weight: 400;
             color: #0E1D51;
@@ -871,16 +884,16 @@ export default {
           height: 72px;
           border-radius: 18px;
           overflow: hidden;
-          border: 1px solid #0E1D51;
 
           .input-part {
             width: 100%;
             position: relative;
             height: 50%;
-
+            font-family: AvertaStd-Regular, AvertaStd;
             input {
               height: 100%;
               background: #F2F2F3;
+              border: 1px solid #0E1D51!important;
 
               width: 100%;
               padding: 0 20px;
@@ -895,6 +908,7 @@ export default {
 
             &:nth-child(2) {
               input {
+                border-top: none;
                 border-radius: 0 0 18px 18px;
               }
             }
@@ -927,6 +941,7 @@ export default {
             height: 20px;
             border-radius: 13px;
             border: 1px solid #0E1D51;
+            font-family: AvertaStd-Regular, AvertaStd;
             font-weight: 400;
             color: #0E1D51;
             font-size: var(--font-size12);
