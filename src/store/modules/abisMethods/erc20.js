@@ -35,8 +35,8 @@ const actions = {
             })
         })
     },
-    balanceOf({rootState}, {account}) {
-        judgeToken(rootState)
+    balanceOf({rootState}, {account,address}) {
+        judgeToken(rootState,address)
         return new Promise((resolve, reject) => {
             state.token.methods.balanceOf(account).call().then(res => {
                 resolve(res)

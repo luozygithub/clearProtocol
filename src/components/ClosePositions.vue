@@ -42,7 +42,7 @@
               Margin Amount
             </div>
             <div class="value">
-              45.95
+              {{ positionObj.collateral? positionObj.collateral:0}}
             </div>
           </div>
           <div class="row">
@@ -50,7 +50,7 @@
               PNL
             </div>
             <div class="value">
-              50%
+              {{ positionObj.pnl? positionObj.pnl:0}}
             </div>
           </div>
           <div class="row">
@@ -58,7 +58,15 @@
               Fee
             </div>
             <div class="value">
-              1.5X
+              0
+            </div>
+          </div>
+          <div class="row">
+            <div class="name">
+              Balance
+            </div>
+            <div class="value">
+              {{ dealNum(parseFloat(positionObj.collateral) + parseFloat(positionObj.pnl)) }}
             </div>
           </div>
         </div>
@@ -100,8 +108,13 @@ export default {
       balance:0
     }
   },
-
+  props:["positionObj"],
   methods:{
+    dealNum(val) {
+      if ((val)) {
+        return val ? (parseInt(Number(val) * 100) / 100) : 0
+      }
+    },
     close(){
       if(!this.slipValue||this.slipValue<=0){
         this.$message.info('Please input slip value');

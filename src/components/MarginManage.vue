@@ -30,14 +30,14 @@
           Account Balance
         </div>
         <div class="balance">
-          1599.00
+          {{ dealNum(balance) }} USDC
         </div>
         <div class="title">
           Margin Amount
         </div>
         <div class="input-box">
           <input type="number" v-model="amount" placeholder="0.000">
-          <div class="max-btn">
+          <div class="max-btn" @click="amount=balance">
             MAX
           </div>
         </div>
@@ -50,7 +50,7 @@
               Margin
             </div>
             <div class="value">
-              45.95
+              {{ positionObj.collateral? positionObj.collateral:0}}
             </div>
           </div>
           <div class="row">
@@ -58,7 +58,7 @@
               Margin Ratio
             </div>
             <div class="value">
-              50%
+              {{ dealNum((parseFloat(positionObj.collateral) + parseFloat(positionObj.pnl))/positionObj.collateral)}}%
             </div>
           </div>
           <div class="row">
@@ -66,7 +66,7 @@
               Leverage
             </div>
             <div class="value">
-              1.5X
+              {{ positionObj.leverage }}
             </div>
           </div>
         </div>
@@ -79,6 +79,9 @@
 </template>
 
 <script>
+import addressMap from "@/abi/addressMap";
+import {mapGetters} from "vuex";
+
 export default {
   name: "MarginManage",
   data() {
@@ -88,13 +91,45 @@ export default {
       activeNav: 0
     }
   },
+  props:["positionObj"],
+  computed: {
+    ...mapGetters([
+      'isConnected',
+      'account'
+    ]),
+  },
+  watch:{
+    account(){
+      this.getBalance()
+    }
+  },
   methods: {
+    async getBalance() {
+      if (!this.isConnected) {
+        this.$message.info('Please connect');
+        return
+      }
+      let res = await this.$store.dispatch("erc20/balanceOf", {
+        address: addressMap.usdt,
+        account: this.$store.state.app.account,
+      })
+      this.balance = res / 10**6
+    },
+    dealNum(val) {
+      if ((val)) {
+        return val ? (parseInt(Number(val) * 100) / 100) : 0
+      }
+      return 0
+    },
     confirm() {
       if (!this.amount || this.amount <= 0) {
         this.$message.info('Please input amount');
         return
       }
     },
+  },
+  created() {
+    this.getBalance()
   }
 }
 </script>
