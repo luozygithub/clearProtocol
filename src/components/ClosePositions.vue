@@ -97,6 +97,7 @@ export default {
     return {
       slipValue: undefined,
       amount:undefined,
+      balance:0
     }
   },
 

@@ -34,8 +34,8 @@
         <a-icon class="menu-item-icon" type="pie-chart"/>
         <span class="menu-item-name">Notes</span>
       </a-menu-item>
-
-      <a-menu-item key="3" class="line2" @click="$router.push({path:'/perp'})">
+<!--perp-->
+      <a-menu-item key="3" class="line2" @click="$router.push({path:'/'})">
         <div class="menu-item-box">
           <a-icon class="menu-item-icon" type="inbox"/>
           <div class="menu-item-name">

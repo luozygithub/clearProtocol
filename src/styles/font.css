@@ -1,0 +1,24 @@
+@font-face {
+  font-family: "AvertaStd-Regular";
+  src: url("../assets/font/AvertaStd-Regular.otf");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "AvertaStd-Semibold";
+  src: url("../assets/font/AvertaStd-Semibold.otf");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "AvertaStd-Black";
+  src: url("../assets/font/AvertaStd-Black.otf");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "AvertaStd-Bold";
+  src: url("../assets/font/AvertaStd-Bold.otf");
+  font-weight: normal;
+  font-style: normal;
+}

@@ -5,7 +5,6 @@
       <div class="content" :style="'left:'+(!collapsed? 200 : 66) +'px;'+ 'width:calc(100vw - '+(collapsed?66:200)+'px)'">
         <CloearProtocolHeader></CloearProtocolHeader>
         <router-view/>
-
       </div>
     </div>
   </div>

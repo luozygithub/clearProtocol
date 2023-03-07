@@ -13,6 +13,11 @@
       </div>
     </div>
     <div class="operate-box">
+      <div class="faucet-btn operate" @click="toFaucet">
+        <img v-if="currentTheme" src="../assets/images/fa-bath-white.svg" width="22" height="22" alt />
+        <img v-else src="@/assets/images/fa-bath.svg" width="22" height="22" alt />
+        <span class="pd-l8">Faucet</span>
+      </div>
       <a-dropdown :trigger="['click']">
 
         <button class="operate choose-chain" @click="e => e.preventDefault()">
@@ -22,7 +27,7 @@
         </button>
         <a-menu slot="overlay">
           <a-menu-item key="0" @click="chainId=97,chooseChain()">
-            Binance Smart Chain Mainnet
+            Binance Smart Chain Testnet
           </a-menu-item>
           <a-menu-item key="1" @click="chainId=421613,chooseChain()">
             Arbitrum Goerli
@@ -30,24 +35,36 @@
 
         </a-menu>
       </a-dropdown>
+      <Wallet></Wallet>
 
-      <button class="operate connect">
-        Connect Wallet
-      </button>
     </div>
   </div>
 </template>
 
 <script>
+import { mapState,  } from 'vuex';
+import Wallet from "@/components/Wallet";
 export default {
   name: "CloearProtocolHeader",
+  components:{
+    Wallet
+  },
   data() {
     return {
       chainId: 0,
       curChainName: "Unsupported"
     }
   },
+  computed:{
+    ...mapState({
+      currentTheme: (state) => state.currentTheme,
+
+    }),
+  },
   methods: {
+    toFaucet() {
+      window.open('/faucet', '_blank');
+    },
     toggleCollapsed() {
       this.collapsed = !this.collapsed;
       this.$store.commit("SET_COLLAPSED", this.collapsed)
@@ -124,7 +141,7 @@ export default {
       if (chainId == 421613) {
         this.curChainName = "Arbitrum Goerli"
       } else if (chainId == 97) {
-        this.curChainName = "Binance Smart Chain Mainnet"
+        this.curChainName = "Binance Smart Chain Testnet"
       }else{
         this.curChainName = "Unsupported"
       }
@@ -137,7 +154,7 @@ export default {
       if (parseInt(chainId).toString(10) == 421613) {
         this.curChainName = "Arbitrum Goerli"
       } else if (parseInt(chainId).toString(10) == 97) {
-        this.curChainName = "Binance Smart Chain Mainnet"
+        this.curChainName = "Binance Smart Chain Testnet"
       }
       let _this = this
       setTimeout(async () => {
@@ -146,7 +163,7 @@ export default {
         if (parseInt(chainId).toString(10) == 421613) {
           _this.curChainName = "Arbitrum Goerli"
         } else if (parseInt(chainId).toString(10) == 97) {
-          _this.curChainName = "Binance Smart Chain Mainnet"
+          _this.curChainName = "Binance Smart Chain Testnet"
         }
       },100)
       window.ethereum.on('chainChanged', (netWarkId) => {
@@ -195,12 +212,14 @@ export default {
     }
   }
 }
-
+.operate-box{
+  display: flex;
+}
 .operate {
   cursor: pointer;
-  padding: 0 10px;
+  padding: 0 20px;
   height: 40px;
-
+  font-size: var(--font-size16);
   background: #63CE63;
   border-radius: 19px;
   color: #fff;
@@ -208,21 +227,26 @@ export default {
   line-height: 30px;
   text-align: center;
   margin-right: 20px;
+  justify-content: center;
   font-family: AvertaStd-Bold, AvertaStd;
-
+  display: flex;
+  align-items: center;
   &:active {
     transform: translate(1px, 1px);
   }
 }
 
-.choose-chain {
+.choose-chain,.faucet-btn {
   background: none;
   font-weight: 600;
   color: #0E1D51;
   border: 1px solid #0E1D51;
 }
-
-.connect {
+.faucet-btn{
+  padding: 0 20px;
+  width: auto;
+}
+.connect, {
   background: linear-gradient(135deg, #0E1D51 0%, #093373 0%, #0156A7 32%, #0E1D51 100%);
   border-radius: 20px;
   width: 255px;
