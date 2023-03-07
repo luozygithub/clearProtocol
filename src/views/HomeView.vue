@@ -162,7 +162,7 @@
                 </div>
                 <div class="flex-box">
                   <div class="name">
-                    Total Amount
+                    Pay Amount / Income Amount
                   </div>
                   <div class="value">
                     $65,378.91
@@ -882,6 +882,7 @@ export default {
     }
 
     .left-content-box {
+      width: 370px;
       display: flex;
       flex-direction: column;
       .left-content-container{
