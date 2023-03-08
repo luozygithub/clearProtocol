@@ -85,7 +85,7 @@
                 <span>54635645.8796</span>
                 USDC
                 <div class="info">
-                  Add to earn rewaeds
+                  Add to earn rewards
                 </div>
               </div>
             </div>

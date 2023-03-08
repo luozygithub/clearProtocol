@@ -478,6 +478,7 @@ import addressMap from "@/abi/addressMap";
 import {getPositions, getRecord, getProfit, getFundingFee} from "@/api/vault";
 import {mapGetters} from "vuex";
 import MathCalculator from "../utils/bigNumberUtil"
+import BigNumber from "bignumber.js";
 let getPriceInterval = null
 var calculator = new MathCalculator();
 export default {
@@ -716,12 +717,12 @@ export default {
       let price = await this.$store.dispatch("vault/getPrice", {
         _indexToken: this.coinInfo.contract_address
       })
-      let sizeDelta = parseInt((this.usdcAmount * (1 + parseFloat(this.feeRate))) * 10 ** 6 / this.slideValue)
+      let sizeDelta = BigNumber((this.usdcAmount * (1 + parseFloat(this.feeRate))) * 10 ** 6 / this.slideValue).toFixed(0)
       console.log(sizeDelta)
       this.$store.dispatch("vault/updatePosition", {
         _indexToken: this.coinInfo.contract_address,
         _leverage: this.slideValue,
-        _sizeDelta: parseInt(this.amount * 10 ** 6),
+        _sizeDelta: BigNumber(this.amount * 10 ** 6).toFixed(0),
         _collateralDelta: sizeDelta,
         _indexPrice: price,
         _direction: this.direction,

@@ -81,6 +81,7 @@
 <script>
 import addressMap from "@/abi/addressMap";
 import {mapGetters} from "vuex";
+import BigNumber from "bignumber.js";
 
 export default {
   name: "MarginManage",
@@ -135,8 +136,8 @@ export default {
       this.$store.dispatch("vault/updatePosition", {
         _indexToken: this.positionObj.index_token,
         _leverage: this.positionObj.leverage,
-        _sizeDelta: parseInt(this.amount  * 10 ** 6 / price),
-        _collateralDelta: parseInt(this.amount*10**6),
+        _sizeDelta: BigNumber(this.amount  * 10 ** 6 / price).toFixed(0),
+        _collateralDelta: BigNumber(this.amount*10**6).toFixed(0),
         _indexPrice: price,
         _direction: direction,
         _collateralDeltaInIO: this.activeNav==0?true:false

@@ -102,6 +102,7 @@
 import {mapGetters} from "vuex";
 import MathCalculator from "../utils/bigNumberUtil"
 import {getPositions} from "../api/vault"
+import BigNumber from "bignumber.js";
 var calculator = new MathCalculator();
 
 export default {
@@ -162,15 +163,17 @@ export default {
         _indexToken: this.positionObj.index_token
       })
       console.log(this.positionObj)
-      let direction = true
+      let direction = true, pnl =0
+      let newWorth = calculator.multiply(calculator.divide(price,10**18) , this.positionObj.size)
+      let oldWOrth = calculator.multiply(this.positionObj.average_price,this.positionObj.size)
       if(this.positionObj.direction==1){
         direction = true
+        pnl = calculator.subtract( newWorth,oldWOrth )
       }else{
         direction = false
+        pnl = calculator.subtract( oldWOrth,newWorth )
       }
-      //当前多减去一部分费率
 
-      let pnl = calculator.subtract(calculator.multiply(calculator.divide(price,10**18) , this.positionObj.size) , calculator.multiply(this.positionObj.average_price,this.positionObj.size))
 
       let fee1 = parseInt(this.feeRate * (this.positionObj.size + 10) * price / 10**12)
       let worth = calculator.add(this.positionObj.collateral,pnl)
@@ -181,7 +184,7 @@ export default {
       this.$store.dispatch("vault/updatePosition", {
         _indexToken: this.positionObj.index_token,
         _leverage: this.positionObj.leverage,
-        _sizeDelta: parseInt(this.positionObj.size * 10 ** 6),
+        _sizeDelta: BigNumber(this.positionObj.size * 10 ** 6).toFixed(0),
         _collateralDelta: parseInt(_collateralDelta),
         _indexPrice: price,
         _direction: !direction,
