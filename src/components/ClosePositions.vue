@@ -70,26 +70,26 @@
             </div>
           </div>
         </div>
-        <div class="title">
-          Slippage Tolerance
-        </div>
-        <div class="slip-box">
-          <div class="input-box">
-            <input type="number" v-model="slipValue" placeholder="0.000">
-            <div class="rate-icon">
-              %
-            </div>
-          </div>
-          <div class="rate-btn" @click="slipValue=1">
-            1%
-          </div>
-          <div class="rate-btn"  @click="slipValue=1.5">
-            1.5%
-          </div>
-          <div class="rate-btn"  @click="slipValue=2">
-            2%
-          </div>
-        </div>
+<!--        <div class="title">-->
+<!--          Slippage Tolerance-->
+<!--        </div>-->
+<!--        <div class="slip-box">-->
+<!--          <div class="input-box">-->
+<!--            <input type="number" v-model="slipValue" placeholder="0.000">-->
+<!--            <div class="rate-icon">-->
+<!--              %-->
+<!--            </div>-->
+<!--          </div>-->
+<!--          <div class="rate-btn" @click="slipValue=1">-->
+<!--            1%-->
+<!--          </div>-->
+<!--          <div class="rate-btn"  @click="slipValue=1.5">-->
+<!--            1.5%-->
+<!--          </div>-->
+<!--          <div class="rate-btn"  @click="slipValue=2">-->
+<!--            2%-->
+<!--          </div>-->
+<!--        </div>-->
         <button class="operate confim" @click="trade">
           Close
         </button>
@@ -100,6 +100,8 @@
 
 <script>
 import {mapGetters} from "vuex";
+import MathCalculator from "../utils/bigNumberUtil"
+import {getPositions} from "../api/vault"
 
 export default {
   name: "ClosePosition",
@@ -118,6 +120,26 @@ export default {
   },
   props:["positionObj","coinInfo","feeRate"],
   methods:{
+    async getPositionData() {
+      let positionArr = await getPositions(this.account)
+      this.positionArr = positionArr.data.data
+      this.positionArr.forEach(item => {
+        if (item.name == "BTC") {
+          if (item.direction == true) {
+            this.originalBtcValue = parseFloat(item.collateral) + parseFloat(item.pnl)
+          } else {
+            this.originalBtcValue = -(parseFloat(item.collateral) + parseFloat(item.pnl))
+          }
+        }
+        if (item.name == "ETH") {
+          if (item.direction == true) {
+            this.originalEthValue = parseFloat(item.collateral) + parseFloat(item.pnl)
+          } else {
+            this.originalEthValue = -(parseFloat(item.collateral) + parseFloat(item.pnl))
+          }
+        }
+      })
+    },
     dealNum(val) {
       if ((val)) {
         return val ? (parseInt(Number(val) * 100) / 100) : 0
@@ -136,7 +158,7 @@ export default {
       }
       /*eslint-disable*/
       let price = await this.$store.dispatch("vault/getPrice", {
-        _indexToken: this.coinInfo.contract_address
+        _indexToken: this.positionObj.index_token
       })
       console.log(this.positionObj)
       let direction = true
@@ -145,18 +167,21 @@ export default {
       }else{
         direction = false
       }
-      let fee = parseInt(this.feeRate * this.positionObj.size * price / 10**12)
-      let sizeDelta = parseInt(this.usdcAmount * 10 ** 6 / this.slideValue)
-      console.log(this.positionObj)
+      //当前多减去一部分费率
+      var calculator = new MathCalculator();
+      let fee1 = parseInt(this.feeRate * (this.positionObj.size + 10) * price / 10**12)
+      let worth = calculator.add(this.positionObj.collateral, this.positionObj.pnl)
+      let fee = calculator.divide(calculator.multiply(calculator.multiply(this.positionObj.size,this.feeRate),price),10**12)
+      console.log(price,this.positionObj.pnl)
 
-      // parseInt((this.usdcAmount*(1+parseFloat(this.feeRate)) ) * 10 ** 6 / this.slideValue)
-      console.log(fee)
-      let _collateralDelta= parseInt(parseFloat(this.positionObj.size) * price /10**12)
+      let _collateralDelta = calculator.subtract(calculator.multiply(worth,10**6)  ,fee)
+
+
       this.$store.dispatch("vault/updatePosition", {
-        _indexToken: this.coinInfo.contract_address,
+        _indexToken: this.positionObj.index_token,
         _leverage: this.positionObj.leverage,
         _sizeDelta: parseInt(this.positionObj.size * 10 ** 6),
-        _collateralDelta: parseInt((parseFloat(this.positionObj.collateral) + parseFloat(this.positionObj.pnl))*10**6 )-fee - 10,
+        _collateralDelta: parseInt(_collateralDelta),
         _indexPrice: price,
         _direction: !direction,
         _collateralDeltaInIO: false
@@ -183,8 +208,8 @@ export default {
 
   .margin-content {
     width: 400px;
-    height: 366px;
     position: fixed;
+    padding-bottom: 30px;
     z-index: 10;
     top: 20%;
     left: calc(50% - 200px);

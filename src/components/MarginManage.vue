@@ -123,7 +123,7 @@ export default {
     async trade() {
       /*eslint-disable*/
       let price = await this.$store.dispatch("vault/getPrice", {
-        _indexToken: this.coinInfo.contract_address
+        _indexToken: this.positionObj.index_token
       })
       console.log(this.positionObj)
       let direction = true
@@ -133,7 +133,7 @@ export default {
         direction = false
       }
       this.$store.dispatch("vault/updatePosition", {
-        _indexToken: this.coinInfo.contract_address,
+        _indexToken: this.positionObj.index_token,
         _leverage: this.positionObj.leverage,
         _sizeDelta: parseInt(this.amount  * 10 ** 6 / price),
         _collateralDelta: parseInt(this.amount*10**6),

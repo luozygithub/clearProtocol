@@ -60,7 +60,7 @@
               </template>
               <a class="ant-dropdown-link " @click.prevent>
                 <div class="coin-box">
-                  <svg t="1677824350805" class="icon" viewBox="0 0 1029 1024" version="1.1"
+                  <svg v-show="activeTokenName=='BTC'" t="1677824350805" class="icon" viewBox="0 0 1029 1024" version="1.1"
                        xmlns="http://www.w3.org/2000/svg" p-id="2818" width="20" height="20">
                     <path
                         d="M1024.727025 511.98976c0 282.771945-229.217816 511.98976-511.98976 511.98976-282.766825 0-511.98976-229.217816-511.98976-511.98976 0-282.766825 229.222936-511.98976 511.98976-511.98976 282.771945 0 511.98976 229.222936 511.98976 511.98976"
@@ -68,6 +68,17 @@
                     <path
                         d="M637.048379 661.623888a55.842723 55.842723 0 0 1-27.145697 33.417571 55.858083 55.858083 0 0 1-42.827943 4.444071l-144.181437-42.940581 32.122238-107.840403 144.171196 42.945701h0.00512c29.726125 8.852303 46.713946 40.242395 37.856523 69.973641m48.628787-221.00038a55.929761 55.929761 0 0 1 4.438952 42.833063c-8.857423 29.721006-40.262875 46.698586-69.973641 37.861643h-0.00512l-144.176316-42.940582 32.111998-107.840403 144.181436 42.940581a55.888802 55.888802 0 0 1 33.422691 27.145698m64.54143-34.917702c-16.48095-30.458271-43.836563-52.678626-77.01862-62.560029l-19.076738-5.677966 26.705385-89.669887-68.519589-20.407912-26.705386 89.669887-58.49995-17.423012 26.710506-89.669886-16.414392-4.889503-66.49723-19.803763-25.742845 86.434111-81.037739-24.135197-22.870583 76.798464 81.037739 24.140317-83.254655 279.536169-81.037739-24.135197-22.870583 76.803584 81.03262 24.130077-21.723726 72.953421 16.409272 4.889502 66.49723 19.803764 22.691386-76.189196 58.638188 17.463971-22.691387 76.194316 68.243116 20.325993 22.691386-76.194316 19.209856 5.718926a130.255315 130.255315 0 0 0 37.185816 5.452691c21.247575 0 42.295474-5.278614 61.51045-15.677127 30.458271-16.48095 52.673507-43.831443 62.560028-77.023739 10.393392-34.912582 5.263255-70.777464-11.268894-100.298794 30.01284-15.661767 53.927881-42.935461 64.331513-77.863403 9.886522-33.192296 6.251395-68.243115-10.224435-98.696266"
                         fill="#FFFFFF" p-id="2820"></path>
+                  </svg>
+                  <svg v-show="activeTokenName=='ETH'" t="1677824451359" class="icon" viewBox="0 0 1024 1024" version="1.1"
+                       xmlns="http://www.w3.org/2000/svg" p-id="3915" width="20" height="20">
+                    <path
+                        d="M512.099961 0.399844c282.689574 0 511.800078 229.110504 511.800078 511.800078s-229.110504 511.800078-511.800078 511.800078S0.299883 794.889496 0.299883 512.199922 229.510348 0.399844 512.099961 0.399844z"
+                        fill="#3E5BF2" p-id="3916"></path>
+                    <path
+                        d="M512.199922 147.242483v510.000781l224.112456-134.34752zM512.199922 877.15736l224.112456-321.774307-224.112456 135.547052zM512.199922 147.242483v510.000781L287.987505 522.895744z"
+                        fill="#FFFFFF" p-id="3917"></path>
+                    <path d="M512.199922 690.930105v186.227255L287.987505 555.383053z" fill="#FFFFFF"
+                          p-id="3918"></path>
                   </svg>
                   {{ curSymbol }}
 
@@ -95,7 +106,7 @@
               <div class="input-box">
                 <div class="input-part">
                   <input type="number" v-model="amount" @input="updateUSDCAmount" placeholder="0.0000">
-                  <span>BTC</span>
+                  <span>{{ activeTokenName }}</span>
                 </div>
                 <div class="input-part">
                   <input type="number" v-model="usdcAmount" @input="updateAmount" placeholder="0.0000">
@@ -309,10 +320,10 @@
                 {{ dealNum(item.pnl) }}
               </div>
               <div class="col operate-box">
-                <button class="operate" @click="isShowMarginManage=true,clickPosition = item">
+                <button class="operate" @click="isShowMarginManage=true,clickPosition = item,getPositionData">
                   Margin Manage
                 </button>
-                <button class="operate" @click="isShowClosePosition=true ,clickPosition = item">
+                <button class="operate" @click="isShowClosePosition=true ,clickPosition = item,getPositionData">
                   Close
                 </button>
               </div>
@@ -466,8 +477,9 @@ import {getTokenInfo,} from "@/api/coinApi";
 import addressMap from "@/abi/addressMap";
 import {getPositions, getRecord, getProfit, getFundingFee} from "@/api/vault";
 import {mapGetters} from "vuex";
-
+import MathCalculator from "../utils/bigNumberUtil"
 let getPriceInterval = null
+var calculator = new MathCalculator();
 export default {
   name: 'HomeView',
   components: {
@@ -588,13 +600,17 @@ export default {
   },
   methods: {
     marginRatio(item) {
+      if(!this.configeInfo.tokens){
+        return
+      }
       let price = 0
       this.configeInfo.tokens.forEach(coin=>{
         if(coin.name==item.name){
           price = coin.index_price
         }
       })
-      return this.dealNum(item.collateral / (price*item.size / item.leverage) * 100)
+      let worth = calculator.add(item.collateral,item.pnl)
+      return this.dealNum(worth / (price*item.size / item.leverage) * 100)
 
     },
     async getProfitData() {
@@ -734,7 +750,7 @@ export default {
         this.curTVSymbol = curTVSymbol
         this.curSymbol = curSymbol
         this.activeTokenName = coinName
-
+        this.getData()
         this.createWidget()
       }
     },
@@ -784,9 +800,8 @@ export default {
         // let priceRes = await getTokenPrices()
         // let priceArr = priceRes.data.data
         // console.log(priceArr)
-
+        this.getPositionData()
         let tokenInfoRes = await getTokenInfo()
-        // let price = await getTokenPrices()
         // console.log(price.data.data)
         let tokenInfo = tokenInfoRes.data.data
         this.feeRate = Number(tokenInfo.transaction_fee_rate)
@@ -810,7 +825,7 @@ export default {
     this.initData()
     getPriceInterval = setInterval(() => {
       this.getData()
-    }, 10000)
+    }, 3000)
   },
   beforeDestroy() {
     clearInterval(getPriceInterval)
