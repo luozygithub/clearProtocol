@@ -94,14 +94,14 @@
               <div class="box-title">Amount</div>
               <div class="input-box">
                 <div class="input-part">
-                  <input type="number" v-model="amount" @change="updateUSDCAmount" placeholder="0.0000">
+                  <input type="number" v-model="amount" @input="updateUSDCAmount" placeholder="0.0000">
                   <span>BTC</span>
                 </div>
                 <div class="input-part">
-                  <input type="number" v-model="usdcAmount" @change="updateAmount" placeholder="0.0000">
+                  <input type="number" v-model="usdcAmount" @input="updateAmount" placeholder="0.0000">
                   <span>USDC</span>
                   <div class="tip-box" v-show="usdcAmount<10">
-                    注入资金大于10U
+                    Amount is not less than 10U.
                   </div>
                 </div>
               </div>
@@ -113,7 +113,7 @@
               <div class="progress-box" style="position: relative">
                 <a-slider :min="2" :max="50" style="position: relative;width: 100%" :tipFormatter="formatTip"
                           tooltipPlacement="bottom" v-model="slideValue"/>
-                <div class="reset" @click="slideValue=0">
+                <div class="reset" @click="slideValue=2">
                   Reset
                 </div>
                 <div class="multi">
@@ -274,10 +274,10 @@
             <div class="row" :class="{'blink':direction && activeTokenName==item.name}"
                  v-for="(item,index) in positionArr" :key="index">
               <div class="col">
-                BTC/USDC
+                {{ item.name }}/USDC
               </div>
               <div class="col ">
-                <div class="side">
+                <div class="side" :class="{'down':item.direction!=1 }">
                   {{ item.direction == 1 ? "Long" : "Short" }}
                 </div>
               </div>
@@ -297,12 +297,12 @@
                 <span v-if="item.name=='BTC'">
                      {{
                     dealNum(Math.abs(originalBtcValue))
-                  }} /{{ dealNum(Math.abs(originalBtcValue) / item.collateral) }}%
+                  }} /{{ marginRatio(item) }}%
                 </span>
                 <span v-if="item.name=='ETH'">
                      {{
-                    dealNum(Math.abs(originalBtcValue))
-                  }} /{{ dealNum(Math.abs(originalBtcValue) / item.collateral) }}%
+                    dealNum(Math.abs(originalEthValue))
+                  }} /{{ marginRatio(item)}}%
                 </span>
               </div>
               <div class="col">
@@ -342,13 +342,13 @@
                 Time
               </div>
             </div>
-            <div class="row">
+            <div class="row" v-for="(item,index) in profitArr" :key="index">
               <div class="col">
-                BTC/USDC
+                {{ item.name }}/USDC
               </div>
               <div class="col ">
-                <div class="side">
-                  Put
+                <div class="side" :class="{'down':item.direction!=1 }">
+                  {{ item.direction == 1 ? "Long" : "Short" }}
                 </div>
               </div>
               <div class="col">
@@ -400,8 +400,8 @@
                 {{ item.name }}/USDC
               </div>
               <div class="col">
-                <div class="side">
-                  Long
+                <div class="side" :class="{'down':item.direction!=1 }">
+                  {{ item.direction == 1 ? "Long" : "Short" }}
                 </div>
               </div>
               <div class="col">
@@ -433,12 +433,12 @@
                 Time
               </div>
             </div>
-            <div class="row">
+            <div class="row" v-for="(item,index) in fundingFeeArr" :key="index">
               <div class="col">
-                BTC/USDC
+                {{ item.name }}/USDC
               </div>
               <div class="col">
-                2.5495%
+                {{ dealNum(item.funding_fee) }}%
               </div>
               <div class="col">
                 0.0005
@@ -453,7 +453,7 @@
     </div>
     <MarginManage v-show="isShowMarginManage" :coin-info="coinInfo" :positionObj="clickPosition"
                   @closeMarginManage="isShowMarginManage = false"/>
-    <ClosePositions v-show="isShowClosePosition" :coin-info="coinInfo" :positionObj="clickPosition"
+    <ClosePositions :feeRate="feeRate" v-show="isShowClosePosition" :coin-info="coinInfo" :positionObj="clickPosition"
                     @closeClosePosition="isShowClosePosition = false"/>
   </div>
 </template>
@@ -464,7 +464,7 @@ import MarginManage from "@/components/MarginManage";
 import ClosePositions from "@/components/ClosePositions";
 import {getTokenInfo,} from "@/api/coinApi";
 import addressMap from "@/abi/addressMap";
-import {getPositions, getRecord, getProfit} from "@/api/vault";
+import {getPositions, getRecord, getProfit, getFundingFee} from "@/api/vault";
 import {mapGetters} from "vuex";
 
 let getPriceInterval = null
@@ -497,6 +497,7 @@ export default {
       coinInfo: {},
       positionArr: [],
       recordArr: [],
+      fundingFeeArr: [],
       profitArr: [],
       originalBtcValue: 0,//原有仓位价值
       originalEthValue: 0,//原有仓位价值
@@ -511,6 +512,7 @@ export default {
     }
   },
   computed: {
+
     payValue() {//需要支付或者获得 u
       if (this.usdcAmount > 0 && this.amount > 0) {
         if (this.operateNav == 0) {
@@ -585,6 +587,16 @@ export default {
     ]),
   },
   methods: {
+    marginRatio(item) {
+      let price = 0
+      this.configeInfo.tokens.forEach(coin=>{
+        if(coin.name==item.name){
+          price = coin.index_price
+        }
+      })
+      return this.dealNum(item.collateral / (price*item.size / item.leverage) * 100)
+
+    },
     async getProfitData() {
       let res = await getProfit(this.account)
       this.profitArr = res.data.data
@@ -593,10 +605,14 @@ export default {
       let res = await getRecord(this.account)
       this.recordArr = res.data.data
     },
+    async getFundingFeeData() {
+      let res = await getFundingFee(this.account)
+      this.fundingFeeArr = res.data.data
+      console.log(this.fundingFeeArr)
+    },
     async getPositionData() {
       let positionArr = await getPositions(this.account)
       this.positionArr = positionArr.data.data
-      console.log(this.positionArr)
       this.positionArr.forEach(item => {
         if (item.name == "BTC") {
           if (item.direction == true) {
@@ -684,7 +700,8 @@ export default {
       let price = await this.$store.dispatch("vault/getPrice", {
         _indexToken: this.coinInfo.contract_address
       })
-      let sizeDelta = parseInt(this.usdcAmount * 10 ** 6 / this.slideValue)
+      let sizeDelta = parseInt((this.usdcAmount * (1 + parseFloat(this.feeRate))) * 10 ** 6 / this.slideValue)
+      console.log(sizeDelta)
       this.$store.dispatch("vault/updatePosition", {
         _indexToken: this.coinInfo.contract_address,
         _leverage: this.slideValue,
@@ -756,8 +773,9 @@ export default {
     initData() {
       this.getPositionData()
       this.getRecordData()
+      this.getFundingFeeData()
       this.getProfitData()
-      if(this.isConnected){
+      if (this.isConnected) {
         this.allowance()
       }
     },

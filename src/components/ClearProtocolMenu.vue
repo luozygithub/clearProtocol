@@ -16,7 +16,7 @@
   >
     <div class="logo-box">
       <img class="logo" src="../assets/logo.svg" alt="" v-show="!collapsed">
-      <img class="logo-s" src="../assets/logo_s.png" alt="" v-show="collapsed">
+      <img class="logo-s" src="../assets/logo_s.svg" alt="" v-show="collapsed">
     </div>
     <a-menu
         :default-selected-keys="['1']"
@@ -151,7 +151,7 @@ export default {
     }
 
     .logo-s {
-      width: 50px;
+      width: 30px;
     }
   }
 

@@ -116,7 +116,7 @@ export default {
       'account'
     ]),
   },
-  props:["positionObj","coinInfo"],
+  props:["positionObj","coinInfo","feeRate"],
   methods:{
     dealNum(val) {
       if ((val)) {
@@ -145,14 +145,20 @@ export default {
       }else{
         direction = false
       }
+      let fee = parseInt(this.feeRate * this.positionObj.size * price / 10**12)
       let sizeDelta = parseInt(this.usdcAmount * 10 ** 6 / this.slideValue)
+      console.log(this.positionObj)
+
+      // parseInt((this.usdcAmount*(1+parseFloat(this.feeRate)) ) * 10 ** 6 / this.slideValue)
+      console.log(fee)
+      let _collateralDelta= parseInt(parseFloat(this.positionObj.size) * price /10**12)
       this.$store.dispatch("vault/updatePosition", {
         _indexToken: this.coinInfo.contract_address,
         _leverage: this.positionObj.leverage,
         _sizeDelta: parseInt(this.positionObj.size * 10 ** 6),
-        _collateralDelta: parseInt(this.positionObj.collateral*10**6),
+        _collateralDelta: parseInt((parseFloat(this.positionObj.collateral) + parseFloat(this.positionObj.pnl))*10**6 )-fee - 10,
         _indexPrice: price,
-        _direction: direction,
+        _direction: !direction,
         _collateralDeltaInIO: false
       }).then(()=> {
         this.$message.info('Close success');

@@ -16,3 +16,6 @@ export const getProfit = (address) => {
 export const getRecord = (address) => {
     return instance.get(`/api/user/record?chain=1&address=${address}`);
 };
+export const getFundingFee = (address) => {
+    return instance.get(`/api/user/funding-fee?chain=1&address=${address}`);
+};

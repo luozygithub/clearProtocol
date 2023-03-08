@@ -455,6 +455,7 @@ const actions = {
                     resolve(res)
                 })
             }).catch(err => {
+                console.log(err)
                 reject(JSON.parse(err.message.substr(24, err.message.length)).message)
             })
         })
@@ -519,6 +520,7 @@ const actions = {
             state.token.methods.getPrice(_indexToken).call().then(res => {
                 resolve(res)
             }).catch(err => {
+                console.log(err)
                 reject(JSON.parse(err.message.substr(24, err.message.length)).message)
             })
         })
