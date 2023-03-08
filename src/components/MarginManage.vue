@@ -106,7 +106,6 @@ export default {
   methods: {
     async getBalance() {
       if (!this.isConnected) {
-        this.$message.info('Please connect');
         return
       }
       let res = await this.$store.dispatch("erc20/balanceOf", {

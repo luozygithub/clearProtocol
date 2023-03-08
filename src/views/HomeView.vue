@@ -641,7 +641,6 @@ export default {
     },
     async allowance() {
       if (!this.isConnected) {
-        this.$message.info('Please connect');
         return
       }
       let res = await this.$store.dispatch("erc20/allowance", {
@@ -758,7 +757,9 @@ export default {
       this.getPositionData()
       this.getRecordData()
       this.getProfitData()
-      this.allowance()
+      if(this.isConnected){
+        this.allowance()
+      }
     },
     async getData() {
       try {
