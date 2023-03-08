@@ -843,15 +843,16 @@ export default {
   @keyframes blink {
     0% {
       background-color: #fff;
-      transform: scale(0.99);
+      transform: scale(1);
     }
     50% {
       background-color: #ccc;
-      transform: scale(1);
+      transform: scale(0.99);
+      box-shadow:  0 0 3px inset;
     }
     100% {
       background-color: #fff;
-      transform: scale(0.99);
+      transform: scale(1);
     }
   }
 
