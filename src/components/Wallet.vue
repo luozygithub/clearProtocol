@@ -78,6 +78,10 @@ export default {
     if (chain && chain.length > 0) {
       this.curChain = chain
     }
+
+  },
+  mounted(){
+    this.connectWallet(1)
   },
   methods: {
     async switchNetwork(value) {

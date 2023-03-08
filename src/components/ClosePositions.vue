@@ -102,6 +102,7 @@
 import {mapGetters} from "vuex";
 import MathCalculator from "../utils/bigNumberUtil"
 import {getPositions} from "../api/vault"
+var calculator = new MathCalculator();
 
 export default {
   name: "ClosePosition",
@@ -168,14 +169,14 @@ export default {
         direction = false
       }
       //当前多减去一部分费率
-      var calculator = new MathCalculator();
+
+      let pnl = calculator.subtract(calculator.multiply(calculator.divide(price,10**18) , this.positionObj.size) , calculator.multiply(this.positionObj.average_price,this.positionObj.size))
+
       let fee1 = parseInt(this.feeRate * (this.positionObj.size + 10) * price / 10**12)
-      let worth = calculator.add(this.positionObj.collateral, this.positionObj.pnl)
+      let worth = calculator.add(this.positionObj.collateral,pnl)
       let fee = calculator.divide(calculator.multiply(calculator.multiply(this.positionObj.size,this.feeRate),price),10**12)
-      console.log(price,this.positionObj.pnl)
-
+      console.log(this.positionObj.pnl, pnl,fee)
       let _collateralDelta = calculator.subtract(calculator.multiply(worth,10**6)  ,fee)
-
 
       this.$store.dispatch("vault/updatePosition", {
         _indexToken: this.positionObj.index_token,

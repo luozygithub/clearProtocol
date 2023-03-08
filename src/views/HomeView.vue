@@ -363,19 +363,19 @@
                 </div>
               </div>
               <div class="col">
-                2.5495
+                {{dealNum(item.size_delta)}}
               </div>
               <div class="col">
-                65378.91
+                {{dealNum(item.index_price)}}
               </div>
               <div class="col">
-                36.14
+                {{dealNum(item.index_price)}}
               </div>
               <div class="col">
-                100.00
+                {{dealNum(item.pel)}}
               </div>
               <div class="col">
-                2021-11-20 00:00:00
+                {{item.updated_at}}
               </div>
             </div>
           </div>
