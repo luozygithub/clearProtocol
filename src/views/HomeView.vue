@@ -180,7 +180,7 @@
                     Pay Amount / Income Amount
                   </div>
                   <div class="value">
-                    ${{payValue}}
+                    ${{ payValue }}
                   </div>
                 </div>
               </div>
@@ -271,7 +271,8 @@
                 Actions
               </div>
             </div>
-            <div class="row" :class="{'blink':direction && activeTokenName==item.name}" v-for="(item,index) in positionArr" :key="index">
+            <div class="row" :class="{'blink':direction && activeTokenName==item.name}"
+                 v-for="(item,index) in positionArr" :key="index">
               <div class="col">
                 BTC/USDC
               </div>
@@ -294,10 +295,14 @@
               </div>
               <div class="col">
                 <span v-if="item.name=='BTC'">
-                     {{ dealNum(Math.abs(originalBtcValue)) }} /{{ dealNum(Math.abs(originalBtcValue) / item.collateral)}}%
+                     {{
+                    dealNum(Math.abs(originalBtcValue))
+                  }} /{{ dealNum(Math.abs(originalBtcValue) / item.collateral) }}%
                 </span>
                 <span v-if="item.name=='ETH'">
-                     {{ dealNum(Math.abs(originalBtcValue)) }} /{{ dealNum(Math.abs(originalBtcValue) / item.collateral)}}%
+                     {{
+                    dealNum(Math.abs(originalBtcValue))
+                  }} /{{ dealNum(Math.abs(originalBtcValue) / item.collateral) }}%
                 </span>
               </div>
               <div class="col">
@@ -446,8 +451,10 @@
         </div>
       </div>
     </div>
-    <MarginManage v-show="isShowMarginManage" :coin-info="coinInfo" :positionObj="clickPosition" @closeMarginManage="isShowMarginManage = false"/>
-    <ClosePositions v-show="isShowClosePosition" :coin-info="coinInfo" :positionObj="clickPosition" @closeClosePosition="isShowClosePosition = false"/>
+    <MarginManage v-show="isShowMarginManage" :coin-info="coinInfo" :positionObj="clickPosition"
+                  @closeMarginManage="isShowMarginManage = false"/>
+    <ClosePositions v-show="isShowClosePosition" :coin-info="coinInfo" :positionObj="clickPosition"
+                    @closeClosePosition="isShowClosePosition = false"/>
   </div>
 </template>
 
@@ -469,8 +476,8 @@ export default {
   },
   data() {
     return {
-      usdcAllowance:0,
-      clickPosition:{},
+      usdcAllowance: 0,
+      clickPosition: {},
       amount: undefined,
       tokenInfo: {},
       configeInfo: {},
@@ -491,8 +498,8 @@ export default {
       positionArr: [],
       recordArr: [],
       profitArr: [],
-      originalBtcValue:0,//原有仓位价值
-      originalEthValue:0,//原有仓位价值
+      originalBtcValue: 0,//原有仓位价值
+      originalEthValue: 0,//原有仓位价值
       usdcAmount: undefined
       //  BINANCE:ETHUSDT
     }
@@ -504,50 +511,50 @@ export default {
     }
   },
   computed: {
-    payValue(){//需要支付或者获得 u
-      if(this.usdcAmount>0&& this.amount>0){
+    payValue() {//需要支付或者获得 u
+      if (this.usdcAmount > 0 && this.amount > 0) {
         if (this.operateNav == 0) {
-          if(this.originalBtcValue>=0){//加仓
+          if (this.originalBtcValue >= 0) {//加仓
             return this.curValue
-          }else{//减仓
+          } else {//减仓
             return this.curValue
           }
         } else {
-          if(this.originalBtcValue>=0){//加仓
+          if (this.originalBtcValue >= 0) {//加仓
             return this.curValue
-          }else{//减仓
+          } else {//减仓
             return this.curValue
           }
         }
       }
       return 0
     },
-    curValue(){ //当前下单价值
-      if(this.usdcAmount>0&& this.amount>0){
+    curValue() { //当前下单价值
+      if (this.usdcAmount > 0 && this.amount > 0) {
         return this.usdcAmount / this.slideValue
       }
       return 0
     },
-    totalAmount(){ // 总价值
-      if(this.usdcAmount>0&& this.amount>0){
+    totalAmount() { // 总价值
+      if (this.usdcAmount > 0 && this.amount > 0) {
         if (this.operateNav == 0) {
           return this.usdcAmount / this.slideValue + this.originalBtcValue
-        }else{
-          return this.usdcAmount / this.slideValue+ this.originalEthValue
+        } else {
+          return this.usdcAmount / this.slideValue + this.originalEthValue
         }
       }
       return 0
     },
     liquidationPrice() { //清仓价格
-      if(this.usdcAmount>0&& this.amount>0){
+      if (this.usdcAmount > 0 && this.amount > 0) {
         if (this.operateNav == 0) {
           let data1 = this.usdcAmount / this.slideValue - this.amount * this.coinInfo.index_price
-          let data2 =  this.amount * 0.6 / this.slideValue - this.amount
-          return data1/data2
-        }else{
-          let data1 = this.usdcAmount / this.slideValue  + this.amount * this.coinInfo.index_price
-          let data2 =  this.amount * 0.6 / this.slideValue + this.amount
-          return data1/data2
+          let data2 = this.amount * 0.6 / this.slideValue - this.amount
+          return data1 / data2
+        } else {
+          let data1 = this.usdcAmount / this.slideValue + this.amount * this.coinInfo.index_price
+          let data2 = this.amount * 0.6 / this.slideValue + this.amount
+          return data1 / data2
         }
       }
 
@@ -590,24 +597,24 @@ export default {
       let positionArr = await getPositions(this.account)
       this.positionArr = positionArr.data.data
       console.log(this.positionArr)
-      this.positionArr.forEach(item=>{
-        if(item.name == "BTC"){
-          if(item.direction==true){
-            this.originalBtcValue =  parseFloat(item.collateral) + parseFloat(item.pnl)
-          }else{
-            this.originalBtcValue =  - (parseFloat(item.collateral) + parseFloat(item.pnl))
+      this.positionArr.forEach(item => {
+        if (item.name == "BTC") {
+          if (item.direction == true) {
+            this.originalBtcValue = parseFloat(item.collateral) + parseFloat(item.pnl)
+          } else {
+            this.originalBtcValue = -(parseFloat(item.collateral) + parseFloat(item.pnl))
           }
         }
-        if(item.name == "ETH"){
-          if(item.direction==true){
-            this.originalEthValue =  parseFloat(item.collateral) + parseFloat(item.pnl)
-          }else{
-            this.originalEthValue =  - (parseFloat(item.collateral) + parseFloat(item.pnl))
+        if (item.name == "ETH") {
+          if (item.direction == true) {
+            this.originalEthValue = parseFloat(item.collateral) + parseFloat(item.pnl)
+          } else {
+            this.originalEthValue = -(parseFloat(item.collateral) + parseFloat(item.pnl))
           }
         }
       })
     },
-    dealD6Num(val){
+    dealD6Num(val) {
       if ((val)) {
         return val ? (parseInt(Number(val) * 1000000) / 1000000) : 0
       }
@@ -642,8 +649,8 @@ export default {
         spender: addressMap.vault,
         owner: this.account
       })
-      if(res>0){
-        this.usdcAllowance = parseInt(res)/10**6
+      if (res > 0) {
+        this.usdcAllowance = parseInt(res) / 10 ** 6
       }
     },
     approve() {
@@ -670,7 +677,7 @@ export default {
         this.$message.info('Please input slideValue');
         return
       }
-      if (this.usdcAmount < 10 ) {
+      if (this.usdcAmount < 10) {
         this.$message.info('Amount less than 10u');
         return
       }
@@ -687,10 +694,12 @@ export default {
         _indexPrice: price,
         _direction: this.direction,
         _collateralDeltaInIO: true
-      }).then(()=> {
+      }).then(() => {
         this.initData()
-        this.$message.info('Close success');
-      }).catch((e)=>{
+        this.$message.info('Trade success');
+        this.amount = undefined
+        this.usdcAmount = undefined
+      }).catch((e) => {
         this.$message.info(e);
       })
     },
@@ -1139,7 +1148,8 @@ export default {
             position: relative;
             height: 50%;
             font-family: AvertaStd-Regular, AvertaStd;
-            .tip-box{
+
+            .tip-box {
               padding: 0 6px;
               left: 80px;
               top: 6px;
@@ -1149,11 +1159,12 @@ export default {
               align-items: center;
               font-family: PingFangSC-Regular, PingFang SC;
               font-weight: 400;
-              color: rgba(14,29,81,0.5);
+              color: rgba(14, 29, 81, 0.5);
               height: 24px;
-              background: rgba(14,29,81,0.1);
+              background: rgba(14, 29, 81, 0.1);
               border-radius: 5px
             }
+
             input {
               height: 100%;
               background: #F2F2F3;

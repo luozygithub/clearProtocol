@@ -143,6 +143,7 @@ export default {
         _collateralDeltaInIO: this.activeNav==0?true:false
       }).then(()=> {
         this.$message.info(this.activeNav==0? 'Add':'Remove'+ ' success');
+        this.amount = 0
       }).catch((e)=>{
         this.$message.info(e);
       })
