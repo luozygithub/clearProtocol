@@ -281,7 +281,7 @@
                 </div>
               </div>
               <div class="col">
-                {{ dealNum(item.size) }}
+                {{ dealD6Num(item.size) }}
               </div>
               <div class="col">
                 {{ item.leverage }}X
@@ -400,7 +400,7 @@
                 </div>
               </div>
               <div class="col">
-                {{ dealNum(item.size_delta) }}
+                {{ dealD6Num(item.size_delta) }}
               </div>
               <div class="col">
                 {{ dealNum(item.index_price) }}X
@@ -606,6 +606,12 @@ export default {
           }
         }
       })
+    },
+    dealD6Num(val){
+      if ((val)) {
+        return val ? (parseInt(Number(val) * 1000000) / 1000000) : 0
+      }
+      return 0
     },
     dealNum(val) {
       if ((val)) {

@@ -91,7 +91,7 @@ export default {
       activeNav: 0
     }
   },
-  props:["positionObj"],
+  props:["positionObj","coinInfo"],
   computed: {
     ...mapGetters([
       'isConnected',
@@ -121,11 +121,42 @@ export default {
       }
       return 0
     },
+    async trade() {
+      /*eslint-disable*/
+      let price = await this.$store.dispatch("vault/getPrice", {
+        _indexToken: this.coinInfo.contract_address
+      })
+      console.log(this.positionObj)
+      let direction = true
+      if(this.positionObj.direction==1){
+        direction = true
+      }else{
+        direction = false
+      }
+      this.$store.dispatch("vault/updatePosition", {
+        _indexToken: this.coinInfo.contract_address,
+        _leverage: this.positionObj.leverage,
+        _sizeDelta: parseInt(this.amount  * 10 ** 6 / price),
+        _collateralDelta: parseInt(this.amount*10**6),
+        _indexPrice: price,
+        _direction: direction,
+        _collateralDeltaInIO: this.activeNav==0?true:false
+      }).then(()=> {
+        this.$message.info(this.activeNav==0? 'Add':'Remove'+ ' success');
+      }).catch((e)=>{
+        this.$message.info(e);
+      })
+    },
     confirm() {
+      if (!this.isConnected) {
+        this.$message.info('Please connect');
+        return
+      }
       if (!this.amount || this.amount <= 0) {
         this.$message.info('Please input amount');
         return
       }
+      this.trade()
     },
   },
   created() {
@@ -230,6 +261,7 @@ export default {
 
       .max-btn {
         position: absolute;
+        user-select: none;
         width: 44px;
         right: 10px;
         top: 6px;
