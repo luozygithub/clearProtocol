@@ -5,7 +5,9 @@ import store from './store'
 import 'ant-design-vue/dist/antd.css';
 import './styles/common.scss'
 import './styles/commons.scss'
+
 import './styles/overrideAntd.scss'
+
 import './styles/variable.scss'
 import './styles/mixin.scss'
 import "./styles/font.css"

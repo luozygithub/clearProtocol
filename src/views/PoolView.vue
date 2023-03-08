@@ -13,13 +13,13 @@
             Asset
           </div>
           <div class="input-box">
-            <input type="number"  >
+            <input type="number" step="any" >
           </div>
           <div class="input-name">
             Amount
           </div>
           <div class="input-box">
-            <input type="number" v-model="amount" placeholder="0.00">
+            <input type="number"  step="any" v-model="amount" placeholder="0.00">
             <button class="max-btn">
               MAX
             </button>

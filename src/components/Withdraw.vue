@@ -11,7 +11,7 @@
       <div class="content">
 
         <div class="input-box">
-          <input type="number" v-model="amount" placeholder="0.000">
+          <input step="any" type="number" v-model="amount" placeholder="0.000">
           <div class="max-btn" @click="amount=balance">
             MAX
           </div>

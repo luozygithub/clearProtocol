@@ -42,8 +42,20 @@
     border: 1px;
     &:focus{
       border: 1px solid #0E1D51;
-
     }
   }
 }
+/* Chrome 和 Safari */
+input::-webkit-validation-bubble {
+  display: none!important;
+}
 
+/* Firefox */
+input:-moz-validation-bubble {
+  display: none;
+}
+
+/* Edge 和 IE */
+input::-ms-validation-bubble {
+  display: none;
+}

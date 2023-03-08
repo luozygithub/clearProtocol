@@ -60,7 +60,8 @@
               </template>
               <a class="ant-dropdown-link " @click.prevent>
                 <div class="coin-box">
-                  <svg v-show="activeTokenName=='BTC'" t="1677824350805" class="icon" viewBox="0 0 1029 1024" version="1.1"
+                  <svg v-show="activeTokenName=='BTC'" t="1677824350805" class="icon" viewBox="0 0 1029 1024"
+                       version="1.1"
                        xmlns="http://www.w3.org/2000/svg" p-id="2818" width="20" height="20">
                     <path
                         d="M1024.727025 511.98976c0 282.771945-229.217816 511.98976-511.98976 511.98976-282.766825 0-511.98976-229.217816-511.98976-511.98976 0-282.766825 229.222936-511.98976 511.98976-511.98976 282.771945 0 511.98976 229.222936 511.98976 511.98976"
@@ -69,7 +70,8 @@
                         d="M637.048379 661.623888a55.842723 55.842723 0 0 1-27.145697 33.417571 55.858083 55.858083 0 0 1-42.827943 4.444071l-144.181437-42.940581 32.122238-107.840403 144.171196 42.945701h0.00512c29.726125 8.852303 46.713946 40.242395 37.856523 69.973641m48.628787-221.00038a55.929761 55.929761 0 0 1 4.438952 42.833063c-8.857423 29.721006-40.262875 46.698586-69.973641 37.861643h-0.00512l-144.176316-42.940582 32.111998-107.840403 144.181436 42.940581a55.888802 55.888802 0 0 1 33.422691 27.145698m64.54143-34.917702c-16.48095-30.458271-43.836563-52.678626-77.01862-62.560029l-19.076738-5.677966 26.705385-89.669887-68.519589-20.407912-26.705386 89.669887-58.49995-17.423012 26.710506-89.669886-16.414392-4.889503-66.49723-19.803763-25.742845 86.434111-81.037739-24.135197-22.870583 76.798464 81.037739 24.140317-83.254655 279.536169-81.037739-24.135197-22.870583 76.803584 81.03262 24.130077-21.723726 72.953421 16.409272 4.889502 66.49723 19.803764 22.691386-76.189196 58.638188 17.463971-22.691387 76.194316 68.243116 20.325993 22.691386-76.194316 19.209856 5.718926a130.255315 130.255315 0 0 0 37.185816 5.452691c21.247575 0 42.295474-5.278614 61.51045-15.677127 30.458271-16.48095 52.673507-43.831443 62.560028-77.023739 10.393392-34.912582 5.263255-70.777464-11.268894-100.298794 30.01284-15.661767 53.927881-42.935461 64.331513-77.863403 9.886522-33.192296 6.251395-68.243115-10.224435-98.696266"
                         fill="#FFFFFF" p-id="2820"></path>
                   </svg>
-                  <svg v-show="activeTokenName=='ETH'" t="1677824451359" class="icon" viewBox="0 0 1024 1024" version="1.1"
+                  <svg v-show="activeTokenName=='ETH'" t="1677824451359" class="icon" viewBox="0 0 1024 1024"
+                       version="1.1"
                        xmlns="http://www.w3.org/2000/svg" p-id="3915" width="20" height="20">
                     <path
                         d="M512.099961 0.399844c282.689574 0 511.800078 229.110504 511.800078 511.800078s-229.110504 511.800078-511.800078 511.800078S0.299883 794.889496 0.299883 512.199922 229.510348 0.399844 512.099961 0.399844z"
@@ -105,11 +107,11 @@
               <div class="box-title">Amount</div>
               <div class="input-box">
                 <div class="input-part">
-                  <input type="number" v-model="amount" @input="updateUSDCAmount" placeholder="0.0000">
+                  <input type="number" step="any" v-model="amount" @input="updateUSDCAmount" placeholder="0.0000">
                   <span>{{ activeTokenName }}</span>
                 </div>
                 <div class="input-part">
-                  <input type="number" v-model="usdcAmount" @input="updateAmount" placeholder="0.0000">
+                  <input type="number" step="any" v-model="usdcAmount" @input="updateAmount" placeholder="0.0000">
                   <span>USDC</span>
                   <div class="tip-box" v-show="usdcAmount<10">
                     Amount is not less than 10U.
@@ -133,27 +135,27 @@
               </div>
 
             </div>
-            <div class="left-content-item">
-              <div class="box-title">
-                Slippage Tolerance
-              </div>
-              <div class="slippage-box">
-                <div class="slippage-input">
-                  <input type="number" v-model="slipValue">
-                  <span>%</span>
-                </div>
-                <div class="rate-btn" @click="slipValue=1">
-                  1%
-                </div>
-                <div class="rate-btn" @click="slipValue=1.5">
-                  1.5%
-                </div>
-                <div class="rate-btn" @click="slipValue=2">
-                  2%
-                </div>
-              </div>
+            <!--            <div class="left-content-item">-->
+            <!--              <div class="box-title">-->
+            <!--                Slippage Tolerance-->
+            <!--              </div>-->
+            <!--              <div class="slippage-box">-->
+            <!--                <div class="slippage-input">-->
+            <!--                  <input type="number" v-model="slipValue">-->
+            <!--                  <span>%</span>-->
+            <!--                </div>-->
+            <!--                <div class="rate-btn" @click="slipValue=1">-->
+            <!--                  1%-->
+            <!--                </div>-->
+            <!--                <div class="rate-btn" @click="slipValue=1.5">-->
+            <!--                  1.5%-->
+            <!--                </div>-->
+            <!--                <div class="rate-btn" @click="slipValue=2">-->
+            <!--                  2%-->
+            <!--                </div>-->
+            <!--              </div>-->
 
-            </div>
+            <!--            </div>-->
 
           </div>
           <div class="left-bottom">
@@ -188,10 +190,11 @@
                 </div>
                 <div class="flex-box">
                   <div class="name">
-                    Pay Amount / Income Amount
+                    <span v-show="payValue>=0">Income Amount</span>
+                    <span v-show="payValue<0">Pay Amount </span>
                   </div>
                   <div class="value">
-                    ${{ payValue }}
+                    ${{ Math.abs(payValue) }}
                   </div>
                 </div>
               </div>
@@ -200,7 +203,7 @@
               Approve
             </button>
             <!--            :disabled="!tradeActive"-->
-            <button class="operate trade" :class="{'active':tradeActive}" @click="trade">
+            <button class="operate trade" v-show="usdcAllowance>10||usdcAllowance>amount" :class="{'active':tradeActive}" @click="trade">
               Trade
             </button>
           </div>
@@ -313,7 +316,7 @@
                 <span v-if="item.name=='ETH'">
                      {{
                     dealNum(Math.abs(originalEthValue))
-                  }} /{{ marginRatio(item)}}%
+                  }} /{{ marginRatio(item) }}%
                 </span>
               </div>
               <div class="col">
@@ -363,19 +366,19 @@
                 </div>
               </div>
               <div class="col">
-                {{dealNum(item.size_delta)}}
+                {{ dealNum(item.size_delta) }}
               </div>
               <div class="col">
-                {{dealNum(item.index_price)}}
+                {{ dealNum(item.index_price) }}
               </div>
               <div class="col">
-                {{dealNum(item.index_price)}}
+                {{ dealNum(item.index_price) }}
               </div>
               <div class="col">
-                {{dealNum(item.pel)}}
+                {{ dealNum(item.pel) }}
               </div>
               <div class="col">
-                {{item.updated_at}}
+                {{ item.updated_at }}
               </div>
             </div>
           </div>
@@ -479,6 +482,7 @@ import {getPositions, getRecord, getProfit, getFundingFee} from "@/api/vault";
 import {mapGetters} from "vuex";
 import MathCalculator from "../utils/bigNumberUtil"
 import BigNumber from "bignumber.js";
+import {MARGINRATIO} from "../utils/constantData"
 let getPriceInterval = null
 var calculator = new MathCalculator();
 export default {
@@ -502,7 +506,7 @@ export default {
       widgetId: 'tradingview_8c9b3',
       widgetHeight: 500,
       activeNav: 0,
-      operateNav: 0,
+      operateNav: 0,//操作方向 0Long 1Short
       feeRate: 0,
       curTVSymbol: "BINANCE:BTCUSDT",
       curSymbol: "BTC/USDC",
@@ -514,6 +518,8 @@ export default {
       profitArr: [],
       originalBtcValue: 0,//原有仓位价值
       originalEthValue: 0,//原有仓位价值
+      originalBtcObj: 0,//原有仓位方向
+      originalEthObj: 0,//原有仓位方向
       usdcAmount: undefined
       //  BINANCE:ETHUSDT
     }
@@ -526,24 +532,7 @@ export default {
   },
   computed: {
 
-    payValue() {//需要支付或者获得 u
-      if (this.usdcAmount > 0 && this.amount > 0) {
-        if (this.operateNav == 0) {
-          if (this.originalBtcValue >= 0) {//加仓
-            return this.curValue
-          } else {//减仓
-            return this.curValue
-          }
-        } else {
-          if (this.originalBtcValue >= 0) {//加仓
-            return this.curValue
-          } else {//减仓
-            return this.curValue
-          }
-        }
-      }
-      return 0
-    },
+
     curValue() { //当前下单价值
       if (this.usdcAmount > 0 && this.amount > 0) {
         return this.usdcAmount / this.slideValue
@@ -560,19 +549,75 @@ export default {
       }
       return 0
     },
-    liquidationPrice() { //清仓价格
+    payValue() {//需要支付或者获得 u
       if (this.usdcAmount > 0 && this.amount > 0) {
-        if (this.operateNav == 0) {
-          let data1 = this.usdcAmount / this.slideValue - this.amount * this.coinInfo.index_price
-          let data2 = this.amount * 0.6 / this.slideValue - this.amount
-          return data1 / data2
-        } else {
-          let data1 = this.usdcAmount / this.slideValue + this.amount * this.coinInfo.index_price
-          let data2 = this.amount * 0.6 / this.slideValue + this.amount
-          return data1 / data2
+        switch (this.activeTokenName) {
+          case "BTC":
+            if (!this.originalBtcValue) {
+              return this.curValue
+            }
+
+            if (this.originalBtcObj.direction == this.direction) {//direction：方向相同
+              const totalSize = calculator.add(this.originalBtcObj.size, this.amount)
+              const totalValue = calculator.divide(calculator.multiply(totalSize, this.coinInfo.index_price), this.slideValue)
+              const payV = calculator.subtract(this.originalBtcValue, totalValue)
+
+              return payV
+            } else  {//direction：方向不同
+              let payV=0
+              const totalSize = calculator.subtract(this.originalBtcObj.size, this.amount)
+              if(totalSize<0){//反方向开仓
+                const totalValue = calculator.divide(calculator.multiply(totalSize, this.coinInfo.index_price), this.slideValue)
+                payV = totalValue
+              }else{//减仓
+                const totalValue = calculator.divide(calculator.multiply(totalSize, this.coinInfo.index_price), this.slideValue)
+                payV = calculator.subtract(this.originalBtcValue, totalValue)
+              }
+              return payV
+            }
+          case "ETH":
+            if (!this.originalEthValue) {
+              return this.curValue
+            }
+            if (this.originalEthObj.direction == this.direction) { //direction：方向相同
+              const totalSize = calculator.add(this.originalEthObj.size, this.amount)
+              const totalValue = calculator.divide(calculator.multiply(totalSize, this.coinInfo.index_price), this.slideValue)
+              const payV = calculator.subtract(this.originalEthValue, totalValue)
+              return payV
+            } else {//direction：方向不同
+              let payV=0
+              const totalSize = calculator.subtract(this.originalEthObj.size, this.amount)
+              if(totalSize<0){//反方向开仓
+                const totalValue = calculator.divide(calculator.multiply(totalSize, this.coinInfo.index_price), this.slideValue)
+                payV = totalValue
+              }else{//减仓
+                const totalValue = calculator.divide(calculator.multiply(totalSize, this.coinInfo.index_price), this.slideValue)
+                payV = calculator.subtract(this.originalEthValue, totalValue)
+              }
+
+              return payV
+            }
+        }
+
+
+      }
+      return 0
+    },
+    liquidationPrice() { //爆仓价格
+      if (this.usdcAmount > 0 && this.amount > 0) {
+        switch (this.activeTokenName) {
+          case "BTC":
+            if (!this.originalBtcValue) {
+              return this.calculatLiq(1)
+            }
+            return this.calculatLiq(2,this.originalBtcObj.direction)
+          case "ETH":
+            if (!this.originalEthValue) {
+              return this.calculatLiq(1)
+            }
+            return this.calculatLiq(2,this.originalEthObj.direction)
         }
       }
-
       return 0
     },
     direction() {//下单后方向
@@ -600,18 +645,64 @@ export default {
     ]),
   },
   methods: {
+    calculatLiq(type,direction){
+      if (type===1) {
+        if (this.operateNav == 0) {
+          let data1 = this.usdcAmount / this.slideValue - this.amount * this.coinInfo.index_price
+          let data2 = this.amount * MARGINRATIO / this.slideValue - this.amount
+          let liqV = calculator.divide(data1, data2)
+          return liqV >= 0 ? liqV : 0
+        } else {
+          let data1 = this.usdcAmount / this.slideValue + this.amount * this.coinInfo.index_price
+          let data2 = this.amount * MARGINRATIO / this.slideValue + this.amount
+          let liqV = calculator.divide(data1, data2)
+          return liqV >= 0 ? liqV : 0
+        }
+      }else{
+        let data1,data2
+        if (direction == this.direction) { //direction：1
+
+          const totalSize = calculator.add(this.originalBtcObj.size, this.amount)
+          const totalValue = calculator.divide(calculator.multiply(totalSize, this.coinInfo.index_price), this.slideValue)
+          if(direction==1){//long
+            data1= totalValue - totalSize * this.coinInfo.index_price
+            data2 = totalSize * MARGINRATIO / this.slideValue - totalSize
+          }else{//short
+            data1= totalValue + totalSize * this.coinInfo.index_price
+            data2 = totalSize * MARGINRATIO / this.slideValue + totalSize
+          }
+          let liqV = calculator.divide(data1, data2)
+          return liqV >= 0 ? liqV : 0
+        } else {
+          let totalSize = calculator.subtract(this.originalBtcObj.size, this.amount)
+          let directionRES = totalSize>0 ?direction:this.direction
+          totalSize = Math.abs(totalSize)
+          const totalValue = calculator.divide(calculator.multiply(totalSize, this.coinInfo.index_price), this.slideValue)
+          if(directionRES){//long
+            data1= totalValue - totalSize * this.coinInfo.index_price
+            data2 = totalSize * MARGINRATIO / this.slideValue - totalSize
+          }else{//short
+            data1= calculator.add(totalValue , calculator.multiply(totalSize, this.coinInfo.index_price))
+            data2 = calculator.add(calculator.divide(totalSize * MARGINRATIO , this.slideValue) , totalSize)
+          }
+
+          let liqV = calculator.divide(data1, data2)
+          return liqV >= 0 ? liqV : 0
+        }
+      }
+    },
     marginRatio(item) {
-      if(!this.configeInfo.tokens){
+      if (!this.configeInfo.tokens) {
         return
       }
       let price = 0
-      this.configeInfo.tokens.forEach(coin=>{
-        if(coin.name==item.name){
+      this.configeInfo.tokens.forEach(coin => {
+        if (coin.name == item.name) {
           price = coin.index_price
         }
       })
-      let worth = calculator.add(item.collateral,item.pnl)
-      return this.dealNum(worth / (price*item.size / item.leverage) * 100)
+      let worth = calculator.add(item.collateral, item.pnl)
+      return this.dealNum(worth / (price * item.size / item.leverage) * 100)
 
     },
     async getProfitData() {
@@ -632,18 +723,12 @@ export default {
       this.positionArr = positionArr.data.data
       this.positionArr.forEach(item => {
         if (item.name == "BTC") {
-          if (item.direction == true) {
-            this.originalBtcValue = parseFloat(item.collateral) + parseFloat(item.pnl)
-          } else {
-            this.originalBtcValue = -(parseFloat(item.collateral) + parseFloat(item.pnl))
-          }
+          this.originalBtcValue = parseFloat(item.collateral) + parseFloat(item.pnl)
+          this.originalBtcObj = item
         }
         if (item.name == "ETH") {
-          if (item.direction == true) {
-            this.originalEthValue = parseFloat(item.collateral) + parseFloat(item.pnl)
-          } else {
-            this.originalEthValue = -(parseFloat(item.collateral) + parseFloat(item.pnl))
-          }
+          this.originalEthValue = parseFloat(item.collateral) + parseFloat(item.pnl)
+          this.originalEthObj = item
         }
       })
     },
@@ -718,7 +803,6 @@ export default {
         _indexToken: this.coinInfo.contract_address
       })
       let sizeDelta = BigNumber((this.usdcAmount * (1 + parseFloat(this.feeRate))) * 10 ** 6 / this.slideValue).toFixed(0)
-      console.log(sizeDelta)
       this.$store.dispatch("vault/updatePosition", {
         _indexToken: this.coinInfo.contract_address,
         _leverage: this.slideValue,
@@ -826,7 +910,7 @@ export default {
     this.initData()
     getPriceInterval = setInterval(() => {
       this.getData()
-    }, 3000)
+    }, 10000)
   },
   beforeDestroy() {
     clearInterval(getPriceInterval)
@@ -849,7 +933,7 @@ export default {
     50% {
       background-color: #ccc;
       transform: scale(0.99);
-      box-shadow:  0 0 3px inset;
+      box-shadow: 0 0 3px inset;
     }
     100% {
       background-color: #fff;
