@@ -90,7 +90,7 @@
             2%
           </div>
         </div>
-        <button class="operate confim" @click="close">
+        <button class="operate confim" @click="trade">
           Close
         </button>
       </div>
@@ -99,6 +99,8 @@
 </template>
 
 <script>
+import {mapGetters} from "vuex";
+
 export default {
   name: "ClosePosition",
   data() {
@@ -108,7 +110,13 @@ export default {
       balance:0
     }
   },
-  props:["positionObj"],
+  computed: {
+    ...mapGetters([
+      'isConnected',
+      'account'
+    ]),
+  },
+  props:["positionObj","coinInfo"],
   methods:{
     dealNum(val) {
       if ((val)) {
@@ -120,6 +128,37 @@ export default {
         this.$message.info('Please input slip value');
         return
       }
+    },
+    async trade() {
+      if (!this.isConnected) {
+        this.$message.info('Please connect');
+        return
+      }
+      /*eslint-disable*/
+      let price = await this.$store.dispatch("vault/getPrice", {
+        _indexToken: this.coinInfo.contract_address
+      })
+      console.log(this.positionObj)
+      let direction = true
+      if(this.positionObj.direction==1){
+        direction = true
+      }else{
+        direction = false
+      }
+      let sizeDelta = parseInt(this.usdcAmount * 10 ** 6 / this.slideValue)
+      this.$store.dispatch("vault/updatePosition", {
+        _indexToken: this.coinInfo.contract_address,
+        _leverage: this.positionObj.leverage,
+        _sizeDelta: parseInt(this.positionObj.size * 10 ** 6),
+        _collateralDelta: parseInt(this.positionObj.collateral*10**6),
+        _indexPrice: price,
+        _direction: direction,
+        _collateralDeltaInIO: false
+      }).then(()=> {
+        this.$message.info('Close success');
+      }).catch((e)=>{
+        this.$message.info(e);
+      })
     },
   }
 }

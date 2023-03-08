@@ -100,7 +100,7 @@
                 <div class="input-part">
                   <input type="number" v-model="usdcAmount" @change="updateAmount" placeholder="0.0000">
                   <span>USDC</span>
-                  <div class="tip-box" v-show="usdcAmount<=10">
+                  <div class="tip-box" v-show="usdcAmount<10">
                     注入资金大于10U
                   </div>
                 </div>
@@ -446,8 +446,8 @@
         </div>
       </div>
     </div>
-    <MarginManage v-show="isShowMarginManage" :positionObj="clickPosition" @closeMarginManage="isShowMarginManage = false"/>
-    <ClosePositions v-show="isShowClosePosition" :positionObj="clickPosition" @closeClosePosition="isShowClosePosition = false"/>
+    <MarginManage v-show="isShowMarginManage" :coin-info="coinInfo" :positionObj="clickPosition" @closeMarginManage="isShowMarginManage = false"/>
+    <ClosePositions v-show="isShowClosePosition" :coin-info="coinInfo" :positionObj="clickPosition" @closeClosePosition="isShowClosePosition = false"/>
   </div>
 </template>
 
@@ -513,7 +513,11 @@ export default {
             return this.curValue
           }
         } else {
-          return 2
+          if(this.originalBtcValue>=0){//加仓
+            return this.curValue
+          }else{//减仓
+            return this.curValue
+          }
         }
       }
       return 0
@@ -552,9 +556,9 @@ export default {
     direction() {//下单后方向
       if (this.amount > 0 && this.slideValue) {
         if (this.operateNav == 0) {
-          return 1
+          return true
         } else {
-          return 2
+          return false
         }
       }
       return 0
@@ -588,14 +592,14 @@ export default {
       console.log(this.positionArr)
       this.positionArr.forEach(item=>{
         if(item.name == "BTC"){
-          if(item.direction==1){
+          if(item.direction==true){
             this.originalBtcValue =  parseFloat(item.collateral) + parseFloat(item.pnl)
           }else{
             this.originalBtcValue =  - (parseFloat(item.collateral) + parseFloat(item.pnl))
           }
         }
         if(item.name == "ETH"){
-          if(item.direction==1){
+          if(item.direction==true){
             this.originalEthValue =  parseFloat(item.collateral) + parseFloat(item.pnl)
           }else{
             this.originalEthValue =  - (parseFloat(item.collateral) + parseFloat(item.pnl))
@@ -660,7 +664,7 @@ export default {
         this.$message.info('Please input slideValue');
         return
       }
-      if (!this.usdcAmount <=10 ) {
+      if (this.usdcAmount < 10 ) {
         this.$message.info('Amount less than 10u');
         return
       }
@@ -675,10 +679,13 @@ export default {
         _sizeDelta: parseInt(this.amount * 10 ** 6),
         _collateralDelta: sizeDelta,
         _indexPrice: price,
-        _direction: true,
+        _direction: this.direction,
         _collateralDeltaInIO: true
       }).then(()=> {
         this.initData()
+        this.$message.info('Close success');
+      }).catch((e)=>{
+        this.$message.info(e);
       })
     },
     handleMenuClick(e) {
@@ -803,163 +810,163 @@ export default {
     animation: blink 10s ease forwards;
   }
 
-  @media only screen and (-webkit-min-device-pixel-ratio: 2),
-  only screen and (min--moz-device-pixel-ratio: 2),
-  only screen and (min-resolution: 192dpi) {
-
-    --line-height17: 24px;
-    .icon {
-      width: 32px;
-      height: 32px;
-      font-size: 30px;
-    }
-    .table-header {
-      padding: 16px 15px !important;
-    }
-    .row {
-      padding: 12px 15px !important;
-    }
-    .nav1-content {
-      .col {
-        &:nth-child(1) {
-          width: 80px !important;
-        }
-
-        &:nth-child(2) {
-          width: 80px !important;
-        }
-
-        &:nth-child(3) {
-          width: 80px !important;
-        }
-
-        &:nth-child(4) {
-          width: 80px !important;
-        }
-
-        &:nth-child(5) {
-          width: 120px !important;
-        }
-
-        &:nth-child(6) {
-          width: 160px !important;
-        }
-
-        &:nth-child(7) {
-          width: 220px !important;
-        }
-
-        &:nth-child(8) {
-          width: 160px !important;
-        }
-
-        &:nth-child(9) {
-          min-width: 180px !important;
-        }
-      }
-
-    }
-    .nav2-content {
-      .col {
-        &:nth-child(1) {
-          width: 120px !important;
-        }
-
-        &:nth-child(2) {
-          width: 100px !important;
-        }
-
-        &:nth-child(3) {
-          width: 100px !important;
-        }
-
-        &:nth-child(4) {
-          width: 160px !important;
-        }
-
-        &:nth-child(5) {
-          width: 160px !important;
-        }
-
-        &:nth-child(6) {
-          width: 180px !important;
-        }
-
-        &:nth-child(7) {
-          width: 220px !important;
-        }
-
-        &:nth-child(8) {
-          width: 160px !important;
-        }
-
-        &:nth-child(9) {
-          min-width: 230px !important;
-        }
-      }
-    }
-
-    .nav3-content {
-      .col {
-        &:nth-child(1) {
-          width: 300px !important;
-        }
-
-        &:nth-child(2) {
-          width: 120px !important;
-        }
-
-        &:nth-child(3) {
-          width: 120px !important;
-        }
-
-        &:nth-child(4) {
-          width: 120px !important;
-        }
-
-        &:nth-child(5) {
-          width: 120px !important;
-        }
-
-        &:nth-child(6) {
-          width: 160px !important;
-        }
-
-        &:nth-child(7) {
-          width: 180px !important;
-        }
-
-        &:nth-child(8) {
-          width: 160px !important;
-        }
-
-        &:nth-child(9) {
-          min-width: 180px !important;
-        }
-      }
-    }
-
-    .nav4-content {
-      .col {
-        &:nth-child(1) {
-          width: 120px !important;
-        }
-
-        &:nth-child(2) {
-          width: 150px !important;
-        }
-
-        &:nth-child(3) {
-          width: 200px !important;
-        }
-
-        &:nth-child(4) {
-          width: 300px;
-        }
-
-      }
-    }
-  }
+  //@media only screen and (-webkit-min-device-pixel-ratio: 2),
+  //only screen and (min--moz-device-pixel-ratio: 2),
+  //only screen and (min-resolution: 192dpi) {
+  //
+  //  --line-height17: 24px;
+  //  .icon {
+  //    width: 32px;
+  //    height: 32px;
+  //    font-size: 30px;
+  //  }
+  //  .table-header {
+  //    padding: 16px 15px !important;
+  //  }
+  //  .row {
+  //    padding: 12px 15px !important;
+  //  }
+  //  .nav1-content {
+  //    .col {
+  //      &:nth-child(1) {
+  //        width: 80px !important;
+  //      }
+  //
+  //      &:nth-child(2) {
+  //        width: 80px !important;
+  //      }
+  //
+  //      &:nth-child(3) {
+  //        width: 80px !important;
+  //      }
+  //
+  //      &:nth-child(4) {
+  //        width: 80px !important;
+  //      }
+  //
+  //      &:nth-child(5) {
+  //        width: 120px !important;
+  //      }
+  //
+  //      &:nth-child(6) {
+  //        width: 160px !important;
+  //      }
+  //
+  //      &:nth-child(7) {
+  //        width: 220px !important;
+  //      }
+  //
+  //      &:nth-child(8) {
+  //        width: 160px !important;
+  //      }
+  //
+  //      &:nth-child(9) {
+  //        min-width: 180px !important;
+  //      }
+  //    }
+  //
+  //  }
+  //  .nav2-content {
+  //    .col {
+  //      &:nth-child(1) {
+  //        width: 120px !important;
+  //      }
+  //
+  //      &:nth-child(2) {
+  //        width: 100px !important;
+  //      }
+  //
+  //      &:nth-child(3) {
+  //        width: 100px !important;
+  //      }
+  //
+  //      &:nth-child(4) {
+  //        width: 160px !important;
+  //      }
+  //
+  //      &:nth-child(5) {
+  //        width: 160px !important;
+  //      }
+  //
+  //      &:nth-child(6) {
+  //        width: 180px !important;
+  //      }
+  //
+  //      &:nth-child(7) {
+  //        width: 220px !important;
+  //      }
+  //
+  //      &:nth-child(8) {
+  //        width: 160px !important;
+  //      }
+  //
+  //      &:nth-child(9) {
+  //        min-width: 230px !important;
+  //      }
+  //    }
+  //  }
+  //
+  //  .nav3-content {
+  //    .col {
+  //      &:nth-child(1) {
+  //        width: 300px !important;
+  //      }
+  //
+  //      &:nth-child(2) {
+  //        width: 120px !important;
+  //      }
+  //
+  //      &:nth-child(3) {
+  //        width: 120px !important;
+  //      }
+  //
+  //      &:nth-child(4) {
+  //        width: 120px !important;
+  //      }
+  //
+  //      &:nth-child(5) {
+  //        width: 120px !important;
+  //      }
+  //
+  //      &:nth-child(6) {
+  //        width: 160px !important;
+  //      }
+  //
+  //      &:nth-child(7) {
+  //        width: 180px !important;
+  //      }
+  //
+  //      &:nth-child(8) {
+  //        width: 160px !important;
+  //      }
+  //
+  //      &:nth-child(9) {
+  //        min-width: 180px !important;
+  //      }
+  //    }
+  //  }
+  //
+  //  .nav4-content {
+  //    .col {
+  //      &:nth-child(1) {
+  //        width: 120px !important;
+  //      }
+  //
+  //      &:nth-child(2) {
+  //        width: 150px !important;
+  //      }
+  //
+  //      &:nth-child(3) {
+  //        width: 200px !important;
+  //      }
+  //
+  //      &:nth-child(4) {
+  //        width: 300px;
+  //      }
+  //
+  //    }
+  //  }
+  //}
 
 
   /*reset antdv */

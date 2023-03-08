@@ -390,30 +390,30 @@ export default {
     }
   }
 
-  @media only screen and (-webkit-min-device-pixel-ratio: 2),
-  only screen and (min--moz-device-pixel-ratio: 2),
-  only screen and (min-resolution: 192dpi){
-    .pool-contain {
-      width: 1000px;
-      height: 500px;
-    }
-    .input-box {
-      width: 360px;
-    }
-    .info-list {
-      .list-item {
-        width: 300px !important;
-        height: 130px !important;
-
-        .operate {
-          width: 100px !important;
-          height: 34px !important;
-          bottom: 6px;
-
-        }
-      }
-    }
-
-  }
+  //@media only screen and (-webkit-min-device-pixel-ratio: 2),
+  //only screen and (min--moz-device-pixel-ratio: 2),
+  //only screen and (min-resolution: 192dpi){
+  //  .pool-contain {
+  //    width: 1000px;
+  //    height: 500px;
+  //  }
+  //  .input-box {
+  //    width: 360px;
+  //  }
+  //  .info-list {
+  //    .list-item {
+  //      width: 300px !important;
+  //      height: 130px !important;
+  //
+  //      .operate {
+  //        width: 100px !important;
+  //        height: 34px !important;
+  //        bottom: 6px;
+  //
+  //      }
+  //    }
+  //  }
+  //
+  //}
 }
 </style>
