@@ -7,7 +7,8 @@
             <a-dropdown>
               <template #overlay>
                 <a-menu @click="handleMenuClick">
-                  <a-menu-item key="1">
+
+                  <a-menu-item key="1" class="coin-info">
                     <div class="coin-info">
                       <div>
                         <svg t="1677824350805" class="icon" viewBox="0 0 1029 1024" version="1.1"
@@ -59,7 +60,7 @@
                 </a-menu>
               </template>
               <a class="ant-dropdown-link " @click.prevent>
-                <div class="coin-box">
+                <div class="coin-box" style="display: flex">
                   <svg v-show="activeTokenName=='BTC'" t="1677824350805" class="icon" viewBox="0 0 1029 1024"
                        version="1.1"
                        xmlns="http://www.w3.org/2000/svg" p-id="2818" width="20" height="20">
@@ -753,10 +754,10 @@ export default {
       )
     },
     updateUSDCAmount() {
-      this.usdcAmount = this.amount * this.coinInfo.index_price
+      this.usdcAmount = BigNumber(this.amount * this.coinInfo.index_price).toFixed(2)
     },
     updateAmount() {
-      this.amount = this.usdcAmount / this.coinInfo.index_price
+      this.amount = (calculator.divide(this.usdcAmount  ,this.coinInfo.index_price))
     },
     async allowance() {
       if (!this.isConnected) {
@@ -1110,7 +1111,7 @@ export default {
     background-color: #0E1D51 !important;
   }
 
-  ::v-deep .ant-dropdown .coin-info {
+  >>>  .coin-info {
     align-items: center;
     display: flex;
     justify-content: space-between;
@@ -1196,12 +1197,27 @@ export default {
         border: 1px solid #ECECEE;
         display: flex;
         justify-content: space-between;
-
+        ::v-deep .ant-dropdown-menu{
+          .coin-box {
+            height: 100%;
+            border: none;
+            display: flex !important;
+            align-items: center !important;
+            font-size: var(--font-size20);
+            font-family: AvertaStd-Regular, AvertaStd;
+            font-weight: 400;
+            color: #0E1D51;
+            line-height: 25px;
+          }
+        }
         .icon {
           margin-right: 6px;
         }
+        .menu-box{
+          background: #000;
+        }
 
-        .ant-dropdown-link {
+        ::v-deep .ant-dropdown-link {
           width: 100%;
           display: flex;
 
