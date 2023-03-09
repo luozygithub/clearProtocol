@@ -21,3 +21,19 @@
     margin-top: 20vh;
   }
 }
+.ant-dropdown{
+
+  .coin-info {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+    .coin-name{
+      display: flex;
+      align-items: center;
+      svg{
+        margin-right: 6px;
+      }
+    }
+  }
+}

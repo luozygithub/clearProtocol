@@ -7,10 +7,9 @@
             <a-dropdown>
               <template #overlay>
                 <a-menu @click="handleMenuClick">
-
-                  <a-menu-item key="1" class="coin-info">
+                  <a-menu-item key="1" >
                     <div class="coin-info">
-                      <div>
+                      <div class="coin-name">
                         <svg t="1677824350805" class="icon" viewBox="0 0 1029 1024" version="1.1"
                              xmlns="http://www.w3.org/2000/svg" p-id="2818" width="20" height="20">
                           <path
@@ -33,7 +32,7 @@
                   </a-menu-item>
                   <a-menu-item key="2">
                     <div class="coin-info">
-                      <div>
+                      <div class="coin-name">
                         <svg t="1677824451359" class="icon" viewBox="0 0 1024 1024" version="1.1"
                              xmlns="http://www.w3.org/2000/svg" p-id="3915" width="20" height="20">
                           <path
@@ -1111,11 +1110,7 @@ export default {
     background-color: #0E1D51 !important;
   }
 
-  >>>  .coin-info {
-    align-items: center;
-    display: flex;
-    justify-content: space-between;
-  }
+
 
   ::v-deep .ant-slider-handle {
     border: solid 2px #0E1D51;
