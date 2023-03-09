@@ -3,7 +3,8 @@
 
     <div class="nav-list">
       <div class="menu" @click="toggleCollapsed">
-        <img src="../assets/menu_icon.png" alt="">
+        <img v-show="$store.state.collapsed" src="../assets/menu_icon.png" alt="">
+        <svg v-show="!$store.state.collapsed" t="1678326899021" class="icon" viewBox="0 0 1109 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2298" width="20" height="14"><path d="M0 0h1109.333v170.667H0V0z m0 426.667h682.667v170.666H0V426.667z m0 426.666h1109.333V1024H0V853.333z" fill="#0e1d51" p-id="2299"></path></svg>
       </div>
       <div class="nav-item" @click="$router.push('/')" :class="{'active':$route.path=='/'}">
         Futures
@@ -187,9 +188,12 @@ export default {
     cursor: pointer;
     padding: 10px 20px;
 
-    img {
+    img ,svg{
       width: 20px;
       height: 14px;
+    }
+    svg{
+      margin-top: 3px;
     }
   }
 }

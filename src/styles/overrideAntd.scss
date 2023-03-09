@@ -28,12 +28,19 @@
     display: flex;
     justify-content: space-between;
     padding: 6px 0;
+    .right{
+      color: #63CE63;
+      &.down{
+        color: #E32A20;
+      }
+    }
     .coin-name{
       display: flex;
       align-items: center;
       svg{
         margin-right: 6px;
       }
+
     }
   }
 }

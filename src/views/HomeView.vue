@@ -23,7 +23,7 @@
                         BTCUSDC
                       </span>
                       </div>
-                      <div class="right">
+                      <div class="right" :class="{'down':dealNum(configeInfo.tokens[1].chg_24h)<0}">
                         {{ configeInfo.tokens ? dealNum(configeInfo.tokens[0].index_price) : "" }}
                         {{ configeInfo.tokens ? dealNum(configeInfo.tokens[0].chg_24h) : "" }}
                       </div>
@@ -32,7 +32,7 @@
                   </a-menu-item>
                   <a-menu-item key="2">
                     <div class="coin-info">
-                      <div class="coin-name">
+                      <div class="coin-name" >
                         <svg t="1677824451359" class="icon" viewBox="0 0 1024 1024" version="1.1"
                              xmlns="http://www.w3.org/2000/svg" p-id="3915" width="20" height="20">
                           <path
@@ -48,7 +48,7 @@
                         ETHUSDC
                       </span>
                       </div>
-                      <div class="right">
+                      <div class="right" :class="{'down':dealNum(configeInfo.tokens[1].chg_24h)<0}">
                         {{ configeInfo.tokens ? dealNum(configeInfo.tokens[1].index_price) : "" }}
                         {{ configeInfo.tokens ? dealNum(configeInfo.tokens[1].chg_24h) : "" }}
                       </div>
@@ -211,7 +211,7 @@
       </div>
       <div class="right-content-box">
         <div class="right-part1">
-          <div class="price">
+          <div class="price" :class="{'down':dealNum(coinInfo.chg_24h_percent) <0}">
             {{ dealNum(coinInfo.index_price) }}
           </div>
           <div class="funding">
@@ -231,7 +231,7 @@
             <div class="name">
               24h Change
             </div>
-            <div class="value">
+            <div class="value" :class="{'down':dealNum(coinInfo.chg_24h_percent) <0}">
               {{ dealNum(coinInfo.chg_24h) }} +
               {{ dealNum(coinInfo.chg_24h_percent) }}%
             </div>
@@ -1465,6 +1465,9 @@ export default {
           line-height: 25px;
           padding-right: 15px;
           border-right: 1px solid #ECECEE;
+          &.down{
+            color: #E32A20;
+          }
         }
 
         .funding, .change {
@@ -1500,6 +1503,9 @@ export default {
             font-weight: 400;
             color: #63CE63;
             line-height: 20px;
+          }
+          .down{
+            color: #E32A20;
           }
         }
       }
