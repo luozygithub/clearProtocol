@@ -203,8 +203,7 @@
               Approve
             </button>
             <!--            :disabled="!tradeActive"-->
-            <button class="operate trade" v-show="usdcAllowance>10||usdcAllowance>amount"
-                    :class="{'active':tradeActive}" @click="trade">
+            <button class="operate trade" v-show="usdcAllowance>10||usdcAllowance>amount" :class="{'active':tradeActive}" @click="trade">
               Trade
             </button>
           </div>
@@ -484,7 +483,6 @@ import {mapGetters} from "vuex";
 import MathCalculator from "../utils/bigNumberUtil"
 import BigNumber from "bignumber.js";
 import {MARGINRATIO} from "../utils/constantData"
-
 let getPriceInterval = null
 var calculator = new MathCalculator();
 export default {
@@ -565,13 +563,13 @@ export default {
               const payV = calculator.subtract(this.originalBtcValue, totalValue)
 
               return payV
-            } else {//direction：方向不同
-              let payV = 0
+            } else  {//direction：方向不同
+              let payV=0
               const totalSize = calculator.subtract(this.originalBtcObj.size, this.amount)
-              if (totalSize < 0) {//反方向开仓
+              if(totalSize<0){//反方向开仓
                 const totalValue = calculator.divide(calculator.multiply(totalSize, this.coinInfo.index_price), this.slideValue)
                 payV = totalValue
-              } else {//减仓
+              }else{//减仓
                 const totalValue = calculator.divide(calculator.multiply(totalSize, this.coinInfo.index_price), this.slideValue)
                 payV = calculator.subtract(this.originalBtcValue, totalValue)
               }
@@ -587,12 +585,12 @@ export default {
               const payV = calculator.subtract(this.originalEthValue, totalValue)
               return payV
             } else {//direction：方向不同
-              let payV = 0
+              let payV=0
               const totalSize = calculator.subtract(this.originalEthObj.size, this.amount)
-              if (totalSize < 0) {//反方向开仓
+              if(totalSize<0){//反方向开仓
                 const totalValue = calculator.divide(calculator.multiply(totalSize, this.coinInfo.index_price), this.slideValue)
                 payV = totalValue
-              } else {//减仓
+              }else{//减仓
                 const totalValue = calculator.divide(calculator.multiply(totalSize, this.coinInfo.index_price), this.slideValue)
                 payV = calculator.subtract(this.originalEthValue, totalValue)
               }
@@ -612,12 +610,12 @@ export default {
             if (!this.originalBtcValue) {
               return this.calculatLiq(1)
             }
-            return this.calculatLiq(2, this.originalBtcObj.direction)
+            return this.calculatLiq(2,this.originalBtcObj)
           case "ETH":
             if (!this.originalEthValue) {
               return this.calculatLiq(1)
             }
-            return this.calculatLiq(2, this.originalEthObj.direction)
+            return this.calculatLiq(2,this.originalEthObj)
         }
       }
       return 0
@@ -625,9 +623,9 @@ export default {
     direction() {//下单后方向
       if (this.amount > 0 && this.slideValue) {
         if (this.operateNav == 0) {
-          return 1
+          return true
         } else {
-          return 0
+          return false
         }
       }
       return 0
@@ -647,50 +645,49 @@ export default {
     ]),
   },
   methods: {
-    calculatLiq(type, direction) {
-      if (type === 1) {
+    calculatLiq(type,originObj){
+      if (type===1) {
         if (this.operateNav == 0) {
-          let liqV = calculator.subtract(this.coinInfo.index_price, calculator.multiply(calculator.divide(this.usdcAmount, this.slideValue), MARGINRATIO))
+          let data1 = this.usdcAmount / this.slideValue - this.amount * this.coinInfo.index_price
+          let data2 = this.amount * MARGINRATIO / this.slideValue - this.amount
+          let liqV = calculator.divide(data1, data2)
           return liqV >= 0 ? liqV : 0
         } else {
-          let liqV = calculator.add(this.coinInfo.index_price, calculator.multiply(calculator.divide(this.usdcAmount, this.slideValue), MARGINRATIO))
+          let data1 = this.usdcAmount / this.slideValue + this.amount * this.coinInfo.index_price
+          let data2 = this.amount * MARGINRATIO / this.slideValue + this.amount
+          let liqV = calculator.divide(data1, data2)
           return liqV >= 0 ? liqV : 0
         }
-      } else {
-        let totalSize
+      }else{
+        let data1,data2
+        if (originObj.direction == this.direction) { //direction：方向相同
 
-        if (direction == this.direction) { //direction：相同
-          if(this.activeTokenName=="BTC"){
-            totalSize = calculator.add(this.originalBtcObj.size, this.amount)
-          }else{
-            totalSize = calculator.add(this.originalEthObj.size, this.amount)
-          }
+          const totalSize = calculator.add(originObj.size, this.amount)
           const totalValue = calculator.divide(calculator.multiply(totalSize, this.coinInfo.index_price), this.slideValue)
-          let liqV = 0
-          console.log(totalSize,totalValue)
-          if (this.direction == 1) {
-            liqV = calculator.subtract(this.coinInfo.index_price, calculator.multiply(totalValue,MARGINRATIO))
-          } else {
-            liqV = calculator.add(this.coinInfo.index_price, calculator.multiply(totalValue,MARGINRATIO))
+          if(originObj.direction==1){//long 多
+            data1= totalValue - totalSize * this.coinInfo.index_price
+            data2 = totalSize * MARGINRATIO / this.slideValue - totalSize
+          }else{//short 空
+            console.log(totalValue,totalSize)
+            data1= calculator.add(totalValue , totalSize * this.coinInfo.index_price)
+            data2 = calculator.add(calculator.divide(totalSize * MARGINRATIO , this.slideValue) , totalSize)
           }
+          let liqV = calculator.divide(data1, data2)
           return liqV >= 0 ? liqV : 0
-        } else {
-          let liqV = 0
-          if(this.activeTokenName=="BTC"){
-            totalSize = calculator.subtract(this.originalBtcObj.size, this.amount)
-          }else{
-            totalSize = calculator.subtract(this.originalEthObj.size, this.amount)
-          }
-          let directionRES = totalSize > 0 ? direction : this.direction
+        } else {//方向不同
+          let totalSize = calculator.subtract(originObj.size, this.amount)
+          let directionRES = totalSize>0 ?originObj.direction:this.direction
           totalSize = Math.abs(totalSize)
           const totalValue = calculator.divide(calculator.multiply(totalSize, this.coinInfo.index_price), this.slideValue)
-          if (directionRES) {//long
-            liqV = calculator.subtract(this.coinInfo.index_price, calculator.multiply(totalValue,MARGINRATIO))
-          } else {//short
-            liqV = calculator.add(this.coinInfo.index_price, calculator.multiply(totalValue,MARGINRATIO))
+          if(directionRES){//long
+            data1= totalValue - totalSize * this.coinInfo.index_price
+            data2 = totalSize * MARGINRATIO / this.slideValue - totalSize
+          }else{//short
+            data1= calculator.add(totalValue , calculator.multiply(totalSize, this.coinInfo.index_price))
+            data2 = calculator.add(calculator.divide(totalSize * MARGINRATIO , this.slideValue) , totalSize)
           }
 
-
+          let liqV = calculator.divide(data1, data2)
           return liqV >= 0 ? liqV : 0
         }
       }
