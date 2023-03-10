@@ -5,6 +5,14 @@ const CONTRACTS = {
         abi:require("./data/vault.json"),
         address:addressMap.vault
     },
+    CLP:{
+        abi:require("./data/CLP.json"),
+        address:addressMap.CLP
+    },
+    vaultUtil:{
+        abi:require("./data/vaultUtil.json"),
+        address:addressMap.vaultUtil
+    },
     erc20:{
         abi:require("./data/erc20.json"),
     }

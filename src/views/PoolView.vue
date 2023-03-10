@@ -20,7 +20,7 @@
           </div>
           <div class="input-box">
             <input type="number"  step="any" v-model="amount" placeholder="0.00">
-            <button class="max-btn">
+            <button class="max-btn" @click="amount=balance">
               MAX
             </button>
             <span>
@@ -36,7 +36,12 @@
               <span>USDC</span>
             </div>
           </div>
-          <button class="operate" @click="add">
+
+          <button class="operate " @click="approve" v-show="usdcAllowance<10||usdcAllowance<amount">
+            Approve
+          </button>
+          <button class="operate " v-show="usdcAllowance>10||usdcAllowance>amount"
+                  @click="add">
             Add
           </button>
         </div>
@@ -47,7 +52,7 @@
                 Pool Size
               </div>
               <div class="value">
-                <span>848593584376.8885</span>
+                <span>0.0000</span>
                 USDC
               </div>
               <div class="add">
@@ -59,7 +64,7 @@
                 Rewards/1K
               </div>
               <div class="value">
-                <span>0.34</span>
+                <span>0.00</span>
                 USDC
               </div>
               <div class="add" style="color: #63CE63;">
@@ -82,7 +87,7 @@
                 PNL
               </div>
               <div class="item-content">
-                <span>54635645.8796</span>
+                <span>0.0000</span>
                 USDC
                 <div class="info">
                   Add to earn rewards
@@ -131,6 +136,7 @@ export default {
   components:{Withdraw},
   data(){
     return {
+      usdcAllowance:0,
       amount:undefined,
       balance: 0,
       isShowWithdraw:false
@@ -144,10 +150,36 @@ export default {
   },
   watch:{
     account(){
-      this.getBalance()
+      this.getData()
     }
   },
   methods:{
+    async allowance() {
+      if (!this.isConnected) {
+        return
+      }
+      let res = await this.$store.dispatch("erc20/allowance", {
+        address: addressMap.usdt,
+        spender: addressMap.CLP,
+        owner: this.account
+      })
+      if (res > 0) {
+        this.usdcAllowance = parseInt(res) / 10 ** 6
+      }
+    },
+    approve() {
+      if (!this.isConnected) {
+        this.$message.info('Please connect');
+        return
+      }
+      this.$store.dispatch("erc20/approve", {
+        address: addressMap.usdt,
+        spender: addressMap.CLP,
+        amount: this.$store.state.app.web3.utils.toWei((10 ** 10).toString()).toString()
+      }).then(() => {
+        this.allowance()
+      })
+    },
     async getBalance() {
       if (!this.isConnected) {
         return
@@ -163,10 +195,24 @@ export default {
         this.$message.info('Please input amount');
         return
       }
+      this.$store.dispatch("CLP/mint",{
+        _usdAmount:this.amount
+      }).then(()=>{
+        this.$message.success('Add success');
+      }).catch((e) => {
+        this.$message.info(e);
+      })
+    },
+    getData(){
+      if (this.isConnected) {
+        this.allowance()
+        this.getBalance()
+
+      }
     }
   },
   created() {
-    this.getBalance()
+    this.getData()
   }
 }
 </script>

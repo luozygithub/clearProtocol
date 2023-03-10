@@ -542,7 +542,27 @@ export default {
       curSymbol: "BTC/USDC",
       activeTokenName: "BTC",
       coinInfo: {},
-      positionArr: [],
+      positionArr: [{
+        average_price: "20100",
+        collateral: "0",
+        direction: 1,
+        icon: "https://cdn-icons-png.flaticon.com/128/5968/5968260.png",
+        index_token: "0x6550bc2301936011c1334555e62A87705A81C12C",
+        leverage: 2,
+        name: "BTC",
+        pnl: "0",
+        size: "0",
+      },{
+        average_price: "20100",
+        collateral: "0",
+        direction: 1,
+        icon: "https://cdn-icons-png.flaticon.com/128/7829/7829596.png",
+        index_token: "0x62CAe0FA2da220f43a51F86Db2EDb36DcA9A5A08",
+        leverage: 2,
+        name: "ETH",
+        pnl: "0",
+        size: "0",
+      }],
       recordArr: [],
       fundingFeeArr: [],
       profitArr: [],
@@ -812,19 +832,26 @@ export default {
       console.log(this.fundingFeeArr)
     },
     async getPositionData() {
-      let positionArr = await getPositions(this.account)
-      this.positionArr = positionArr.data.data
-      //取出当前
-      this.positionArr.forEach(item => {
-        if (item.name == "BTC") {
-          this.originalBtcValue = calculator.add(parseFloat(item.collateral), parseFloat(item.pnl))
-          this.originalBtcObj = item
-        }
-        if (item.name == "ETH") {
-          this.originalEthValue = calculator.add(parseFloat(item.collateral), parseFloat(item.pnl))
-          this.originalEthObj = item
-        }
-      })
+      try{
+        let res = await getPositions(this.account)
+        let positionArr=res.data.data
+        this.positionArr = positionArr
+
+
+        //取出当前
+        this.positionArr.forEach(item => {
+          if (item.name == "BTC") {
+            this.originalBtcValue = calculator.add(parseFloat(item.collateral), parseFloat(item.pnl))
+            this.originalBtcObj = item
+          }
+          if (item.name == "ETH") {
+            this.originalEthValue = calculator.add(parseFloat(item.collateral), parseFloat(item.pnl))
+            this.originalEthObj = item
+          }
+        })
+      }catch (e){
+        console.log(e)
+      }
     },
     dealD6Num(val) {
       if ((val)) {
