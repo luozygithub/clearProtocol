@@ -215,8 +215,8 @@
                 </div>
                 <div class="flex-box">
                   <div class="name">
-                    <span v-show="payValue>=0">Income Amount</span>
-                    <span v-show="payValue<0">Pay Amount </span>
+                    <span v-show="payValue>0">Income Amount</span>
+                    <span v-show="payValue<=0">Pay Amount </span>
                   </div>
                   <div class="value">
                     ${{ dealNum(Math.abs(payValue)) }}
@@ -502,14 +502,14 @@
 
 import MarginManage from "@/components/MarginManage";
 import ClosePositions from "@/components/ClosePositions";
-import {getTokenInfo,} from "@/api/coinApi";
+import {getTokenInfo, getTokenPrices} from "@/api/coinApi";
 import addressMap from "@/abi/addressMap";
 import {getPositions, getRecord, getProfit, getFundingFee} from "@/api/vault";
 import {mapGetters} from "vuex";
 import MathCalculator from "../utils/bigNumberUtil"
 import BigNumber from "bignumber.js";
 import {MARGINRATIO} from "../utils/constantData"
-import {USDCDECIMALS} from "../utils/constantData";
+import {DECIMALS6} from "../utils/constantData";
 import moment from "moment"
 
 let getPriceInterval = null
@@ -523,6 +523,7 @@ export default {
   data() {
     return {
       moment,
+      tokenPriceMap: {},
       usdcAllowance: 0,
       clickPosition: {},
       amount: undefined,
@@ -552,7 +553,7 @@ export default {
         name: "BTC",
         pnl: "0",
         size: "0",
-      },{
+      }, {
         average_price: "20100",
         collateral: "0",
         direction: 1,
@@ -582,34 +583,11 @@ export default {
   },
   computed: {
     collateralDeltaInIO() {//增加还是减少保证金 （true:添加，false:减少）
-      switch (this.activeTokenName) {
-        case "BTC":
-          if (this.originalBtcObj.direction && this.originalBtcObj.direction != this.direction) {//direction：方向不同
-            let totalSize = calculator.subtract(this.originalBtcObj.size, this.amount)
-            if (totalSize > 0) { //减仓
-              return false
-            } else {//反向开仓
-              if (totalSize < 0 && (calculator.subtract(this.curValue, this.originalBtcValue) < this.originalBtcValue)) {//反方向开仓 && 需要减少保证金
-                return false
-              }
-            }
-          }
-          return true
-
-        case "ETH":
-          if (this.originalEthObj.direction && this.originalEthObj.direction != this.direction) {//direction：方向不同
-            let totalSize = calculator.subtract(this.originalEthObj.size, this.amount)
-            if (totalSize > 0) {
-              return false
-            } else {//反向开仓
-              if (totalSize < 0 && (calculator.subtract(this.curValue, this.originalEthValue) < this.originalEthValue)) {//反方向开仓 && 仓位减小
-                return false
-              }
-            }
-          }
-          return true
+      if (this.payValue >= 0) {
+        return false
+      } else {
+        return true
       }
-      return false
     },
     curValue() { //当前下单价值
       if (this.usdcAmount > 0 && this.amount > 0) {
@@ -635,8 +613,7 @@ export default {
             if (!this.originalBtcValue) {
               return this.amount
             }
-
-            if (this.originalBtcObj.direction == this.direction) {//direction：方向相同
+            if (this.originalBtcObj.direction != this.operateNav) {//direction：方向相同
               totalSize = calculator.add(this.originalBtcObj.size, this.amount)
             } else {
               totalSize = calculator.subtract(this.originalBtcObj.size, this.amount)
@@ -647,7 +624,7 @@ export default {
               return this.amount
             }
 
-            if (this.originalEthObj.direction == this.direction) {//direction：方向相同
+            if (this.originalEthObj.direction != this.operateNav) {//direction：方向相同
               totalSize = calculator.add(this.originalEthObj.size, this.amount)
             } else {
               totalSize = calculator.subtract(this.originalEthObj.size, this.amount)
@@ -660,55 +637,33 @@ export default {
     },
     payValue() {//需要支付或者获得 u
       if (this.usdcAmount > 0 && this.amount > 0) {
+        let changeValue = 0
         switch (this.activeTokenName) {
           case "BTC":
             if (!this.originalBtcValue) {
-              return this.curValue
+              return -this.curValue
             }
-
-            if (this.originalBtcObj.direction == this.direction) {//direction：方向相同
-              const totalSize = calculator.add(this.originalBtcObj.size, this.amount)
-              const totalValue = calculator.divide(calculator.multiply(totalSize, this.coinInfo.index_price), this.slideValue)
-              const payV = calculator.subtract(this.originalBtcValue, totalValue)
-
-              return payV
-            } else {//direction：方向不同
-              let payV = 0
-              const totalSize = calculator.subtract(this.originalBtcObj.size, this.amount)
-              if (totalSize < 0) {//反方向开仓
-                const totalValue = calculator.divide(calculator.multiply(totalSize, this.coinInfo.index_price), this.slideValue)
-                payV = totalValue
-              } else {//减仓
-                const totalValue = calculator.divide(calculator.multiply(totalSize, this.coinInfo.index_price), this.slideValue)
-                payV = calculator.subtract(this.originalBtcValue, totalValue)
-              }
-              return payV
+            console.log(Math.abs(this.endSize),this.originalEthObj.size)
+            if (this.endSize < 0 && (Math.abs(this.endSize) > this.originalBtcObj.size)) {
+              changeValue = this.originalBtcValue - Math.abs(this.endSize) * this.tokenPriceMap[this.originalBtcObj.index_token] / this.slideValue
+            } else {
+              changeValue = this.originalBtcValue - Math.abs(this.endSize) * this.tokenPriceMap[this.originalBtcObj.index_token] / this.slideValue
             }
+            console.log(changeValue)
+            return changeValue
           case "ETH":
             if (!this.originalEthValue) {
-              return this.curValue
+              return -this.curValue
             }
-            if (this.originalEthObj.direction == this.direction) { //direction：方向相同
-              const totalSize = calculator.add(this.originalEthObj.size, this.amount)
-              const totalValue = calculator.divide(calculator.multiply(totalSize, this.coinInfo.index_price), this.slideValue)
-              const payV = calculator.subtract(this.originalEthValue, totalValue)
-              return payV
-            } else {//direction：方向不同
-              let payV = 0
-              const totalSize = calculator.subtract(this.originalEthObj.size, this.amount)
-              if (totalSize < 0) {//反方向开仓
-                const totalValue = calculator.divide(calculator.multiply(totalSize, this.coinInfo.index_price), this.slideValue)
-                payV = totalValue
-              } else {//减仓
-                const totalValue = calculator.divide(calculator.multiply(totalSize, this.coinInfo.index_price), this.slideValue)
-                payV = calculator.subtract(this.originalEthValue, totalValue)
-              }
-
-              return payV
+            console.log(Math.abs(this.endSize),this.originalEthObj.size)
+            if (this.endSize < 0 && (Math.abs(this.endSize) > this.originalEthObj.size)) {
+              changeValue = this.originalEthValue - Math.abs(this.endSize) * this.tokenPriceMap[this.originalEthObj.index_token] / this.slideValue
+            } else {
+              changeValue = this.originalEthValue - Math.abs(this.endSize) * this.tokenPriceMap[this.originalEthObj.index_token] / this.slideValue
             }
+            console.log(changeValue)
+            return changeValue
         }
-
-
       }
       return 0
     },
@@ -832,9 +787,9 @@ export default {
       console.log(this.fundingFeeArr)
     },
     async getPositionData() {
-      try{
+      try {
         let res = await getPositions(this.account)
-        let positionArr=res.data.data
+        let positionArr = res.data.data
         this.positionArr = positionArr
 
 
@@ -849,7 +804,7 @@ export default {
             this.originalEthObj = item
           }
         })
-      }catch (e){
+      } catch (e) {
         console.log(e)
       }
     },
@@ -927,7 +882,6 @@ export default {
       })
     },
     async trade() {
-
       if (!this.isConnected) {
         this.$message.info('Please connect');
         return
@@ -950,38 +904,14 @@ export default {
       })
 
       //开仓金额花费
-      let sizeDelta = 0, collateralDelta = 0
-      //let sizeDelta = BigNumber((this.usdcAmount * (1 + parseFloat(this.feeRate))) * USDCDECIMALS / this.slideValue).toFixed(0)
-      if (!this.collateralDeltaInIO) {//是否需要减少保证金
-        let originObj = this.activeTokenName == "BTC" ? this.originalBtcObj : this.originalEthObj
+      let sizeDelta = 0
+      sizeDelta = BigNumber(Math.abs(this.amount) * DECIMALS6).toFixed(0)
 
-        if (originObj.direction != this.direction) {
-          let totalSize = calculator.subtract(originObj.size, this.amount)
-          if (totalSize > 0) {//同向减仓
-            //减少金额 = 开仓价值 -/+ 需要补充的
-            sizeDelta = BigNumber((this.amount) * USDCDECIMALS).toFixed(0)
-            collateralDelta = BigNumber(calculator.add(this.curValue, originObj.pnl) * USDCDECIMALS * (1 - parseFloat(this.feeRate))).toFixed(0)
-          } else {//反向开仓减仓
-            sizeDelta = BigNumber(calculator.subtract(this.amount, Math.abs(this.endSize)) * USDCDECIMALS).toFixed(0)
-            collateralDelta = BigNumber(Math.abs(this.payValue) * USDCDECIMALS * (1 - parseFloat(this.feeRate))).toFixed(0)
-          }
-
-        }
-      } else {
-        let originObj = this.activeTokenName == "BTC" ? this.originalBtcObj : this.originalEthObj
-        if (originObj.direction == this.direction) {
-          sizeDelta = BigNumber(Math.abs(this.amount) * USDCDECIMALS).toFixed(0)
-          collateralDelta = BigNumber(Math.abs(this.payValue) * USDCDECIMALS * (1 - parseFloat(this.feeRate))).toFixed(0)
-        } else {
-          sizeDelta = BigNumber(Math.abs(this.amount) * USDCDECIMALS).toFixed(0)
-          collateralDelta = BigNumber(Math.abs(this.payValue) * USDCDECIMALS * (1 - parseFloat(this.feeRate))).toFixed(0)
-        }
-      }
       this.$store.dispatch("vault/updatePosition", {
         _indexToken: this.coinInfo.contract_address,
         _leverage: this.slideValue,
         _sizeDelta: Math.abs(sizeDelta),
-        _collateralDelta: Math.abs(collateralDelta),
+        _collateralDelta: BigNumber(Math.abs(this.payValue) * DECIMALS6).toFixed(0),
         _indexPrice: price,
         _direction: this.direction,
         _collateralDeltaInIO: this.collateralDeltaInIO
@@ -991,6 +921,7 @@ export default {
         this.amount = undefined
         this.usdcAmount = undefined
       }).catch((e) => {
+        console.log(e)
         this.$message.info(e);
       })
     },
@@ -1056,12 +987,13 @@ export default {
     },
     async getData() {
       try {
-        // let priceRes = await getTokenPrices()
+        let priceRes = await getTokenPrices()
+        this.tokenPriceMap = priceRes.data.data
         // let priceArr = priceRes.data.data
         // console.log(priceArr)
         this.getPositionData()
         let tokenInfoRes = await getTokenInfo()
-        // console.log(price.data.data)
+
         let tokenInfo = tokenInfoRes.data.data
         this.feeRate = Number(tokenInfo.transaction_fee_rate)
         this.tokenInfo = tokenInfo
@@ -1084,7 +1016,7 @@ export default {
     this.initData()
     getPriceInterval = setInterval(() => {
       this.getData()
-    }, 3000)
+    }, 100000)
   },
   beforeDestroy() {
     clearInterval(getPriceInterval)

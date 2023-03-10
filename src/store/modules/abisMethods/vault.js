@@ -435,13 +435,13 @@ const actions = {
         _direction,
         _collateralDeltaInIO
     }) {
-        console.log(  _indexToken,
+        console.log(  {_indexToken,
             _leverage,
             _sizeDelta,
             _collateralDelta,
             _indexPrice,
             _direction,
-            _collateralDeltaInIO)
+            _collateralDeltaInIO})
         judgeToken(rootState)
         return new Promise((resolve, reject) => {
             state.token.methods.updatePosition(_indexToken, _leverage, _sizeDelta, _collateralDelta, _indexPrice, _direction, _collateralDeltaInIO).estimateGas({
@@ -451,8 +451,10 @@ const actions = {
                     from: rootState.app.account,
                     gas: parseInt(gas * 1.2)
                 }).then(res => {
-
                     resolve(res)
+                }).catch(err => {
+                    console.log(err)
+                    reject(JSON.parse(err.message.substr(24, err.message.length)).message)
                 })
             }).catch(err => {
                 console.log(err)
