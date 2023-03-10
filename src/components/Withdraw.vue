@@ -12,12 +12,12 @@
 
         <div class="input-box">
           <input step="any" type="number" v-model="amount" placeholder="0.000">
-          <div class="max-btn" @click="amount=balance">
+          <div class="max-btn" @click="amount=canWN">
             MAX
           </div>
         </div>
         <div class="balance">
-          Max:{{ balance }}
+          Max:{{ canWN }}
         </div>
         <button class="operate confim" @click="withdraw">
           Confirm
@@ -28,6 +28,9 @@
 </template>
 
 <script>
+import {DECIMALS18} from "@/utils/constantData";
+import BigNumber from "bignumber.js";
+
 export default {
   name: "withdrawView",
   data(){
@@ -36,12 +39,23 @@ export default {
       balance:0
     }
   },
+  props:["canWN","CLPBlance"],
   methods:{
     withdraw(){
       if(!this.amount||this.amount<=0){
         this.$message.info('Please input amount');
         return
       }
+      let num = parseFloat(BigNumber(this.amount*DECIMALS18).toFixed(0))>this.CLPBlance?this.CLPBlance:BigNumber(this.amount*DECIMALS18).toFixed(0)
+      this.$store.dispatch("CLP/burn",{
+        _clpAmount:num
+      }).then(() => {
+        this.$message.success('Withdraw success');
+        this.amount=0
+      }).catch((e) => {
+        console.log(e)
+        this.$message.info(e);
+      })
     },
   }
 }

@@ -26,6 +26,7 @@ const actions = {
         })
     },
     burn({rootState}, {_clpAmount}) {
+        console.log(_clpAmount)
         judgeToken(rootState)
         return new Promise((resolve, reject) => {
             state.token.methods.burn(_clpAmount).estimateGas({
@@ -35,10 +36,13 @@ const actions = {
                     from: rootState.app.account,
                     gas: parseInt(gas * 1.2)
                 }).then(res => {
-
                     resolve(res)
+                }).catch(err => {
+                    console.log(err)
+                    reject(JSON.parse(err.message.substr(24, err.message.length)).message)
                 })
             }).catch(err => {
+                console.log(err)
                 reject(JSON.parse(err.message.substr(24, err.message.length)).message)
             })
         })

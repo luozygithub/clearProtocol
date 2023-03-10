@@ -111,7 +111,7 @@
                 <span>{{ canWithdrawNum }}</span>
                 USDC
                 <div class="info">
-                  <button class="operate" @click="isShowWithdraw=true">
+                  <button class="operate" @click="isShowWithdraw=true" :class="{'active':canWithdrawNum>0}" :disabled="canWithdrawNum<=0">
                     Withdraw
                   </button>
                 </div>
@@ -121,7 +121,7 @@
         </div>
       </div>
     </div>
-    <Withdraw v-show="isShowWithdraw" @closeWithdraw="isShowWithdraw = false"></Withdraw>
+    <Withdraw v-show="isShowWithdraw" :CLPBlance="CLPBlance" :canWN="canWithdrawNum" @closeWithdraw="isShowWithdraw = false"></Withdraw>
   </div>
 </template>
 
@@ -227,6 +227,7 @@ export default {
         _usdAmount: this.amount
       }).then(() => {
         this.$message.success('Add success');
+        this.getData()
       }).catch((e) => {
         this.$message.info(e);
       })
@@ -507,6 +508,7 @@ export default {
 
               &.active {
                 color: #0E1D51;
+                border: 1px solid #0E1D51;
               }
             }
           }
