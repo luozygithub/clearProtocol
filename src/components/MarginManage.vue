@@ -82,6 +82,7 @@
 import addressMap from "@/abi/addressMap";
 import {mapGetters} from "vuex";
 import BigNumber from "bignumber.js";
+import {USDCDECIMALS} from "@/utils/constantData";
 
 export default {
   name: "MarginManage",
@@ -113,7 +114,7 @@ export default {
         address: addressMap.usdt,
         account: this.$store.state.app.account,
       })
-      this.balance = res / 10**6
+      this.balance = res / USDCDECIMALS
     },
     dealNum(val) {
       if ((val)) {
@@ -136,8 +137,8 @@ export default {
       this.$store.dispatch("vault/updatePosition", {
         _indexToken: this.positionObj.index_token,
         _leverage: this.positionObj.leverage,
-        _sizeDelta: BigNumber(this.amount  * 10 ** 6 / price).toFixed(0),
-        _collateralDelta: BigNumber(this.amount*10**6).toFixed(0),
+        _sizeDelta: BigNumber(this.amount  * USDCDECIMALS / price).toFixed(0),
+        _collateralDelta: BigNumber(this.amount*USDCDECIMALS).toFixed(0),
         _indexPrice: price,
         _direction: direction,
         _collateralDeltaInIO: this.activeNav==0?true:false

@@ -1,6 +1,6 @@
-.ant-message-notice{
+.ant-message-notice {
 
-  .ant-message-notice-content{
+  .ant-message-notice-content {
     border-radius: 20px;
     padding: 1em 1.5em;
     //.ant-message-custom-content{
@@ -17,30 +17,97 @@
     //}
 
   }
-  &:nth-child(1){
+
+  &:nth-child(1) {
     margin-top: 20vh;
   }
 }
-.ant-dropdown{
+
+.ant-dropdown {
 
   .coin-info {
     align-items: center;
     display: flex;
     justify-content: space-between;
     padding: 6px 0;
-    .right{
+
+    .right {
+      display: flex;
       color: #63CE63;
-      &.down{
+
+      .price {
+        margin-right: 6px;
+        font-size: var(--font-size14);
+        font-family: AvertaStd-Regular, AvertaStd;
+        font-weight: 400;
+        color: #0E1D51;
+      }
+
+      &.down {
         color: #E32A20;
       }
     }
-    .coin-name{
+
+    .coin-name {
       display: flex;
       align-items: center;
-      svg{
+
+      .usdc {
+        font-size: var(--font-size12);
+        margin-top: 2px;
+        margin-left: -2px;
+        transform: scale(0.8);
+        color: #aaa;
+      }
+
+      svg {
         margin-right: 6px;
       }
 
     }
   }
+}
+
+.slider-box {
+  width: 100%;
+  position: relative;
+  margin-right: 16px;
+
+
+  .slider-lines {
+    position: absolute;
+    left: 6px;
+    top: 0;
+    height: 8px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .ant-slider-handle {
+    position: relative;
+    z-index: 1;
+  }
+
+  .slider-line {
+    content: "";
+    position: absolute;
+    top: 17px;
+    z-index: 0;
+    width: 3px;
+    height: 5px;
+    border-radius: 1px;
+    transform: scaleY(2); /* 将线条沿 y 轴方向缩放 2 倍 */
+    background-color: #eee;
+
+    &.active {
+      background-color: #0E1D51;
+    }
+  }
+}
+
+.ant-slider {
+  position: relative;
+
+
 }

@@ -7,7 +7,7 @@
             <a-dropdown>
               <template #overlay>
                 <a-menu @click="handleMenuClick">
-                  <a-menu-item key="1" >
+                  <a-menu-item key="1">
                     <div class="coin-info">
                       <div class="coin-name">
                         <svg t="1677824350805" class="icon" viewBox="0 0 1029 1024" version="1.1"
@@ -20,19 +20,25 @@
                               fill="#FFFFFF" p-id="2820"></path>
                         </svg>
                         <span>
-                        BTCUSDC
-                      </span>
+                          BTC
+                        </span>
+                        <span class="usdc">/USDC</span>
                       </div>
-                      <div class="right" :class="{'down':dealNum(configeInfo.tokens[1].chg_24h)<0}">
-                        {{ configeInfo.tokens ? dealNum(configeInfo.tokens[0].index_price) : "" }}
-                        {{ configeInfo.tokens ? dealNum(configeInfo.tokens[0].chg_24h) : "" }}
+                      <div class="right"
+                           :class="{'down':dealNum(configeInfo.tokens?configeInfo.tokens[1].chg_24h:0)<0}">
+                        <div class="price">
+                          ${{ configeInfo.tokens ? dealNum(configeInfo.tokens[0].index_price) : "" }}
+                        </div>
+                        <div class="rate">
+                          {{ configeInfo.tokens ? dealNum(configeInfo.tokens[0].chg_24h_percent) + "%" : "" }}
+                        </div>
                       </div>
                     </div>
 
                   </a-menu-item>
                   <a-menu-item key="2">
                     <div class="coin-info">
-                      <div class="coin-name" >
+                      <div class="coin-name">
                         <svg t="1677824451359" class="icon" viewBox="0 0 1024 1024" version="1.1"
                              xmlns="http://www.w3.org/2000/svg" p-id="3915" width="20" height="20">
                           <path
@@ -45,15 +51,20 @@
                                 p-id="3918"></path>
                         </svg>
                         <span>
-                        ETHUSDC
-                      </span>
+                          ETH
+                        </span>
+                        <span class="usdc">/USDC</span>
                       </div>
-                      <div class="right" :class="{'down':dealNum(configeInfo.tokens[1].chg_24h)<0}">
-                        {{ configeInfo.tokens ? dealNum(configeInfo.tokens[1].index_price) : "" }}
-                        {{ configeInfo.tokens ? dealNum(configeInfo.tokens[1].chg_24h) : "" }}
+                      <div class="right"
+                           :class="{'down':dealNum(configeInfo.tokens?configeInfo.tokens[1].chg_24h:0)<0}">
+                        <div class="price">
+                          ${{ configeInfo.tokens ? dealNum(configeInfo.tokens[1].index_price) : "" }}
+                        </div>
+                        <div class="rate">
+                          {{ configeInfo.tokens ? dealNum(configeInfo.tokens[1].chg_24h_percent) + "%" : "" }}
+                        </div>
                       </div>
                     </div>
-
                   </a-menu-item>
 
                 </a-menu>
@@ -96,10 +107,10 @@
           </div>
           <div class="left-content">
             <div class="flex-box">
-              <button class="operate " :class="{'sell':operateNav!=0}" @click="operateNav=0">
+              <button class="operate buy" :class="{'active':operateNav==0}" @click="operateNav=0">
                 Buy (Long)
               </button>
-              <button class="operate  " :class="{'sell':operateNav!=1}" @click="operateNav=1">
+              <button class="operate  sell" :class="{'active':operateNav==1}" @click="operateNav=1">
                 Sell (Short)
               </button>
             </div>
@@ -124,8 +135,22 @@
                 Leverage
               </div>
               <div class="progress-box" style="position: relative">
-                <a-slider :min="2" :max="50" style="position: relative;width: 100%" :tipFormatter="formatTip"
-                          tooltipPlacement="bottom" v-model="slideValue"/>
+                <div class="slider-box">
+                  <a-slider :min="2" :max="50" style="position: relative;width: 100%" :tipFormatter="formatTip"
+                            tooltipPlacement="bottom" v-model="slideValue">
+                  </a-slider>
+                  <div class="slider-lines" style="pointer-events: none;--value: calc((100% / max) * value)">
+                    <div class="slider-line" :class="{'active':slideValue>=4.8}" :style="{ left: '10%' }"/>
+                    <div class="slider-line" :class="{'active':slideValue>=9.6}" :style="{ left: '20%' }"/>
+                    <div class="slider-line" :class="{'active':slideValue>=4.8*3}" :style="{ left: '30%' }"/>
+                    <div class="slider-line" :class="{'active':slideValue>=4.8*5}" :style="{ left: '40%' }"/>
+                    <div class="slider-line" :class="{'active':slideValue>=4.8*6}" :style="{ left: '50%' }"/>
+                    <div class="slider-line" :class="{'active':slideValue>=4.8*7}" :style="{ left: '60%' }"/>
+                    <div class="slider-line" :class="{'active':slideValue>=4.8*8}" :style="{ left: '70%' }"/>
+                    <div class="slider-line" :class="{'active':slideValue>=4.8*9}" :style="{ left: '80%' }"/>
+                    <div class="slider-line" :class="{'active':slideValue>=4.8*10}" :style="{ left: '90%' }"/>
+                  </div>
+                </div>
                 <div class="reset" @click="slideValue=2">
                   Reset
                 </div>
@@ -177,7 +202,7 @@
                     Est. Liquidation Price
                   </div>
                   <div class="value">
-                    {{ liquidationPrice }}
+                    {{ dealNum(liquidationPrice) }}
                   </div>
                 </div>
                 <div class="flex-box">
@@ -185,7 +210,7 @@
                     Fee
                   </div>
                   <div class="value">
-                    ${{ feeRate && usdcAmount ? feeRate * usdcAmount : 0 }}
+                    ${{ feeRate && usdcAmount ? dealNum(feeRate * usdcAmount) : 0 }}
                   </div>
                 </div>
                 <div class="flex-box">
@@ -194,7 +219,7 @@
                     <span v-show="payValue<0">Pay Amount </span>
                   </div>
                   <div class="value">
-                    ${{ Math.abs(payValue) }}
+                    ${{ dealNum(Math.abs(payValue)) }}
                   </div>
                 </div>
               </div>
@@ -203,7 +228,8 @@
               Approve
             </button>
             <!--            :disabled="!tradeActive"-->
-            <button class="operate trade" v-show="usdcAllowance>10||usdcAllowance>amount" :class="{'active':tradeActive}" @click="trade">
+            <button class="operate trade" v-show="usdcAllowance>10||usdcAllowance>amount"
+                    :class="{'active':tradeActive}" @click="trade">
               Trade
             </button>
           </div>
@@ -223,7 +249,7 @@
                 {{ coinInfo.funding_rate ? dealNum(coinInfo.funding_rate[0]) : 0 }}%
               </div>
               <div class="time">
-                {{ dealNum(coinInfo.funding_time) }}
+                {{ coinInfo.funding_time }}
               </div>
             </div>
           </div>
@@ -232,7 +258,7 @@
               24h Change
             </div>
             <div class="value" :class="{'down':dealNum(coinInfo.chg_24h_percent) <0}">
-              {{ dealNum(coinInfo.chg_24h) }} +
+              {{ dealNum(coinInfo.chg_24h) }}
               {{ dealNum(coinInfo.chg_24h_percent) }}%
             </div>
           </div>
@@ -372,13 +398,13 @@
                 {{ dealNum(item.index_price) }}
               </div>
               <div class="col">
-                {{ dealNum(item.index_price) }}
+                {{ dealFeeNum(item.transaction_fee) }}
               </div>
               <div class="col">
                 {{ dealNum(item.pel) }}
               </div>
               <div class="col">
-                {{ item.updated_at }}
+                {{ moment(item.updated_at) }}
               </div>
             </div>
           </div>
@@ -408,7 +434,7 @@
             </div>
             <div class="row" v-for="(item,index) in recordArr" :key="index">
               <div class="col">
-                {{ item.updated_at }}
+                {{ moment(item.updated_at) }}
               </div>
               <div class="col">
                 {{ item.name }}/USDC
@@ -428,7 +454,7 @@
                 {{ dealNum(item.leverage) }}
               </div>
               <div class="col">
-                {{ dealNum(item.transaction_fee) / 10 ** 6 }}$
+                {{ dealFeeNum(item.transaction_fee / 10 ** 6) }}$
               </div>
             </div>
           </div>
@@ -483,6 +509,9 @@ import {mapGetters} from "vuex";
 import MathCalculator from "../utils/bigNumberUtil"
 import BigNumber from "bignumber.js";
 import {MARGINRATIO} from "../utils/constantData"
+import {USDCDECIMALS} from "../utils/constantData";
+import moment from "moment"
+
 let getPriceInterval = null
 var calculator = new MathCalculator();
 export default {
@@ -493,6 +522,7 @@ export default {
   },
   data() {
     return {
+      moment,
       usdcAllowance: 0,
       clickPosition: {},
       amount: undefined,
@@ -520,7 +550,7 @@ export default {
       originalEthValue: 0,//原有仓位价值
       originalBtcObj: 0,//原有仓位方向
       originalEthObj: 0,//原有仓位方向
-      usdcAmount: undefined
+      usdcAmount: undefined,
       //  BINANCE:ETHUSDT
     }
   },
@@ -531,11 +561,39 @@ export default {
     }
   },
   computed: {
+    collateralDeltaInIO() {//增加还是减少保证金 （true:添加，false:减少）
+      switch (this.activeTokenName) {
+        case "BTC":
+          if (this.originalBtcObj.direction && this.originalBtcObj.direction != this.direction) {//direction：方向不同
+            let totalSize = calculator.subtract(this.originalBtcObj.size, this.amount)
+            if (totalSize > 0) { //减仓
+              return false
+            } else {//反向开仓
+              if (totalSize < 0 && (calculator.subtract(this.curValue, this.originalBtcValue) < this.originalBtcValue)) {//反方向开仓 && 需要减少保证金
+                return false
+              }
+            }
+          }
+          return true
 
-
+        case "ETH":
+          if (this.originalEthObj.direction && this.originalEthObj.direction != this.direction) {//direction：方向不同
+            let totalSize = calculator.subtract(this.originalEthObj.size, this.amount)
+            if (totalSize > 0) {
+              return false
+            } else {//反向开仓
+              if (totalSize < 0 && (calculator.subtract(this.curValue, this.originalEthValue) < this.originalEthValue)) {//反方向开仓 && 仓位减小
+                return false
+              }
+            }
+          }
+          return true
+      }
+      return false
+    },
     curValue() { //当前下单价值
       if (this.usdcAmount > 0 && this.amount > 0) {
-        return this.usdcAmount / this.slideValue
+        return calculator.divide(this.usdcAmount, this.slideValue)
       }
       return 0
     },
@@ -548,6 +606,37 @@ export default {
         }
       }
       return 0
+    },
+    endSize() {//操作后仓位大小
+      if (this.usdcAmount > 0 && this.amount > 0) {
+        let totalSize = 0
+        switch (this.activeTokenName) {
+          case "BTC":
+            if (!this.originalBtcValue) {
+              return this.amount
+            }
+
+            if (this.originalBtcObj.direction == this.direction) {//direction：方向相同
+              totalSize = calculator.add(this.originalBtcObj.size, this.amount)
+            } else {
+              totalSize = calculator.subtract(this.originalBtcObj.size, this.amount)
+            }
+            return totalSize
+          case "ETH":
+            if (!this.originalEthValue) {
+              return this.amount
+            }
+
+            if (this.originalEthObj.direction == this.direction) {//direction：方向相同
+              totalSize = calculator.add(this.originalEthObj.size, this.amount)
+            } else {
+              totalSize = calculator.subtract(this.originalEthObj.size, this.amount)
+            }
+            return totalSize
+        }
+      }
+      return 0
+
     },
     payValue() {//需要支付或者获得 u
       if (this.usdcAmount > 0 && this.amount > 0) {
@@ -563,13 +652,13 @@ export default {
               const payV = calculator.subtract(this.originalBtcValue, totalValue)
 
               return payV
-            } else  {//direction：方向不同
-              let payV=0
+            } else {//direction：方向不同
+              let payV = 0
               const totalSize = calculator.subtract(this.originalBtcObj.size, this.amount)
-              if(totalSize<0){//反方向开仓
+              if (totalSize < 0) {//反方向开仓
                 const totalValue = calculator.divide(calculator.multiply(totalSize, this.coinInfo.index_price), this.slideValue)
                 payV = totalValue
-              }else{//减仓
+              } else {//减仓
                 const totalValue = calculator.divide(calculator.multiply(totalSize, this.coinInfo.index_price), this.slideValue)
                 payV = calculator.subtract(this.originalBtcValue, totalValue)
               }
@@ -585,12 +674,12 @@ export default {
               const payV = calculator.subtract(this.originalEthValue, totalValue)
               return payV
             } else {//direction：方向不同
-              let payV=0
+              let payV = 0
               const totalSize = calculator.subtract(this.originalEthObj.size, this.amount)
-              if(totalSize<0){//反方向开仓
+              if (totalSize < 0) {//反方向开仓
                 const totalValue = calculator.divide(calculator.multiply(totalSize, this.coinInfo.index_price), this.slideValue)
                 payV = totalValue
-              }else{//减仓
+              } else {//减仓
                 const totalValue = calculator.divide(calculator.multiply(totalSize, this.coinInfo.index_price), this.slideValue)
                 payV = calculator.subtract(this.originalEthValue, totalValue)
               }
@@ -610,12 +699,12 @@ export default {
             if (!this.originalBtcValue) {
               return this.calculatLiq(1)
             }
-            return this.calculatLiq(2,this.originalBtcObj)
+            return this.calculatLiq(2, this.originalBtcObj)
           case "ETH":
             if (!this.originalEthValue) {
               return this.calculatLiq(1)
             }
-            return this.calculatLiq(2,this.originalEthObj)
+            return this.calculatLiq(2, this.originalEthObj)
         }
       }
       return 0
@@ -645,8 +734,11 @@ export default {
     ]),
   },
   methods: {
-    calculatLiq(type,originObj){
-      if (type===1) {
+    onSliderChange() {
+
+    },
+    calculatLiq(type, originObj) {
+      if (type === 1) {
         if (this.operateNav == 0) {
           let data1 = this.usdcAmount / this.slideValue - this.amount * this.coinInfo.index_price
           let data2 = this.amount * MARGINRATIO / this.slideValue - this.amount
@@ -658,33 +750,33 @@ export default {
           let liqV = calculator.divide(data1, data2)
           return liqV >= 0 ? liqV : 0
         }
-      }else{
-        let data1,data2
+      } else {
+        let data1, data2
         if (originObj.direction == this.direction) { //direction：方向相同
 
           const totalSize = calculator.add(originObj.size, this.amount)
           const totalValue = calculator.divide(calculator.multiply(totalSize, this.coinInfo.index_price), this.slideValue)
-          if(originObj.direction==1){//long 多
-            data1= totalValue - totalSize * this.coinInfo.index_price
+          if (originObj.direction == 1) {//long 多
+            data1 = totalValue - totalSize * this.coinInfo.index_price
             data2 = totalSize * MARGINRATIO / this.slideValue - totalSize
-          }else{//short 空
-            console.log(totalValue,totalSize)
-            data1= calculator.add(totalValue , totalSize * this.coinInfo.index_price)
-            data2 = calculator.add(calculator.divide(totalSize * MARGINRATIO , this.slideValue) , totalSize)
+          } else {//short 空
+            console.log(totalValue, totalSize)
+            data1 = calculator.add(totalValue, totalSize * this.coinInfo.index_price)
+            data2 = calculator.add(calculator.divide(totalSize * MARGINRATIO, this.slideValue), totalSize)
           }
           let liqV = calculator.divide(data1, data2)
           return liqV >= 0 ? liqV : 0
         } else {//方向不同
           let totalSize = calculator.subtract(originObj.size, this.amount)
-          let directionRES = totalSize>0 ?originObj.direction:this.direction
+          let directionRES = totalSize > 0 ? originObj.direction : this.direction
           totalSize = Math.abs(totalSize)
           const totalValue = calculator.divide(calculator.multiply(totalSize, this.coinInfo.index_price), this.slideValue)
-          if(directionRES){//long
-            data1= totalValue - totalSize * this.coinInfo.index_price
+          if (directionRES) {//long
+            data1 = totalValue - totalSize * this.coinInfo.index_price
             data2 = totalSize * MARGINRATIO / this.slideValue - totalSize
-          }else{//short
-            data1= calculator.add(totalValue , calculator.multiply(totalSize, this.coinInfo.index_price))
-            data2 = calculator.add(calculator.divide(totalSize * MARGINRATIO , this.slideValue) , totalSize)
+          } else {//short
+            data1 = calculator.add(totalValue, calculator.multiply(totalSize, this.coinInfo.index_price))
+            data2 = calculator.add(calculator.divide(totalSize * MARGINRATIO, this.slideValue), totalSize)
           }
 
           let liqV = calculator.divide(data1, data2)
@@ -722,18 +814,31 @@ export default {
     async getPositionData() {
       let positionArr = await getPositions(this.account)
       this.positionArr = positionArr.data.data
+      //取出当前
       this.positionArr.forEach(item => {
         if (item.name == "BTC") {
-          this.originalBtcValue = parseFloat(item.collateral) + parseFloat(item.pnl)
+          this.originalBtcValue = calculator.add(parseFloat(item.collateral), parseFloat(item.pnl))
           this.originalBtcObj = item
         }
         if (item.name == "ETH") {
-          this.originalEthValue = parseFloat(item.collateral) + parseFloat(item.pnl)
+          this.originalEthValue = calculator.add(parseFloat(item.collateral), parseFloat(item.pnl))
           this.originalEthObj = item
         }
       })
     },
     dealD6Num(val) {
+      if ((val)) {
+        return val ? (parseInt(Number(val) * 1000000) / 1000000) : 0
+      }
+      return 0
+    },
+    dealFeeNum(val) {
+      if (val == 0) {
+        return 0
+      }
+      if (val < 0.00001) {
+        return "<0.00001"
+      }
       if ((val)) {
         return val ? (parseInt(Number(val) * 1000000) / 1000000) : 0
       }
@@ -756,7 +861,17 @@ export default {
       this.usdcAmount = BigNumber(this.amount * this.coinInfo.index_price).toFixed(2)
     },
     updateAmount() {
-      this.amount = (calculator.divide(this.usdcAmount  ,this.coinInfo.index_price))
+      let value = this.usdcAmount.replace(/[^\d.]/g, '');
+      const parts = value.split('.');
+      let integerPart = parts[0];
+      let decimalPart = parts[1];
+      if (decimalPart && decimalPart.length > 2) {
+        decimalPart = decimalPart.slice(0, 2);
+      }
+      value = decimalPart ? `${integerPart}.${decimalPart}` : integerPart;
+      this.usdcAmount = value;
+
+      this.amount = (calculator.divide(this.usdcAmount, this.coinInfo.index_price))
     },
     async allowance() {
       if (!this.isConnected) {
@@ -780,9 +895,12 @@ export default {
         address: addressMap.usdt,
         spender: addressMap.vault,
         amount: this.$store.state.app.web3.utils.toWei((10 ** 10).toString()).toString()
+      }).then(() => {
+        this.allowance()
       })
     },
     async trade() {
+
       if (!this.isConnected) {
         this.$message.info('Please connect');
         return
@@ -803,15 +921,43 @@ export default {
       let price = await this.$store.dispatch("vault/getPrice", {
         _indexToken: this.coinInfo.contract_address
       })
-      let sizeDelta = BigNumber((this.usdcAmount * (1 + parseFloat(this.feeRate))) * 10 ** 6 / this.slideValue).toFixed(0)
+
+      //开仓金额花费
+      let sizeDelta = 0, collateralDelta = 0
+      //let sizeDelta = BigNumber((this.usdcAmount * (1 + parseFloat(this.feeRate))) * USDCDECIMALS / this.slideValue).toFixed(0)
+      if (!this.collateralDeltaInIO) {//是否需要减少保证金
+        let originObj = this.activeTokenName == "BTC" ? this.originalBtcObj : this.originalEthObj
+
+        if (originObj.direction != this.direction) {
+          let totalSize = calculator.subtract(originObj.size, this.amount)
+          if (totalSize > 0) {//同向减仓
+            //减少金额 = 开仓价值 -/+ 需要补充的
+            sizeDelta = BigNumber((this.amount) * USDCDECIMALS).toFixed(0)
+            collateralDelta = BigNumber(calculator.add(this.curValue, originObj.pnl) * USDCDECIMALS * (1 - parseFloat(this.feeRate))).toFixed(0)
+          } else {//反向开仓减仓
+            sizeDelta = BigNumber(calculator.subtract(this.amount, Math.abs(this.endSize)) * USDCDECIMALS).toFixed(0)
+            collateralDelta = BigNumber(Math.abs(this.payValue) * USDCDECIMALS * (1 - parseFloat(this.feeRate))).toFixed(0)
+          }
+
+        }
+      } else {
+        let originObj = this.activeTokenName == "BTC" ? this.originalBtcObj : this.originalEthObj
+        if (originObj.direction == this.direction) {
+          sizeDelta = BigNumber(Math.abs(this.amount) * USDCDECIMALS).toFixed(0)
+          collateralDelta = BigNumber(Math.abs(this.payValue) * USDCDECIMALS * (1 - parseFloat(this.feeRate))).toFixed(0)
+        } else {
+          sizeDelta = BigNumber(Math.abs(this.amount) * USDCDECIMALS).toFixed(0)
+          collateralDelta = BigNumber(Math.abs(this.payValue) * USDCDECIMALS * (1 - parseFloat(this.feeRate))).toFixed(0)
+        }
+      }
       this.$store.dispatch("vault/updatePosition", {
         _indexToken: this.coinInfo.contract_address,
         _leverage: this.slideValue,
-        _sizeDelta: BigNumber(this.amount * 10 ** 6).toFixed(0),
-        _collateralDelta: sizeDelta,
+        _sizeDelta: Math.abs(sizeDelta),
+        _collateralDelta: Math.abs(collateralDelta),
         _indexPrice: price,
         _direction: this.direction,
-        _collateralDeltaInIO: true
+        _collateralDeltaInIO: this.collateralDeltaInIO
       }).then(() => {
         this.initData()
         this.$message.info('Trade success');
@@ -1111,7 +1257,6 @@ export default {
   }
 
 
-
   ::v-deep .ant-slider-handle {
     border: solid 2px #0E1D51;
   }
@@ -1180,10 +1325,26 @@ export default {
         font-family: AvertaStd-Regular, AvertaStd;
       }
 
+      .buy.operate {
+        background: #fff;
+        color: #63CE63;
+        border: 1px solid #63CE63;
+
+        &.active {
+          background: #63CE63;
+          color: #fff;
+        }
+      }
+
       .sell.operate {
         background: #FFFFFF;
         color: #E32A20;
         border: 1px solid #E32A20;
+
+        &.active {
+          background: #E32A20;
+          color: #fff;
+        }
       }
 
       .left-header {
@@ -1192,7 +1353,8 @@ export default {
         border: 1px solid #ECECEE;
         display: flex;
         justify-content: space-between;
-        ::v-deep .ant-dropdown-menu{
+
+        ::v-deep .ant-dropdown-menu {
           .coin-box {
             height: 100%;
             border: none;
@@ -1205,10 +1367,12 @@ export default {
             line-height: 25px;
           }
         }
+
         .icon {
           margin-right: 6px;
         }
-        .menu-box{
+
+        .menu-box {
           background: #000;
         }
 
@@ -1465,7 +1629,8 @@ export default {
           line-height: 25px;
           padding-right: 15px;
           border-right: 1px solid #ECECEE;
-          &.down{
+
+          &.down {
             color: #E32A20;
           }
         }
@@ -1504,7 +1669,8 @@ export default {
             color: #63CE63;
             line-height: 20px;
           }
-          .down{
+
+          .down {
             color: #E32A20;
           }
         }

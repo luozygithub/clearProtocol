@@ -12,8 +12,8 @@
           <div class="input-name">
             Asset
           </div>
-          <div class="input-box">
-            <input type="number" step="any" >
+          <div class="input-box usdc">
+            Tether US USDC
           </div>
           <div class="input-name">
             Amount
@@ -32,7 +32,7 @@
               Wallet
             </div>
             <div class="right">
-              546345.8796
+              {{ balance }}
               <span>USDC</span>
             </div>
           </div>
@@ -122,22 +122,51 @@
 
 <script>
 import Withdraw from "@/components/Withdraw";
+import {mapGetters} from "vuex";
+import addressMap from "@/abi/addressMap";
+import {USDCDECIMALS} from "../utils/constantData"
+import BigNumber from "bignumber.js";
 export default {
   name: "PoolView",
   components:{Withdraw},
   data(){
     return {
       amount:undefined,
+      balance: 0,
       isShowWithdraw:false
     }
   },
+  computed: {
+    ...mapGetters([
+      'isConnected',
+      'account'
+    ]),
+  },
+  watch:{
+    account(){
+      this.getBalance()
+    }
+  },
   methods:{
+    async getBalance() {
+      if (!this.isConnected) {
+        return
+      }
+      let res = await this.$store.dispatch("erc20/balanceOf", {
+        address: addressMap.usdt,
+        account: this.$store.state.app.account,
+      })
+      this.balance = BigNumber(res / USDCDECIMALS).toFixed(2)
+    },
     add(){
       if(!this.amount||this.amount<=0){
         this.$message.info('Please input amount');
         return
       }
     }
+  },
+  created() {
+    this.getBalance()
   }
 }
 </script>
@@ -218,7 +247,21 @@ export default {
       overflow: hidden;
       width: 520px;
       border-right: 1px solid #ECECEE;
-
+      .usdc{
+        width: 260px;
+        height: 36px;
+        background: #F5F5F5;
+        line-height: 36px;
+        border-radius: 18px;
+        opacity: 0.7;
+        border: 1px solid rgba(205,208,227,0.65);
+        text-align: center;
+        font-size: var(--font-size14);
+        font-family: AvertaStd-Regular, AvertaStd;
+        font-weight: 400;
+        color: #0E1D51;
+        user-select: none;
+      }
       .operate {
         margin-top: 36px;
         width: 260px;

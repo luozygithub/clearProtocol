@@ -138,7 +138,6 @@ export default {
   .menu-item-name {
     font-size: 16px !important;
     line-height: 18px;
-
   }
 
   .logo-box {

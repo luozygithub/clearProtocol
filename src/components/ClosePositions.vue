@@ -29,7 +29,7 @@
               Account Balance
             </div>
             <div class="value">
-              {{balance}}
+              {{dealNum(balance)}}
             </div>
           </div>
         </div>
@@ -103,6 +103,9 @@ import {mapGetters} from "vuex";
 import MathCalculator from "../utils/bigNumberUtil"
 import {getPositions} from "../api/vault"
 import BigNumber from "bignumber.js";
+import {USDCDECIMALS} from "@/utils/constantData";
+import addressMap from "@/abi/addressMap";
+
 var calculator = new MathCalculator();
 
 export default {
@@ -120,8 +123,27 @@ export default {
       'account'
     ]),
   },
+  watch:{
+    account(){
+      this.getBalance()
+    }
+  },
   props:["positionObj","coinInfo","feeRate"],
+  created() {
+    this.getBalance()
+  },
+
   methods:{
+    async getBalance() {
+      if (!this.isConnected) {
+        return
+      }
+      let res = await this.$store.dispatch("erc20/balanceOf", {
+        address: addressMap.usdt,
+        account: this.$store.state.app.account,
+      })
+      this.balance = res / USDCDECIMALS
+    },
     async getPositionData() {
       let positionArr = await getPositions(this.account)
       this.positionArr = positionArr.data.data
@@ -175,11 +197,10 @@ export default {
       }
 
 
-      let fee1 = parseInt(this.feeRate * (this.positionObj.size + 10) * price / 10**12)
+      // let fee1 = parseInt(this.feeRate * (this.positionObj.size + 10) * price / 10**12)
       let worth = calculator.add(this.positionObj.collateral,pnl)
       let fee = calculator.divide(calculator.multiply(calculator.multiply(this.positionObj.size,this.feeRate),price),10**12)
-      console.log(this.positionObj.pnl, pnl,fee)
-      let _collateralDelta = calculator.subtract(calculator.multiply(worth,10**6)  ,fee)
+      let _collateralDelta = calculator.subtract(calculator.multiply(worth,USDCDECIMALS)  ,fee)
 
       this.$store.dispatch("vault/updatePosition", {
         _indexToken: this.positionObj.index_token,
