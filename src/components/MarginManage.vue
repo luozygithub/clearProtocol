@@ -50,7 +50,7 @@
               Margin
             </div>
             <div class="value">
-              {{ positionObj.collateral? positionObj.collateral:0}}
+              {{ positionObj.collateral ? positionObj.collateral : 0 }}
             </div>
           </div>
           <div class="row">
@@ -58,7 +58,9 @@
               Margin Ratio
             </div>
             <div class="value">
-              {{ dealNum((parseFloat(positionObj.collateral) + parseFloat(positionObj.pnl))/positionObj.collateral)}}%
+              {{
+                dealNum((parseFloat(positionObj.collateral) + parseFloat(positionObj.pnl)) / positionObj.collateral)
+              }}%
             </div>
           </div>
           <div class="row">
@@ -93,15 +95,15 @@ export default {
       activeNav: 0
     }
   },
-  props:["positionObj","coinInfo"],
+  props: ["positionObj", "coinInfo"],
   computed: {
     ...mapGetters([
       'isConnected',
       'account'
     ]),
   },
-  watch:{
-    account(){
+  watch: {
+    account() {
       this.getBalance()
     }
   },
@@ -129,23 +131,19 @@ export default {
       })
       console.log(this.positionObj)
       let direction = true
-      if(this.positionObj.direction==1){
+      if (this.positionObj.direction == 1) {
         direction = true
-      }else{
+      } else {
         direction = false
       }
-      this.$store.dispatch("vault/updatePosition", {
+      this.$store.dispatch("vault/updateCollateral", {
         _indexToken: this.positionObj.index_token,
-        _leverage: this.positionObj.leverage,
-        _sizeDelta: BigNumber(this.amount  * USDCDECIMALS / price).toFixed(0),
-        _collateralDelta: BigNumber(this.amount*USDCDECIMALS).toFixed(0),
-        _indexPrice: price,
-        _direction: direction,
-        _collateralDeltaInIO: this.activeNav==0?true:false
-      }).then(()=> {
-        this.$message.info(this.activeNav==0? 'Add':'Remove'+ ' success');
+        _collateralDelta: BigNumber(this.amount * USDCDECIMALS).toFixed(0),
+        _collateralDeltaInIO: this.activeNav == 0 ? true : false,
+      }).then(() => {
+        this.$message.info(this.activeNav == 0 ? 'Add' : 'Remove' + ' success');
         this.amount = 0
-      }).catch((e)=>{
+      }).catch((e) => {
         this.$message.info(e);
       })
     },

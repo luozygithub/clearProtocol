@@ -58,7 +58,7 @@
               Fee
             </div>
             <div class="value">
-              0
+              {{fee}}
             </div>
           </div>
           <div class="row">
@@ -103,7 +103,7 @@ import {mapGetters} from "vuex";
 import MathCalculator from "../utils/bigNumberUtil"
 import {getPositions} from "../api/vault"
 import BigNumber from "bignumber.js";
-import {USDCDECIMALS} from "@/utils/constantData";
+import {USDCDECIMALS,POORACCURACY} from "@/utils/constantData";
 import addressMap from "@/abi/addressMap";
 
 var calculator = new MathCalculator();
@@ -122,6 +122,9 @@ export default {
       'isConnected',
       'account'
     ]),
+    fee(){
+      return BigNumber(calculator.multiply(calculator.multiply(this.positionObj.size,this.feeRate),this.coinInfo.index_price)).toFixed(6)
+    }
   },
   watch:{
     account(){
@@ -199,7 +202,7 @@ export default {
 
       // let fee1 = parseInt(this.feeRate * (this.positionObj.size + 10) * price / 10**12)
       let worth = calculator.add(this.positionObj.collateral,pnl)
-      let fee = calculator.divide(calculator.multiply(calculator.multiply(this.positionObj.size,this.feeRate),price),10**12)
+      let fee = calculator.divide(calculator.multiply(calculator.multiply(this.positionObj.size,this.feeRate),price),POORACCURACY)
       let _collateralDelta = calculator.subtract(calculator.multiply(worth,USDCDECIMALS)  ,fee)
 
       this.$store.dispatch("vault/updatePosition", {

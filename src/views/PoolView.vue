@@ -121,7 +121,7 @@
         </div>
       </div>
     </div>
-    <Withdraw v-show="isShowWithdraw" :CLPBlance="CLPBlance" :canWN="canWithdrawNum" @closeWithdraw="isShowWithdraw = false"></Withdraw>
+    <Withdraw v-show="isShowWithdraw" @getData="getData" :CLPBlance="CLPBlance" :canWN="canWithdrawNum" @closeWithdraw="isShowWithdraw = false"></Withdraw>
   </div>
 </template>
 

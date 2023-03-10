@@ -28,9 +28,9 @@
 </template>
 
 <script>
-import {DECIMALS18} from "@/utils/constantData";
 import BigNumber from "bignumber.js";
-
+import MathCalculator from "@/utils/bigNumberUtil";
+var calculator = new MathCalculator();
 export default {
   name: "withdrawView",
   data(){
@@ -46,12 +46,13 @@ export default {
         this.$message.info('Please input amount');
         return
       }
-      let num = parseFloat(BigNumber(this.amount*DECIMALS18).toFixed(0))>this.CLPBlance?this.CLPBlance:BigNumber(this.amount*DECIMALS18).toFixed(0)
+      let num = calculator.divide(calculator.multiply(this.CLPBlance , this.amount) , this.canWN)
       this.$store.dispatch("CLP/burn",{
-        _clpAmount:num
+        _clpAmount:BigNumber(num).toFixed(0)
       }).then(() => {
         this.$message.success('Withdraw success');
         this.amount=0
+        this.$emit("getData")
       }).catch((e) => {
         console.log(e)
         this.$message.info(e);
