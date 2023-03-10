@@ -1084,7 +1084,7 @@ export default {
     this.initData()
     getPriceInterval = setInterval(() => {
       this.getData()
-    }, 10000)
+    }, 3000)
   },
   beforeDestroy() {
     clearInterval(getPriceInterval)

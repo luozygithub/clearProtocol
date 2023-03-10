@@ -17,6 +17,16 @@ const actions = {
             })
         })
     },
+    getAum({rootState}) {
+        judgeToken(rootState)
+        return new Promise((resolve, reject) => {
+            state.token.methods.getAum().call().then(res => {
+                resolve(res)
+            }).catch(err => {
+                reject(JSON.parse(err.message.substr(24, err.message.length)).message)
+            })
+        })
+    },
 }
 export default {
     namespaced: true,

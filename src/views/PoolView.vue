@@ -19,7 +19,7 @@
             Amount
           </div>
           <div class="input-box">
-            <input type="number"  step="any" v-model="amount" placeholder="0.00">
+            <input type="number" step="any" v-model="amount" placeholder="0.00">
             <button class="max-btn" @click="amount=balance">
               MAX
             </button>
@@ -108,7 +108,7 @@
                 Available
               </div>
               <div class="item-content">
-                <span>0.0000</span>
+                <span>{{ canWithdrawNum }}</span>
                 USDC
                 <div class="info">
                   <button class="operate" @click="isShowWithdraw=true">
@@ -121,7 +121,7 @@
         </div>
       </div>
     </div>
-    <Withdraw  v-show="isShowWithdraw" @closeWithdraw="isShowWithdraw = false"> </Withdraw>
+    <Withdraw v-show="isShowWithdraw" @closeWithdraw="isShowWithdraw = false"></Withdraw>
   </div>
 </template>
 
@@ -129,17 +129,23 @@
 import Withdraw from "@/components/Withdraw";
 import {mapGetters} from "vuex";
 import addressMap from "@/abi/addressMap";
-import {USDCDECIMALS} from "../utils/constantData"
+import {USDCDECIMALS, POORACCURACY} from "../utils/constantData"
 import BigNumber from "bignumber.js";
+import MathCalculator from "@/utils/bigNumberUtil";
+
+var calculator = new MathCalculator();
 export default {
   name: "PoolView",
-  components:{Withdraw},
-  data(){
+  components: {Withdraw},
+  data() {
     return {
-      usdcAllowance:0,
-      amount:undefined,
+      usdcAllowance: 0,
+      amount: undefined,
       balance: 0,
-      isShowWithdraw:false
+      isShowWithdraw: false,
+      CLPTotalSupply: 0,
+      CLPBlance: 0,
+      Aum: 0
     }
   },
   computed: {
@@ -147,13 +153,35 @@ export default {
       'isConnected',
       'account'
     ]),
+    canWithdrawNum() {
+      let num = 0
+      if (this.CLPTotalSupply > 0) {
+        num = BigNumber(calculator.divide(calculator.divide(calculator.multiply(this.CLPBlance, this.Aum), POORACCURACY), this.CLPTotalSupply)).toFixed(4)
+      }
+      return num
+    }
   },
-  watch:{
-    account(){
+  watch: {
+    account() {
       this.getData()
     }
   },
-  methods:{
+  methods: {
+    async getAum() {
+      let res = await this.$store.dispatch("vaultUtil/getAum",)
+      this.Aum = res
+    },
+    async getTotalSupply() {
+      let res = await this.$store.dispatch("CLP/totalSupply",)
+      console.log(res)
+      this.CLPTotalSupply = res
+    },
+    async CLPBlanceOf() {
+      let res = await this.$store.dispatch("CLP/balanceOf", {
+        account: this.account
+      })
+      this.CLPBlance = res
+    },
     async allowance() {
       if (!this.isConnected) {
         return
@@ -190,24 +218,26 @@ export default {
       })
       this.balance = BigNumber(res / USDCDECIMALS).toFixed(2)
     },
-    add(){
-      if(!this.amount||this.amount<=0){
+    add() {
+      if (!this.amount || this.amount <= 0) {
         this.$message.info('Please input amount');
         return
       }
-      this.$store.dispatch("CLP/mint",{
-        _usdAmount:this.amount
-      }).then(()=>{
+      this.$store.dispatch("CLP/mint", {
+        _usdAmount: this.amount
+      }).then(() => {
         this.$message.success('Add success');
       }).catch((e) => {
         this.$message.info(e);
       })
     },
-    getData(){
+    getData() {
       if (this.isConnected) {
         this.allowance()
         this.getBalance()
-
+        this.getAum()
+        this.getTotalSupply()
+        this.CLPBlanceOf()
       }
     }
   },
@@ -293,14 +323,15 @@ export default {
       overflow: hidden;
       width: 520px;
       border-right: 1px solid #ECECEE;
-      .usdc{
+
+      .usdc {
         width: 260px;
         height: 36px;
         background: #F5F5F5;
         line-height: 36px;
         border-radius: 18px;
         opacity: 0.7;
-        border: 1px solid rgba(205,208,227,0.65);
+        border: 1px solid rgba(205, 208, 227, 0.65);
         text-align: center;
         font-size: var(--font-size14);
         font-family: AvertaStd-Regular, AvertaStd;
@@ -308,6 +339,7 @@ export default {
         color: #0E1D51;
         user-select: none;
       }
+
       .operate {
         margin-top: 36px;
         width: 260px;
@@ -377,7 +409,8 @@ export default {
         font-weight: 400;
         color: #8F97AA;
         line-height: var(--font-size14);
-        .right{
+
+        .right {
           color: #0E1D51;
 
         }
@@ -396,6 +429,7 @@ export default {
           width: 50%;
           font-size: var(--font-size14);
           font-family: AvertaStd-Regular, AvertaStd;
+
           .name {
             font-weight: 400;
             color: #8F97AA;
@@ -447,6 +481,7 @@ export default {
             line-height: var(--line-height15);
             position: relative;
             font-family: AvertaStd-Regular, AvertaStd;
+
             span {
               color: #0E1D51;
             }
@@ -469,7 +504,8 @@ export default {
               position: absolute;
               right: 0;
               color: #E6E7F0;
-              &.active{
+
+              &.active {
                 color: #0E1D51;
               }
             }
