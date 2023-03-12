@@ -211,13 +211,13 @@
               {{ item.name }}/USDC
             </div>
             <div class="col">
-              {{ dealNum(item.funding_fee) }}%
+              {{ dealD6Num(item.funding_fee_rate) }}%
             </div>
             <div class="col">
-              0.0005
+              {{ dealNum(item.funding_fee) }}
             </div>
             <div class="col">
-              2021-11-20 00:00:00 UTC
+              {{item.time }}
             </div>
           </div>
         </div>
