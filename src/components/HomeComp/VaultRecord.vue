@@ -80,10 +80,10 @@
               {{ getPNL(item) }}
             </div>
             <div class="col operate-box">
-              <button class="operate" :class="{'onOperate': isShowTempPosition && activeTokenName==item.name}" @click="isShowMarginManage=true,clickPosition = item">
+              <button class="operate" :disabled="isShowTempPosition && activeTokenName==item.name" :class="{'onOperate': isShowTempPosition && activeTokenName==item.name}" @click="isShowMarginManage=true,clickPosition = item">
                 Margin Manage
               </button>
-              <button class="operate" :class="{'onOperate': isShowTempPosition && activeTokenName==item.name}" @click="isShowClosePosition=true ,clickPosition = item">
+              <button class="operate"  :disabled="isShowTempPosition && activeTokenName==item.name" :class="{'onOperate': isShowTempPosition && activeTokenName==item.name}" @click="isShowClosePosition=true ,clickPosition = item">
                 Close
               </button>
             </div>
@@ -288,14 +288,16 @@ export default {
       const price = this.tokenPriceMap[item.index_token]
       const worth = calculator.multiply(item.average_price, item.size)//抵押物价值 (*杠杆)
       const positionWorth = calculator.multiply(item.size, price) //仓位价值（*杠杆）
+      let pnl = 0
       if (item.direction == 1) {
-        return BigNumber(calculator.subtract(positionWorth, worth)).toFixed(2)
+        pnl = BigNumber(calculator.subtract(positionWorth, worth)).toFixed(2)
       } else {
-        return BigNumber(calculator.subtract(worth, positionWorth)).toFixed(2)
+        pnl = BigNumber(calculator.subtract(worth, positionWorth)).toFixed(2)
       }
+      item.pnl = pnl
+      return pnl
     },
     getMargin(item) {
-      console.log(item.collateral, item.pnl)
       let margin = calculator.add(item.collateral, item.pnl)
       return this.dealNum(margin)
     },
@@ -323,7 +325,6 @@ export default {
         let data1 = calculator.add(calculator.divide(worth, item.leverage), positionWorth)
         let data2 = calculator.add(LQSize, item.size)
         let liqV = calculator.divide(data1, data2)
-        console.log(data1, data2)
         return liqV >= 0 ? BigNumber(liqV).toFixed(2) : 0
       }
     },
@@ -334,7 +335,6 @@ export default {
     async getFundingFeeData() {
       let res = await getFundingFee(this.account)
       this.fundingFeeArr = res.data.data
-      console.log(this.fundingFeeArr)
     },
     initData() {
       this.getRecordData()

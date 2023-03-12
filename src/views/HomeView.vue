@@ -710,18 +710,12 @@ export default {
       //开仓金额花费
       let sizeDelta = 0
       sizeDelta = BigNumber(Math.abs(this.amount) * DECIMALS6).toFixed(0)
-      let _collateralDelta = 0
 
-      if (this.direction) {//增加保证金（花费）
-        BigNumber(calculator.add(Math.abs(this.payValue), this.fee) * DECIMALS6).toFixed(0)
-      } else {//减少保证金（提取）
-        BigNumber(calculator.add(Math.abs(this.payValue) - this.fee) * DECIMALS6).toFixed(0)
-      }
       this.$store.dispatch("vault/updatePosition", {
         _indexToken: this.coinInfo.contract_address,
         _leverage: this.slideValue,
         _sizeDelta: Math.abs(sizeDelta),
-        _collateralDelta,
+        _collateralDelta:BigNumber(this.userPayAmount* DECIMALS6).toFixed(0),
         _indexPrice: price,
         _direction: this.direction,
         _collateralDeltaInIO: this.collateralDeltaInIO
