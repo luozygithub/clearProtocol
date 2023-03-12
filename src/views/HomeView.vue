@@ -313,12 +313,33 @@ export default {
     account() {
       this.initData()
     },
-    amount(val) {//动态显示
-      if (val >= 0) {
-
+    slideValue(){
+      if (this.amount >= 0) {
         this.tempPositionArr.forEach(item => {
           if (item.name == this.activeTokenName) {
             item.average_price = this.tokenPriceMap[item.index_token]
+            item.leverage = this.slideValue
+            item.size = Math.abs(this.endSize)
+            item.collateral = Math.abs(this.endSize) * this.tokenPriceMap[item.index_token] / this.slideValue
+            if (item.direction == this.operateNav) {//direction：方向不同
+              if (this.amount > parseFloat(item.size)) {
+                item.direction = !item.direction
+              }
+            }
+          }
+        })
+        this.isShowTempPosition = true
+      } else {
+        this.isShowTempPosition = false
+        this.dealPositionData()
+      }
+    },
+    amount(val) {//动态显示
+      if (val >= 0) {
+        this.tempPositionArr.forEach(item => {
+          if (item.name == this.activeTokenName) {
+            item.average_price = this.tokenPriceMap[item.index_token]
+            item.leverage = this.slideValue
             item.size = Math.abs(this.endSize)
             item.collateral = Math.abs(this.endSize) * this.tokenPriceMap[item.index_token] / this.slideValue
             if (item.direction == this.operateNav) {//direction：方向不同

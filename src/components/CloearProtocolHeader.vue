@@ -27,9 +27,9 @@
 
         </button>
         <a-menu slot="overlay">
-          <a-menu-item key="0" @click="chainId=97,chooseChain()">
-            Binance Smart Chain Testnet
-          </a-menu-item>
+<!--          <a-menu-item key="0" @click="chainId=97,chooseChain()">-->
+<!--            Binance Smart Chain Testnet-->
+<!--          </a-menu-item>-->
           <a-menu-item key="1" @click="chainId=421613,chooseChain()">
             Arbitrum Goerli
           </a-menu-item>
