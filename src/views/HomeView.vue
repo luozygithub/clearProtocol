@@ -200,7 +200,7 @@
                       <span v-show="payValue<=0">Pay Amount </span>
                     </div>
                     <div class="value">
-                      ${{ dealNum(Math.abs(payValue)+fee) }}
+                      ${{ userPayAmount }}
                     </div>
                   </div>
                 </div>
@@ -288,7 +288,7 @@ export default {
       slipValue: 1,
       progress: 10,
       widgetId: 'tradingview_8c9b3',
-      widgetHeight: 500,
+      widgetHeight: 330,
       activeNav: 0,
       operateNav: 0,//操作方向 0Long 1Short
       feeRate: 0,
@@ -313,7 +313,7 @@ export default {
     account() {
       this.initData()
     },
-    slideValue(){
+    slideValue() {
       if (this.amount >= 0) {
         this.tempPositionArr.forEach(item => {
           if (item.name == this.activeTokenName) {
@@ -413,8 +413,8 @@ export default {
       return 0
 
     },
-    fee(){
-      return this.usdcAmount *this.feeRate
+    fee() {
+      return this.usdcAmount * this.feeRate
     },
     payValue() {//需要支付或者获得 u
       if (this.usdcAmount > 0 && this.amount > 0) {
@@ -472,6 +472,16 @@ export default {
         }
       }
       return 0
+    },
+    userPayAmount(){
+      if(!this.fee||!this.payValue){
+        return 0
+      }
+      if (this.direction) {//增加保证金（花费）
+        return BigNumber(calculator.add(Math.abs(this.payValue), this.fee)).toFixed(2)
+      } else {//减少保证金（提取）
+        return BigNumber(calculator.add(Math.abs(this.payValue) - this.fee)).toFixed(2)
+      }
     },
     collapsed() {
       return this.$store.state.collapsed
@@ -698,12 +708,18 @@ export default {
       //开仓金额花费
       let sizeDelta = 0
       sizeDelta = BigNumber(Math.abs(this.amount) * DECIMALS6).toFixed(0)
+      let _collateralDelta = 0
 
+      if (this.direction) {//增加保证金（花费）
+        BigNumber(calculator.add(Math.abs(this.payValue), this.fee) * DECIMALS6).toFixed(0)
+      } else {//减少保证金（提取）
+        BigNumber(calculator.add(Math.abs(this.payValue) - this.fee) * DECIMALS6).toFixed(0)
+      }
       this.$store.dispatch("vault/updatePosition", {
         _indexToken: this.coinInfo.contract_address,
         _leverage: this.slideValue,
         _sizeDelta: Math.abs(sizeDelta),
-        _collateralDelta: BigNumber(calculator.add(Math.abs(this.payValue),this.fee) * DECIMALS6).toFixed(0),
+        _collateralDelta,
         _indexPrice: price,
         _direction: this.direction,
         _collateralDeltaInIO: this.collateralDeltaInIO
@@ -713,7 +729,6 @@ export default {
         this.usdcAmount = undefined
         this.isLoading = true
         let statusRes = await getTranStatus(res.blockHash)
-        console.log(statusRes.data.data)
         if (statusRes.data.data == 1) {
           setTimeout(() => {
             this.initData()
@@ -1429,7 +1444,7 @@ export default {
 
         .tradingview_8c9b3 {
           border-radius: 8px;
-          height: 500px;
+          height: 280px;
         }
       }
 
