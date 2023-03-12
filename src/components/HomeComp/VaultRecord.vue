@@ -1,229 +1,232 @@
 <template>
   <div class="vault-record">
-    <div class="right-part3">
-      <div class="right-part3-nav">
-        <div class="nav-item" :class="{'active':activeNav==0}" @click="activeNav=0">
-          Positions
-        </div>
-        <div class="nav-item" :class="{'active':activeNav==1}" @click="activeNav=1">
-          Close Positions
-        </div>
-        <div class="nav-item" :class="{'active':activeNav==2}" @click="activeNav=2">
-          Action History
-        </div>
-        <div class="nav-item" :class="{'active':activeNav==3}" @click="activeNav=3">
-          Funding Rate
-        </div>
-      </div>
-      <div class="nav1-content" v-show="activeNav==0">
-        <div class="table-header">
-          <div class="col">
-            Contract
+    <a-spin :spinning="isLoading">
+      <div class="right-part3">
+        <div class="right-part3-nav">
+          <div class="nav-item" :class="{'active':activeNav==0}" @click="activeNav=0">
+            Positions
           </div>
-          <div class="col">
-            Side
+          <div class="nav-item" :class="{'active':activeNav==1}" @click="activeNav=1">
+            Close Positions
           </div>
-          <div class="col">
-            Size
+          <div class="nav-item" :class="{'active':activeNav==2}" @click="activeNav=2">
+            Action History
           </div>
-          <div class="col">
-            Leverage
-          </div>
-          <div class="col">
-            Entry Price
-          </div>
-          <div class="col">
-            Liquidation Price
-          </div>
-          <div class="col">
-            Margin/Margin Ratio
-          </div>
-          <div class="col">
-            Unrealized PNL
-          </div>
-          <div class="col">
-            Actions
+          <div class="nav-item" :class="{'active':activeNav==3}" @click="activeNav=3">
+            Funding Rate
           </div>
         </div>
-        <div class="row" v-show="parseFloat(item.size)>0" :class="{'blink': isShowTempPosition && activeTokenName==item.name}"
-             v-for="(item,index) in positionArr" :key="index">
-          <div class="col">
-            {{ item.name }}/USDC
-          </div>
-          <div class="col ">
-            <div class="side" :class="{'down':item.direction!=1 }">
-              {{ item.direction == 1 ? "Long" : "Short" }}
+        <div class="nav1-content" v-show="activeNav==0">
+          <div class="table-header">
+            <div class="col">
+              Contract
+            </div>
+            <div class="col">
+              Side
+            </div>
+            <div class="col">
+              Size
+            </div>
+            <div class="col">
+              Leverage
+            </div>
+            <div class="col">
+              Entry Price
+            </div>
+            <div class="col">
+              Liquidation Price
+            </div>
+            <div class="col">
+              Margin/Margin Ratio
+            </div>
+            <div class="col">
+              Unrealized PNL
+            </div>
+            <div class="col">
+              Actions
             </div>
           </div>
-          <div class="col">
-            {{ dealD6Num(item.size) }}
-          </div>
-          <div class="col">
-            {{ item.leverage }}x
-          </div>
-          <div class="col">
-            {{ dealNum(item.average_price) }}
-          </div>
-          <div class="col">
-            {{ getLQP(item) }}
-          </div>
+          <div class="row" v-show="parseFloat(item.size)>0"
+               :class="{'blink': isShowTempPosition && activeTokenName==item.name}"
+               v-for="(item,index) in positionArr" :key="index">
+            <div class="col">
+              {{ item.name }}/USDC
+            </div>
+            <div class="col ">
+              <div class="side" :class="{'down':item.direction!=1 }">
+                {{ item.direction == 1 ? "Long" : "Short" }}
+              </div>
+            </div>
+            <div class="col">
+              {{ dealD6Num(item.size) }}
+            </div>
+            <div class="col">
+              {{ item.leverage }}x
+            </div>
+            <div class="col">
+              {{ dealNum(item.average_price) }}
+            </div>
+            <div class="col">
+              {{ getLQP(item) }}
+            </div>
 
-          <div class="col">
+            <div class="col">
                 <span>
                      {{ getMargin(item) }}/{{ marginRatio(item) }}%
                 </span>
 
-          </div>
-          <div class="col">
-            {{getPNL(item)}}
-          </div>
-          <div class="col operate-box">
-            <button class="operate" @click="isShowMarginManage=true,clickPosition = item">
-              Margin Manage
-            </button>
-            <button class="operate" @click="isShowClosePosition=true ,clickPosition = item">
-              Close
-            </button>
-          </div>
-        </div>
-      </div>
-      <div class="nav2-content" v-show="activeNav==1">
-        <div class="table-header">
-          <div class="col">
-            Contract
-          </div>
-          <div class="col">
-            Side
-          </div>
-          <div class="col">
-            Size
-          </div>
-          <div class="col">
-            Fill Price
-          </div>
-          <div class="col">
-            Fee
-          </div>
-          <div class="col">
-            Realized PNL
-          </div>
-          <div class="col">
-            Time
-          </div>
-        </div>
-        <div class="row"  v-for="(item,index) in profitArr" :key="index">
-          <div class="col">
-            {{ item.name }}/USDC
-          </div>
-          <div class="col ">
-            <div class="side" :class="{'down':item.direction!=1 }">
-              {{ item.direction == 1 ? "Long" : "Short" }}
+            </div>
+            <div class="col">
+              {{ getPNL(item) }}
+            </div>
+            <div class="col operate-box">
+              <button class="operate" @click="isShowMarginManage=true,clickPosition = item">
+                Margin Manage
+              </button>
+              <button class="operate" @click="isShowClosePosition=true ,clickPosition = item">
+                Close
+              </button>
             </div>
           </div>
-          <div class="col">
-            {{ dealNum(item.size_delta) }}
-          </div>
-          <div class="col">
-            {{ dealNum(item.index_price) }}
-          </div>
-          <div class="col">
-            {{ dealFeeNum(item.transaction_fee) }}
-          </div>
-          <div class="col">
-            {{ dealNum(item.pel) }}
-          </div>
-          <div class="col">
-            {{ moment(item.updated_at) }}
-          </div>
         </div>
-      </div>
-      <div class="nav3-content" v-show="activeNav==2">
-        <div class="table-header">
-          <div class="col">
-            Time
-          </div>
-          <div class="col">
-            Contract
-          </div>
-          <div class="col">
-            Side
-          </div>
-          <div class="col">
-            Size
-          </div>
-          <div class="col">
-            Leverage
-          </div>
-          <div class="col">
-            Fill Price
-          </div>
-          <div class="col">
-            Fee
-          </div>
-        </div>
-        <div class="row"  v-for="(item,index) in recordArr" :key="index">
-          <div class="col">
-            {{ moment(item.updated_at) }}
-          </div>
-          <div class="col">
-            {{ item.name }}/USDC
-          </div>
-          <div class="col">
-            <div class="side" :class="{'down':item.direction!=1 }">
-              {{ item.direction == 1 ? "Long" : "Short" }}
+        <div class="nav2-content" v-show="activeNav==1">
+          <div class="table-header">
+            <div class="col">
+              Contract
+            </div>
+            <div class="col">
+              Side
+            </div>
+            <div class="col">
+              Size
+            </div>
+            <div class="col">
+              Fill Price
+            </div>
+            <div class="col">
+              Fee
+            </div>
+            <div class="col">
+              Realized PNL
+            </div>
+            <div class="col">
+              Time
             </div>
           </div>
-          <div class="col">
-            {{ dealD6Num(item.size_delta) }}
+          <div class="row" v-for="(item,index) in profitArr" :key="index">
+            <div class="col">
+              {{ item.name }}/USDC
+            </div>
+            <div class="col ">
+              <div class="side" :class="{'down':item.direction!=1 }">
+                {{ item.direction == 1 ? "Long" : "Short" }}
+              </div>
+            </div>
+            <div class="col">
+              {{ dealNum(item.size_delta) }}
+            </div>
+            <div class="col">
+              {{ dealNum(item.index_price) }}
+            </div>
+            <div class="col">
+              {{ dealFeeNum(item.transaction_fee) }}
+            </div>
+            <div class="col">
+              {{ dealNum(item.pel) }}
+            </div>
+            <div class="col">
+              {{ moment(item.updated_at) }}
+            </div>
           </div>
-          <div class="col Leverage">
-            {{ dealNum(item.leverage) }}x
+        </div>
+        <div class="nav3-content" v-show="activeNav==2">
+          <div class="table-header">
+            <div class="col">
+              Time
+            </div>
+            <div class="col">
+              Contract
+            </div>
+            <div class="col">
+              Side
+            </div>
+            <div class="col">
+              Size
+            </div>
+            <div class="col">
+              Leverage
+            </div>
+            <div class="col">
+              Fill Price
+            </div>
+            <div class="col">
+              Fee
+            </div>
+          </div>
+          <div class="row" v-for="(item,index) in recordArr" :key="index">
+            <div class="col">
+              {{ moment(item.updated_at) }}
+            </div>
+            <div class="col">
+              {{ item.name }}/USDC
+            </div>
+            <div class="col">
+              <div class="side" :class="{'down':item.direction!=1 }">
+                {{ item.direction == 1 ? "Long" : "Short" }}
+              </div>
+            </div>
+            <div class="col">
+              {{ dealD6Num(item.size_delta) }}
+            </div>
+            <div class="col Leverage">
+              {{ dealNum(item.leverage) }}x
 
-          </div>
-          <div class="col Fill Price">
-            {{ dealNum(item.index_price) }}
+            </div>
+            <div class="col Fill Price">
+              {{ dealNum(item.index_price) }}
 
+            </div>
+            <div class="col">
+              {{ dealFeeNum(item.transaction_fee / 10 ** 6) }}$
+            </div>
           </div>
-          <div class="col">
-            {{ dealFeeNum(item.transaction_fee / 10 ** 6) }}$
+        </div>
+        <div class="nav4-content" v-show="activeNav==3">
+          <div class="table-header">
+            <div class="col">
+              Contract
+            </div>
+            <div class="col">
+              Funding Rate
+            </div>
+            <div class="col">
+              Funding Payment
+            </div>
+            <div class="col">
+              Time
+            </div>
+          </div>
+          <div class="row" v-for="(item,index) in fundingFeeArr" :key="index">
+            <div class="col">
+              {{ item.name }}/USDC
+            </div>
+            <div class="col">
+              {{ dealNum(item.funding_fee) }}%
+            </div>
+            <div class="col">
+              0.0005
+            </div>
+            <div class="col">
+              2021-11-20 00:00:00 UTC
+            </div>
           </div>
         </div>
       </div>
-      <div class="nav4-content" v-show="activeNav==3">
-        <div class="table-header">
-          <div class="col">
-            Contract
-          </div>
-          <div class="col">
-            Funding Rate
-          </div>
-          <div class="col">
-            Funding Payment
-          </div>
-          <div class="col">
-            Time
-          </div>
-        </div>
-        <div class="row" v-for="(item,index) in fundingFeeArr" :key="index">
-          <div class="col">
-            {{ item.name }}/USDC
-          </div>
-          <div class="col">
-            {{ dealNum(item.funding_fee) }}%
-          </div>
-          <div class="col">
-            0.0005
-          </div>
-          <div class="col">
-            2021-11-20 00:00:00 UTC
-          </div>
-        </div>
-      </div>
-    </div>
-    <MarginManage v-show="isShowMarginManage" :coin-info="coinInfo" :positionObj="clickPosition"
-                  @closeMarginManage="isShowMarginManage = false"/>
+    </a-spin>
+    <MarginManage v-show="isShowMarginManage" :setLoading="setLoading" :coin-info="coinInfo" :positionObj="clickPosition"
+                  @closeMarginManage="isShowMarginManage = false" :initData="initData"/>
     <ClosePositions :feeRate="feeRate" v-show="isShowClosePosition" :coin-info="coinInfo" :positionObj="clickPosition"
-                    @closeClosePosition="isShowClosePosition = false"/>
+                    @closeClosePosition="isShowClosePosition = false" :setLoading="setLoading" :initData="initData"/>
   </div>
 </template>
 
@@ -241,7 +244,7 @@ import BigNumber from "bignumber.js";
 
 export default {
   name: "vaultReacord",
-  props: ["positionArr", "coinInfo", "feeRate", "configInfo","activeTokenName","isShowTempPosition"],
+  props: ["positionArr", "coinInfo", "feeRate", "configInfo", "activeTokenName", "isShowTempPosition"],
   components: {
     ClosePositions,
     MarginManage
@@ -249,6 +252,7 @@ export default {
   data() {
     return {
       moment,
+      isLoading: false,
       isShowClosePosition: false,
       isShowMarginManage: false,
       activeNav: 0,
@@ -263,13 +267,13 @@ export default {
       'isConnected',
       'account'
     ]),
-    tokenPriceMap(){
-      return  this.$store.state.perpetual.priceMap
+    tokenPriceMap() {
+      return this.$store.state.perpetual.priceMap
     },
 
   },
-  watch:{
-    account(){
+  watch: {
+    account() {
       this.initData()
     }
   },
@@ -277,14 +281,17 @@ export default {
     this.initData()
   },
   methods: {
-    getPNL(item){
+    setLoading(val) {
+      this.isLoading = val
+    },
+    getPNL(item) {
       const price = this.tokenPriceMap[item.index_token]
       const worth = calculator.multiply(item.average_price, item.size)//抵押物价值 (*杠杆)
       const positionWorth = calculator.multiply(item.size, price) //仓位价值（*杠杆）
-      if(item.direction==1){
-        return BigNumber(calculator.subtract(positionWorth , worth)).toFixed(2)
-      }else{
-        return BigNumber(calculator.subtract( worth,positionWorth)).toFixed(2)
+      if (item.direction == 1) {
+        return BigNumber(calculator.subtract(positionWorth, worth)).toFixed(2)
+      } else {
+        return BigNumber(calculator.subtract(worth, positionWorth)).toFixed(2)
       }
     },
     getMargin(item) {
@@ -381,6 +388,7 @@ export default {
 .blink {
   animation: blink 10s ease forwards;
 }
+
 .right-part3 {
   border-radius: 8px;
   background: #FFFFFF;

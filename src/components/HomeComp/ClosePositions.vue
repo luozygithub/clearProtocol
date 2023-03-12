@@ -105,6 +105,7 @@ import {getPositions} from "../../api/vault"
 import BigNumber from "bignumber.js";
 import {USDCDECIMALS,POORACCURACY,DECIMALS18} from "@/utils/constantData";
 import addressMap from "@/abi/addressMap";
+import {getTranStatus} from "@/api/comon";
 
 var calculator = new MathCalculator();
 
@@ -131,7 +132,7 @@ export default {
       this.getBalance()
     }
   },
-  props:["positionObj","coinInfo","feeRate"],
+  props:["positionObj","coinInfo","feeRate","initData","setLoading"],
   created() {
     this.getBalance()
   },
@@ -187,7 +188,7 @@ export default {
       let price = await this.$store.dispatch("vault/getPrice", {
         _indexToken: this.positionObj.index_token
       })
-      console.log(this.positionObj)
+
       let direction = true, pnl =0
       let newWorth = calculator.multiply(calculator.divide(price,DECIMALS18) , this.positionObj.size)
       let oldWOrth = calculator.multiply(this.positionObj.average_price,this.positionObj.size)
@@ -213,8 +214,16 @@ export default {
         _indexPrice: price,
         _direction: !direction,
         _collateralDeltaInIO: false
-      }).then(()=> {
+      }).then(async (res)=> {
         this.$message.info('Close success');
+        let statusRes = await getTranStatus(res.blockHash)
+        this.setLoading(true)
+        if (statusRes.data.data == 1) {
+          setTimeout(() => {
+            this.$emit("initData")
+            this.$emit("setLoading",false)
+          }, 1000)
+        }
       }).catch((e)=>{
         this.$message.info(e);
       })

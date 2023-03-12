@@ -85,6 +85,7 @@ import addressMap from "@/abi/addressMap";
 import {mapGetters} from "vuex";
 import BigNumber from "bignumber.js";
 import {USDCDECIMALS} from "@/utils/constantData";
+import {getTranStatus} from "@/api/comon";
 
 export default {
   name: "MarginManage",
@@ -95,7 +96,7 @@ export default {
       activeNav: 0
     }
   },
-  props: ["positionObj", "coinInfo"],
+  props: ["positionObj", "coinInfo","initData","setLoading"],
   computed: {
     ...mapGetters([
       'isConnected',
@@ -125,24 +126,21 @@ export default {
       return 0
     },
     async trade() {
-      /*eslint-disable*/
-      let price = await this.$store.dispatch("vault/getPrice", {
-        _indexToken: this.positionObj.index_token
-      })
-      console.log(this.positionObj)
-      let direction = true
-      if (this.positionObj.direction == 1) {
-        direction = true
-      } else {
-        direction = false
-      }
       this.$store.dispatch("vault/updateCollateral", {
         _indexToken: this.positionObj.index_token,
         _collateralDelta: BigNumber(this.amount * USDCDECIMALS).toFixed(0),
         _collateralDeltaInIO: this.activeNav == 0 ? true : false,
-      }).then(() => {
-        this.$message.info(this.activeNav == 0 ? 'Add' : 'Remove' + ' success');
+      }).then(async (res) => {
+        this.$message.info((this.activeNav == 0 ? 'Add' : 'Remove') + ' success');
         this.amount = 0
+        let statusRes = await getTranStatus(res.blockHash)
+        this.setLoading(true)
+        if (statusRes.data.data == 1) {
+          setTimeout(() => {
+            this.$emit("initData")
+            this.$emit("setLoading",false)
+          }, 1000)
+        }
       }).catch((e) => {
         this.$message.info(e);
       })

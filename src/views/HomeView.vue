@@ -261,7 +261,7 @@ import VaultRecord from "@/components/HomeComp/VaultRecord";
 import {getTranStatus} from "@/api/comon";
 import {getConfigInfo} from "@/api/coinApi";
 import addressMap from "@/abi/addressMap";
-import {getPositions, getRecord, getProfit, getFundingFee} from "@/api/vault";
+import {getPositions,} from "@/api/vault";
 import {mapGetters} from "vuex";
 import MathCalculator from "../utils/bigNumberUtil"
 import BigNumber from "bignumber.js";
@@ -532,19 +532,8 @@ export default {
         }
       }
     },
-    async getProfitData() {
-      let res = await getProfit(this.account)
-      this.profitArr = res.data.data
-    },
-    async getRecordData() {
-      let res = await getRecord(this.account)
-      this.recordArr = res.data.data
-    },
-    async getFundingFeeData() {
-      let res = await getFundingFee(this.account)
-      this.fundingFeeArr = res.data.data
-      console.log(this.fundingFeeArr)
-    },
+
+
     async getPositionData() {
       try {
         let res = await getPositions(this.account)
@@ -599,6 +588,9 @@ export default {
         return val ? (parseInt(Number(val) * 100) / 100) : 0
       }
       return 0
+    },
+    setLoading(val){
+      this.isLoading = val
     },
     formatTip(value) {
       return (
@@ -757,9 +749,6 @@ export default {
     },
     initData() {
       this.getPositionData()
-      this.getRecordData()
-      this.getFundingFeeData()
-      this.getProfitData()
       if (this.isConnected) {
         this.allowance()
       }
