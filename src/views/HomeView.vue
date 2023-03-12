@@ -477,10 +477,11 @@ export default {
       if(!this.fee||!this.payValue){
         return 0
       }
+      console.log(this.fee,this.payValue)
       if (this.direction) {//增加保证金（花费）
         return BigNumber(calculator.add(Math.abs(this.payValue), this.fee)).toFixed(2)
       } else {//减少保证金（提取）
-        return BigNumber(calculator.add(Math.abs(this.payValue) - this.fee)).toFixed(2)
+        return BigNumber(calculator.add(Math.abs(this.payValue) ,this.fee)).toFixed(2)
       }
     },
     collapsed() {

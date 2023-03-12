@@ -80,10 +80,10 @@
               {{ getPNL(item) }}
             </div>
             <div class="col operate-box">
-              <button class="operate" @click="isShowMarginManage=true,clickPosition = item">
+              <button class="operate" :class="{'onOperate': isShowTempPosition && activeTokenName==item.name}" @click="isShowMarginManage=true,clickPosition = item">
                 Margin Manage
               </button>
-              <button class="operate" @click="isShowClosePosition=true ,clickPosition = item">
+              <button class="operate" :class="{'onOperate': isShowTempPosition && activeTokenName==item.name}" @click="isShowClosePosition=true ,clickPosition = item">
                 Close
               </button>
             </div>
@@ -516,7 +516,10 @@ export default {
           color: #0E1D51;
           line-height: 15px;
           background: #fff;
-
+          &.onOperate{
+            border: 1px solid #eee!important;
+            color: #aaa;
+          }
           &:last-child {
             margin-left: 6px;
           }
