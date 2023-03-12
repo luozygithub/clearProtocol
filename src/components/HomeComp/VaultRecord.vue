@@ -295,6 +295,7 @@ export default {
       }
     },
     getMargin(item) {
+      console.log(item.collateral, item.pnl)
       let margin = calculator.add(item.collateral, item.pnl)
       return this.dealNum(margin)
     },

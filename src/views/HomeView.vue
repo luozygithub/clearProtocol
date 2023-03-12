@@ -316,9 +316,11 @@ export default {
     slideValue() {
       if (this.amount >= 0) {
         this.tempPositionArr.forEach(item => {
+
           if (item.name == this.activeTokenName) {
             item.average_price = this.tokenPriceMap[item.index_token]
             item.leverage = this.slideValue
+            item.pnl = 0
             item.size = Math.abs(this.endSize)
             item.collateral = Math.abs(this.endSize) * this.tokenPriceMap[item.index_token] / this.slideValue
             if (item.direction == this.operateNav) {//direction：方向不同
@@ -340,6 +342,7 @@ export default {
           if (item.name == this.activeTokenName) {
             item.average_price = this.tokenPriceMap[item.index_token]
             item.leverage = this.slideValue
+            item.pnl = 0
             item.size = Math.abs(this.endSize)
             item.collateral = Math.abs(this.endSize) * this.tokenPriceMap[item.index_token] / this.slideValue
             if (item.direction == this.operateNav) {//direction：方向不同
@@ -477,11 +480,10 @@ export default {
       if(!this.fee||!this.payValue){
         return 0
       }
-      console.log(this.fee,this.payValue)
       if (this.direction) {//增加保证金（花费）
         return BigNumber(calculator.add(Math.abs(this.payValue), this.fee)).toFixed(2)
       } else {//减少保证金（提取）
-        return BigNumber(calculator.add(Math.abs(this.payValue) ,this.fee)).toFixed(2)
+        return BigNumber(calculator.subtract(Math.abs(this.payValue) ,this.fee)).toFixed(2)
       }
     },
     collapsed() {
@@ -505,12 +507,12 @@ export default {
     calculatLiq(type, originObj) { //计算清仓价格
       if (type === 1) {
         if (this.operateNav == 0) {
-          let data1 = this.usdcAmount / this.slideValue - this.amount * this.coinInfo.index_price
+          let data1 = this.usdcAmount / this.slideValue - this.amount * this.tokenPriceMap[this.coinInfo.contract_address]
           let data2 = this.amount * MARGINRATIO / this.slideValue - this.amount
           let liqV = calculator.divide(data1, data2)
           return liqV >= 0 ? liqV : 0
         } else {
-          let data1 = this.usdcAmount / this.slideValue + this.amount * this.coinInfo.index_price
+          let data1 = this.usdcAmount / this.slideValue + this.amount * this.tokenPriceMap[this.coinInfo.contract_address]
           let data2 = this.amount * MARGINRATIO / this.slideValue + this.amount
           let liqV = calculator.divide(data1, data2)
           return liqV >= 0 ? liqV : 0
@@ -520,13 +522,13 @@ export default {
         if (originObj.direction == this.direction) { //direction：方向相同
 
           const totalSize = calculator.add(originObj.size, this.amount)
-          const totalValue = calculator.divide(calculator.multiply(totalSize, this.coinInfo.index_price), this.slideValue)
+          const totalValue = calculator.divide(calculator.multiply(totalSize, this.tokenPriceMap[this.coinInfo.contract_address]), this.slideValue)
           if (originObj.direction == 1) {//long 多
-            data1 = totalValue - totalSize * this.coinInfo.index_price
+            data1 = totalValue - totalSize * this.tokenPriceMap[this.coinInfo.contract_address]
             data2 = totalSize * MARGINRATIO / this.slideValue - totalSize
           } else {//short 空
             console.log(totalValue, totalSize)
-            data1 = calculator.add(totalValue, totalSize * this.coinInfo.index_price)
+            data1 = calculator.add(totalValue, totalSize * this.tokenPriceMap[this.coinInfo.contract_address])
             data2 = calculator.add(calculator.divide(totalSize * MARGINRATIO, this.slideValue), totalSize)
           }
           let liqV = calculator.divide(data1, data2)
@@ -535,12 +537,12 @@ export default {
           let totalSize = calculator.subtract(originObj.size, this.amount)
           let directionRES = totalSize > 0 ? originObj.direction : this.direction
           totalSize = Math.abs(totalSize)
-          const totalValue = calculator.divide(calculator.multiply(totalSize, this.coinInfo.index_price), this.slideValue)
+          const totalValue = calculator.divide(calculator.multiply(totalSize, this.tokenPriceMap[this.coinInfo.contract_address]), this.slideValue)
           if (directionRES) {//long
-            data1 = totalValue - totalSize * this.coinInfo.index_price
+            data1 = totalValue - totalSize * this.tokenPriceMap[this.coinInfo.contract_address]
             data2 = totalSize * MARGINRATIO / this.slideValue - totalSize
           } else {//short
-            data1 = calculator.add(totalValue, calculator.multiply(totalSize, this.coinInfo.index_price))
+            data1 = calculator.add(totalValue, calculator.multiply(totalSize, this.tokenPriceMap[this.coinInfo.contract_address]))
             data2 = calculator.add(calculator.divide(totalSize * MARGINRATIO, this.slideValue), totalSize)
           }
 
@@ -551,17 +553,7 @@ export default {
     },
 
     dealPositionData() {
-      this.tempPositionArr = [{
-        average_price: "20100",
-        collateral: "0",
-        direction: 1,
-        icon: "https://cdn-icons-png.flaticon.com/128/5968/5968260.png",
-        index_token: "0x6550bc2301936011c1334555e62A87705A81C12C",
-        leverage: 2,
-        name: "BTC",
-        pnl: "0",
-        size: "0",
-      }, {
+      this.tempPositionArr = [ {
         average_price: "1500",
         collateral: "0",
         direction: 1,
@@ -569,6 +561,16 @@ export default {
         index_token: "0x62CAe0FA2da220f43a51F86Db2EDb36DcA9A5A08",
         leverage: 2,
         name: "ETH",
+        pnl: "0",
+        size: "0",
+      },{
+        average_price: "20100",
+        collateral: "0",
+        direction: 1,
+        icon: "https://cdn-icons-png.flaticon.com/128/5968/5968260.png",
+        index_token: "0x6550bc2301936011c1334555e62A87705A81C12C",
+        leverage: 2,
+        name: "BTC",
         pnl: "0",
         size: "0",
       }]
@@ -591,7 +593,6 @@ export default {
             Titem.pnl = item.pnl
           }
         })
-        console.log(this.tempPositionArr)
       })
     },
     async getPositionData() {
@@ -641,7 +642,7 @@ export default {
       )
     },
     updateUSDCAmount() {
-      this.usdcAmount = BigNumber(this.amount * this.coinInfo.index_price).toFixed(2)
+      this.usdcAmount = BigNumber(this.amount * this.tokenPriceMap[this.coinInfo.contract_address]).toFixed(2)
     },
     updateAmount() {
       let value = this.usdcAmount.replace(/[^\d.]/g, '');
@@ -654,7 +655,7 @@ export default {
       value = decimalPart ? `${integerPart}.${decimalPart}` : integerPart;
       this.usdcAmount = value;
 
-      this.amount = (calculator.divide(this.usdcAmount, this.coinInfo.index_price))
+      this.amount = (calculator.divide(this.usdcAmount, this.tokenPriceMap[this.coinInfo.contract_address]))
     },
     async allowance() {
       if (!this.isConnected) {
