@@ -1,536 +1,286 @@
 <template>
   <div class="home" :style="'left:'+(!collapsed? 200 : 66) +'px;'+ 'width:calc(100vw - '+(collapsed?66:200)+'px)'">
-    <div class="content-box">
-      <div class="left-content-box">
-        <div class="left-content-container">
-          <div class="left-header">
-            <a-dropdown>
-              <template #overlay>
-                <a-menu @click="handleMenuClick">
-                  <a-menu-item key="1">
-                    <div class="coin-info">
-                      <div class="coin-name">
-                        <svg t="1677824350805" class="icon" viewBox="0 0 1029 1024" version="1.1"
-                             xmlns="http://www.w3.org/2000/svg" p-id="2818" width="20" height="20">
-                          <path
-                              d="M1024.727025 511.98976c0 282.771945-229.217816 511.98976-511.98976 511.98976-282.766825 0-511.98976-229.217816-511.98976-511.98976 0-282.766825 229.222936-511.98976 511.98976-511.98976 282.771945 0 511.98976 229.222936 511.98976 511.98976"
-                              fill="#F7931A" p-id="2819"></path>
-                          <path
-                              d="M637.048379 661.623888a55.842723 55.842723 0 0 1-27.145697 33.417571 55.858083 55.858083 0 0 1-42.827943 4.444071l-144.181437-42.940581 32.122238-107.840403 144.171196 42.945701h0.00512c29.726125 8.852303 46.713946 40.242395 37.856523 69.973641m48.628787-221.00038a55.929761 55.929761 0 0 1 4.438952 42.833063c-8.857423 29.721006-40.262875 46.698586-69.973641 37.861643h-0.00512l-144.176316-42.940582 32.111998-107.840403 144.181436 42.940581a55.888802 55.888802 0 0 1 33.422691 27.145698m64.54143-34.917702c-16.48095-30.458271-43.836563-52.678626-77.01862-62.560029l-19.076738-5.677966 26.705385-89.669887-68.519589-20.407912-26.705386 89.669887-58.49995-17.423012 26.710506-89.669886-16.414392-4.889503-66.49723-19.803763-25.742845 86.434111-81.037739-24.135197-22.870583 76.798464 81.037739 24.140317-83.254655 279.536169-81.037739-24.135197-22.870583 76.803584 81.03262 24.130077-21.723726 72.953421 16.409272 4.889502 66.49723 19.803764 22.691386-76.189196 58.638188 17.463971-22.691387 76.194316 68.243116 20.325993 22.691386-76.194316 19.209856 5.718926a130.255315 130.255315 0 0 0 37.185816 5.452691c21.247575 0 42.295474-5.278614 61.51045-15.677127 30.458271-16.48095 52.673507-43.831443 62.560028-77.023739 10.393392-34.912582 5.263255-70.777464-11.268894-100.298794 30.01284-15.661767 53.927881-42.935461 64.331513-77.863403 9.886522-33.192296 6.251395-68.243115-10.224435-98.696266"
-                              fill="#FFFFFF" p-id="2820"></path>
-                        </svg>
-                        <span>
+    <a-spin :spinning="isLoading">
+      <div class="content-box">
+        <div class="left-content-box">
+          <div class="left-content-container">
+            <div class="left-header">
+              <a-dropdown>
+                <template #overlay>
+                  <a-menu @click="handleMenuClick">
+                    <a-menu-item key="1">
+                      <div class="coin-info">
+                        <div class="coin-name">
+                          <svg t="1677824350805" class="icon" viewBox="0 0 1029 1024" version="1.1"
+                               xmlns="http://www.w3.org/2000/svg" p-id="2818" width="20" height="20">
+                            <path
+                                d="M1024.727025 511.98976c0 282.771945-229.217816 511.98976-511.98976 511.98976-282.766825 0-511.98976-229.217816-511.98976-511.98976 0-282.766825 229.222936-511.98976 511.98976-511.98976 282.771945 0 511.98976 229.222936 511.98976 511.98976"
+                                fill="#F7931A" p-id="2819"></path>
+                            <path
+                                d="M637.048379 661.623888a55.842723 55.842723 0 0 1-27.145697 33.417571 55.858083 55.858083 0 0 1-42.827943 4.444071l-144.181437-42.940581 32.122238-107.840403 144.171196 42.945701h0.00512c29.726125 8.852303 46.713946 40.242395 37.856523 69.973641m48.628787-221.00038a55.929761 55.929761 0 0 1 4.438952 42.833063c-8.857423 29.721006-40.262875 46.698586-69.973641 37.861643h-0.00512l-144.176316-42.940582 32.111998-107.840403 144.181436 42.940581a55.888802 55.888802 0 0 1 33.422691 27.145698m64.54143-34.917702c-16.48095-30.458271-43.836563-52.678626-77.01862-62.560029l-19.076738-5.677966 26.705385-89.669887-68.519589-20.407912-26.705386 89.669887-58.49995-17.423012 26.710506-89.669886-16.414392-4.889503-66.49723-19.803763-25.742845 86.434111-81.037739-24.135197-22.870583 76.798464 81.037739 24.140317-83.254655 279.536169-81.037739-24.135197-22.870583 76.803584 81.03262 24.130077-21.723726 72.953421 16.409272 4.889502 66.49723 19.803764 22.691386-76.189196 58.638188 17.463971-22.691387 76.194316 68.243116 20.325993 22.691386-76.194316 19.209856 5.718926a130.255315 130.255315 0 0 0 37.185816 5.452691c21.247575 0 42.295474-5.278614 61.51045-15.677127 30.458271-16.48095 52.673507-43.831443 62.560028-77.023739 10.393392-34.912582 5.263255-70.777464-11.268894-100.298794 30.01284-15.661767 53.927881-42.935461 64.331513-77.863403 9.886522-33.192296 6.251395-68.243115-10.224435-98.696266"
+                                fill="#FFFFFF" p-id="2820"></path>
+                          </svg>
+                          <span>
                           BTC
                         </span>
-                        <span class="usdc">/USDC</span>
-                      </div>
-                      <div class="right"
-                           :class="{'down':dealNum(configeInfo.tokens?configeInfo.tokens[1].chg_24h:0)<0}">
-                        <div class="price">
-                          ${{ configeInfo.tokens ? dealNum(configeInfo.tokens[0].index_price) : "" }}
+                          <span class="usdc">/USDC</span>
                         </div>
-                        <div class="rate">
-                          {{ configeInfo.tokens ? dealNum(configeInfo.tokens[0].chg_24h_percent) + "%" : "" }}
+                        <div class="right"
+                             :class="{'down':dealNum(configInfo.tokens?configInfo.tokens[1].chg_24h:0)<0}">
+                          <div class="price">
+                            ${{ configInfo.tokens ? dealNum(configInfo.tokens[0].index_price) : "" }}
+                          </div>
+                          <div class="rate">
+                            {{ configInfo.tokens ? dealNum(configInfo.tokens[0].chg_24h_percent) + "%" : "" }}
+                          </div>
                         </div>
                       </div>
-                    </div>
 
-                  </a-menu-item>
-                  <a-menu-item key="2">
-                    <div class="coin-info">
-                      <div class="coin-name">
-                        <svg t="1677824451359" class="icon" viewBox="0 0 1024 1024" version="1.1"
-                             xmlns="http://www.w3.org/2000/svg" p-id="3915" width="20" height="20">
-                          <path
-                              d="M512.099961 0.399844c282.689574 0 511.800078 229.110504 511.800078 511.800078s-229.110504 511.800078-511.800078 511.800078S0.299883 794.889496 0.299883 512.199922 229.510348 0.399844 512.099961 0.399844z"
-                              fill="#3E5BF2" p-id="3916"></path>
-                          <path
-                              d="M512.199922 147.242483v510.000781l224.112456-134.34752zM512.199922 877.15736l224.112456-321.774307-224.112456 135.547052zM512.199922 147.242483v510.000781L287.987505 522.895744z"
-                              fill="#FFFFFF" p-id="3917"></path>
-                          <path d="M512.199922 690.930105v186.227255L287.987505 555.383053z" fill="#FFFFFF"
-                                p-id="3918"></path>
-                        </svg>
-                        <span>
+                    </a-menu-item>
+                    <a-menu-item key="2">
+                      <div class="coin-info">
+                        <div class="coin-name">
+                          <svg t="1677824451359" class="icon" viewBox="0 0 1024 1024" version="1.1"
+                               xmlns="http://www.w3.org/2000/svg" p-id="3915" width="20" height="20">
+                            <path
+                                d="M512.099961 0.399844c282.689574 0 511.800078 229.110504 511.800078 511.800078s-229.110504 511.800078-511.800078 511.800078S0.299883 794.889496 0.299883 512.199922 229.510348 0.399844 512.099961 0.399844z"
+                                fill="#3E5BF2" p-id="3916"></path>
+                            <path
+                                d="M512.199922 147.242483v510.000781l224.112456-134.34752zM512.199922 877.15736l224.112456-321.774307-224.112456 135.547052zM512.199922 147.242483v510.000781L287.987505 522.895744z"
+                                fill="#FFFFFF" p-id="3917"></path>
+                            <path d="M512.199922 690.930105v186.227255L287.987505 555.383053z" fill="#FFFFFF"
+                                  p-id="3918"></path>
+                          </svg>
+                          <span>
                           ETH
                         </span>
-                        <span class="usdc">/USDC</span>
-                      </div>
-                      <div class="right"
-                           :class="{'down':dealNum(configeInfo.tokens?configeInfo.tokens[1].chg_24h:0)<0}">
-                        <div class="price">
-                          ${{ configeInfo.tokens ? dealNum(configeInfo.tokens[1].index_price) : "" }}
+                          <span class="usdc">/USDC</span>
                         </div>
-                        <div class="rate">
-                          {{ configeInfo.tokens ? dealNum(configeInfo.tokens[1].chg_24h_percent) + "%" : "" }}
+                        <div class="right"
+                             :class="{'down':dealNum(configInfo.tokens?configInfo.tokens[1].chg_24h:0)<0}">
+                          <div class="price">
+                            ${{ configInfo.tokens ? dealNum(configInfo.tokens[1].index_price) : "" }}
+                          </div>
+                          <div class="rate">
+                            {{ configInfo.tokens ? dealNum(configInfo.tokens[1].chg_24h_percent) + "%" : "" }}
+                          </div>
                         </div>
                       </div>
+                    </a-menu-item>
+
+                  </a-menu>
+                </template>
+                <a class="ant-dropdown-link " @click.prevent>
+                  <div class="coin-box" style="display: flex">
+                    <svg v-show="activeTokenName=='BTC'" t="1677824350805" class="icon" viewBox="0 0 1029 1024"
+                         version="1.1"
+                         xmlns="http://www.w3.org/2000/svg" p-id="2818" width="20" height="20">
+                      <path
+                          d="M1024.727025 511.98976c0 282.771945-229.217816 511.98976-511.98976 511.98976-282.766825 0-511.98976-229.217816-511.98976-511.98976 0-282.766825 229.222936-511.98976 511.98976-511.98976 282.771945 0 511.98976 229.222936 511.98976 511.98976"
+                          fill="#F7931A" p-id="2819"></path>
+                      <path
+                          d="M637.048379 661.623888a55.842723 55.842723 0 0 1-27.145697 33.417571 55.858083 55.858083 0 0 1-42.827943 4.444071l-144.181437-42.940581 32.122238-107.840403 144.171196 42.945701h0.00512c29.726125 8.852303 46.713946 40.242395 37.856523 69.973641m48.628787-221.00038a55.929761 55.929761 0 0 1 4.438952 42.833063c-8.857423 29.721006-40.262875 46.698586-69.973641 37.861643h-0.00512l-144.176316-42.940582 32.111998-107.840403 144.181436 42.940581a55.888802 55.888802 0 0 1 33.422691 27.145698m64.54143-34.917702c-16.48095-30.458271-43.836563-52.678626-77.01862-62.560029l-19.076738-5.677966 26.705385-89.669887-68.519589-20.407912-26.705386 89.669887-58.49995-17.423012 26.710506-89.669886-16.414392-4.889503-66.49723-19.803763-25.742845 86.434111-81.037739-24.135197-22.870583 76.798464 81.037739 24.140317-83.254655 279.536169-81.037739-24.135197-22.870583 76.803584 81.03262 24.130077-21.723726 72.953421 16.409272 4.889502 66.49723 19.803764 22.691386-76.189196 58.638188 17.463971-22.691387 76.194316 68.243116 20.325993 22.691386-76.194316 19.209856 5.718926a130.255315 130.255315 0 0 0 37.185816 5.452691c21.247575 0 42.295474-5.278614 61.51045-15.677127 30.458271-16.48095 52.673507-43.831443 62.560028-77.023739 10.393392-34.912582 5.263255-70.777464-11.268894-100.298794 30.01284-15.661767 53.927881-42.935461 64.331513-77.863403 9.886522-33.192296 6.251395-68.243115-10.224435-98.696266"
+                          fill="#FFFFFF" p-id="2820"></path>
+                    </svg>
+                    <svg v-show="activeTokenName=='ETH'" t="1677824451359" class="icon" viewBox="0 0 1024 1024"
+                         version="1.1"
+                         xmlns="http://www.w3.org/2000/svg" p-id="3915" width="20" height="20">
+                      <path
+                          d="M512.099961 0.399844c282.689574 0 511.800078 229.110504 511.800078 511.800078s-229.110504 511.800078-511.800078 511.800078S0.299883 794.889496 0.299883 512.199922 229.510348 0.399844 512.099961 0.399844z"
+                          fill="#3E5BF2" p-id="3916"></path>
+                      <path
+                          d="M512.199922 147.242483v510.000781l224.112456-134.34752zM512.199922 877.15736l224.112456-321.774307-224.112456 135.547052zM512.199922 147.242483v510.000781L287.987505 522.895744z"
+                          fill="#FFFFFF" p-id="3917"></path>
+                      <path d="M512.199922 690.930105v186.227255L287.987505 555.383053z" fill="#FFFFFF"
+                            p-id="3918"></path>
+                    </svg>
+                    {{ curSymbol }}
+
+
+                  </div>
+                  <div class="contract">
+                    Contract
+                    <a-icon type="down"/>
+                  </div>
+                </a>
+
+              </a-dropdown>
+            </div>
+            <div class="left-content">
+              <div class="flex-box">
+                <button class="operate buy" :class="{'active':operateNav==0}" @click="operateNav=0">
+                  Buy (Long)
+                </button>
+                <button class="operate  sell" :class="{'active':operateNav==1}" @click="operateNav=1">
+                  Sell (Short)
+                </button>
+              </div>
+              <div class="left-content-item">
+                <div class="box-title">Amount</div>
+                <div class="input-box">
+                  <div class="input-part">
+                    <input type="number" step="any" v-model="amount" @input="updateUSDCAmount" placeholder="0.0000">
+                    <span>{{ activeTokenName }}</span>
+                  </div>
+                  <div class="input-part">
+                    <input type="number" step="any" v-model="usdcAmount" @input="updateAmount" placeholder="0.0000">
+                    <span>USDC</span>
+                    <div class="tip-box" v-show="usdcAmount<10">
+                      Amount is not less than 10U.
                     </div>
-                  </a-menu-item>
-
-                </a-menu>
-              </template>
-              <a class="ant-dropdown-link " @click.prevent>
-                <div class="coin-box" style="display: flex">
-                  <svg v-show="activeTokenName=='BTC'" t="1677824350805" class="icon" viewBox="0 0 1029 1024"
-                       version="1.1"
-                       xmlns="http://www.w3.org/2000/svg" p-id="2818" width="20" height="20">
-                    <path
-                        d="M1024.727025 511.98976c0 282.771945-229.217816 511.98976-511.98976 511.98976-282.766825 0-511.98976-229.217816-511.98976-511.98976 0-282.766825 229.222936-511.98976 511.98976-511.98976 282.771945 0 511.98976 229.222936 511.98976 511.98976"
-                        fill="#F7931A" p-id="2819"></path>
-                    <path
-                        d="M637.048379 661.623888a55.842723 55.842723 0 0 1-27.145697 33.417571 55.858083 55.858083 0 0 1-42.827943 4.444071l-144.181437-42.940581 32.122238-107.840403 144.171196 42.945701h0.00512c29.726125 8.852303 46.713946 40.242395 37.856523 69.973641m48.628787-221.00038a55.929761 55.929761 0 0 1 4.438952 42.833063c-8.857423 29.721006-40.262875 46.698586-69.973641 37.861643h-0.00512l-144.176316-42.940582 32.111998-107.840403 144.181436 42.940581a55.888802 55.888802 0 0 1 33.422691 27.145698m64.54143-34.917702c-16.48095-30.458271-43.836563-52.678626-77.01862-62.560029l-19.076738-5.677966 26.705385-89.669887-68.519589-20.407912-26.705386 89.669887-58.49995-17.423012 26.710506-89.669886-16.414392-4.889503-66.49723-19.803763-25.742845 86.434111-81.037739-24.135197-22.870583 76.798464 81.037739 24.140317-83.254655 279.536169-81.037739-24.135197-22.870583 76.803584 81.03262 24.130077-21.723726 72.953421 16.409272 4.889502 66.49723 19.803764 22.691386-76.189196 58.638188 17.463971-22.691387 76.194316 68.243116 20.325993 22.691386-76.194316 19.209856 5.718926a130.255315 130.255315 0 0 0 37.185816 5.452691c21.247575 0 42.295474-5.278614 61.51045-15.677127 30.458271-16.48095 52.673507-43.831443 62.560028-77.023739 10.393392-34.912582 5.263255-70.777464-11.268894-100.298794 30.01284-15.661767 53.927881-42.935461 64.331513-77.863403 9.886522-33.192296 6.251395-68.243115-10.224435-98.696266"
-                        fill="#FFFFFF" p-id="2820"></path>
-                  </svg>
-                  <svg v-show="activeTokenName=='ETH'" t="1677824451359" class="icon" viewBox="0 0 1024 1024"
-                       version="1.1"
-                       xmlns="http://www.w3.org/2000/svg" p-id="3915" width="20" height="20">
-                    <path
-                        d="M512.099961 0.399844c282.689574 0 511.800078 229.110504 511.800078 511.800078s-229.110504 511.800078-511.800078 511.800078S0.299883 794.889496 0.299883 512.199922 229.510348 0.399844 512.099961 0.399844z"
-                        fill="#3E5BF2" p-id="3916"></path>
-                    <path
-                        d="M512.199922 147.242483v510.000781l224.112456-134.34752zM512.199922 877.15736l224.112456-321.774307-224.112456 135.547052zM512.199922 147.242483v510.000781L287.987505 522.895744z"
-                        fill="#FFFFFF" p-id="3917"></path>
-                    <path d="M512.199922 690.930105v186.227255L287.987505 555.383053z" fill="#FFFFFF"
-                          p-id="3918"></path>
-                  </svg>
-                  {{ curSymbol }}
-
-
+                  </div>
                 </div>
-                <div class="contract">
-                  Contract
-                  <a-icon type="down"/>
+              </div>
+              <div class="left-content-item">
+                <div class="box-title">
+                  Leverage
                 </div>
-              </a>
+                <div class="progress-box" style="position: relative">
+                  <div class="slider-box">
+                    <a-slider :min="2" :max="50" style="position: relative;width: 100%" :tipFormatter="formatTip"
+                              tooltipPlacement="bottom" v-model="slideValue">
+                    </a-slider>
+                    <div class="slider-lines" style="pointer-events: none;--value: calc((100% / max) * value)">
+                      <div class="slider-line" :class="{'active':slideValue>=4.8}" :style="{ left: '10%' }"/>
+                      <div class="slider-line" :class="{'active':slideValue>=9.6}" :style="{ left: '20%' }"/>
+                      <div class="slider-line" :class="{'active':slideValue>=4.8*3}" :style="{ left: '30%' }"/>
+                      <div class="slider-line" :class="{'active':slideValue>=4.8*5}" :style="{ left: '40%' }"/>
+                      <div class="slider-line" :class="{'active':slideValue>=4.8*6}" :style="{ left: '50%' }"/>
+                      <div class="slider-line" :class="{'active':slideValue>=4.8*7}" :style="{ left: '60%' }"/>
+                      <div class="slider-line" :class="{'active':slideValue>=4.8*8}" :style="{ left: '70%' }"/>
+                      <div class="slider-line" :class="{'active':slideValue>=4.8*9}" :style="{ left: '80%' }"/>
+                      <div class="slider-line" :class="{'active':slideValue>=4.8*10}" :style="{ left: '90%' }"/>
+                    </div>
+                  </div>
+                  <div class="reset" @click="slideValue=2">
+                    Reset
+                  </div>
+                  <div class="multi">
+                    {{ slideValue }}x
+                  </div>
+                </div>
 
-            </a-dropdown>
-          </div>
-          <div class="left-content">
-            <div class="flex-box">
-              <button class="operate buy" :class="{'active':operateNav==0}" @click="operateNav=0">
-                Buy (Long)
+              </div>
+            </div>
+            <div class="left-bottom">
+              <div class="left-content-item">
+                <div class="box-title">
+                  Transaction
+                </div>
+                <div class="transaction-info">
+                  <div class="flex-box">
+                    <div class="name">
+                      Entry Price
+                    </div>
+                    <div class="value">
+                      ${{ dealNum(coinInfo.index_price) }}
+                    </div>
+                  </div>
+                  <div class="flex-box">
+                    <div class="name">
+                      Est. Liquidation Price
+                    </div>
+                    <div class="value">
+                      {{ dealNum(liquidationPrice) }}
+                    </div>
+                  </div>
+                  <div class="flex-box">
+                    <div class="name">
+                      Fee
+                    </div>
+                    <div class="value">
+                      ${{ feeRate && usdcAmount ? dealNum(feeRate * usdcAmount) : 0 }}
+                    </div>
+                  </div>
+                  <div class="flex-box">
+                    <div class="name">
+                      <span v-show="payValue>0">Income Amount</span>
+                      <span v-show="payValue<=0">Pay Amount </span>
+                    </div>
+                    <div class="value">
+                      ${{ dealNum(Math.abs(payValue)) }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <button class="operate approve" @click="approve" v-show="usdcAllowance<10||usdcAllowance<amount">
+                Approve
               </button>
-              <button class="operate  sell" :class="{'active':operateNav==1}" @click="operateNav=1">
-                Sell (Short)
+              <!--            :disabled="!tradeActive"-->
+              <button class="operate trade" v-show="usdcAllowance>10||usdcAllowance>amount"
+                      :class="{'active':tradeActive}" @click="trade">
+                Trade
               </button>
             </div>
-            <div class="left-content-item">
-              <div class="box-title">Amount</div>
-              <div class="input-box">
-                <div class="input-part">
-                  <input type="number" step="any" v-model="amount" @input="updateUSDCAmount" placeholder="0.0000">
-                  <span>{{ activeTokenName }}</span>
-                </div>
-                <div class="input-part">
-                  <input type="number" step="any" v-model="usdcAmount" @input="updateAmount" placeholder="0.0000">
-                  <span>USDC</span>
-                  <div class="tip-box" v-show="usdcAmount<10">
-                    Amount is not less than 10U.
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="left-content-item">
-              <div class="box-title">
-                Leverage
-              </div>
-              <div class="progress-box" style="position: relative">
-                <div class="slider-box">
-                  <a-slider :min="2" :max="50" style="position: relative;width: 100%" :tipFormatter="formatTip"
-                            tooltipPlacement="bottom" v-model="slideValue">
-                  </a-slider>
-                  <div class="slider-lines" style="pointer-events: none;--value: calc((100% / max) * value)">
-                    <div class="slider-line" :class="{'active':slideValue>=4.8}" :style="{ left: '10%' }"/>
-                    <div class="slider-line" :class="{'active':slideValue>=9.6}" :style="{ left: '20%' }"/>
-                    <div class="slider-line" :class="{'active':slideValue>=4.8*3}" :style="{ left: '30%' }"/>
-                    <div class="slider-line" :class="{'active':slideValue>=4.8*5}" :style="{ left: '40%' }"/>
-                    <div class="slider-line" :class="{'active':slideValue>=4.8*6}" :style="{ left: '50%' }"/>
-                    <div class="slider-line" :class="{'active':slideValue>=4.8*7}" :style="{ left: '60%' }"/>
-                    <div class="slider-line" :class="{'active':slideValue>=4.8*8}" :style="{ left: '70%' }"/>
-                    <div class="slider-line" :class="{'active':slideValue>=4.8*9}" :style="{ left: '80%' }"/>
-                    <div class="slider-line" :class="{'active':slideValue>=4.8*10}" :style="{ left: '90%' }"/>
-                  </div>
-                </div>
-                <div class="reset" @click="slideValue=2">
-                  Reset
-                </div>
-                <div class="multi">
-                  {{ slideValue }}x
-                </div>
-              </div>
-
-            </div>
-            <!--            <div class="left-content-item">-->
-            <!--              <div class="box-title">-->
-            <!--                Slippage Tolerance-->
-            <!--              </div>-->
-            <!--              <div class="slippage-box">-->
-            <!--                <div class="slippage-input">-->
-            <!--                  <input type="number" v-model="slipValue">-->
-            <!--                  <span>%</span>-->
-            <!--                </div>-->
-            <!--                <div class="rate-btn" @click="slipValue=1">-->
-            <!--                  1%-->
-            <!--                </div>-->
-            <!--                <div class="rate-btn" @click="slipValue=1.5">-->
-            <!--                  1.5%-->
-            <!--                </div>-->
-            <!--                <div class="rate-btn" @click="slipValue=2">-->
-            <!--                  2%-->
-            <!--                </div>-->
-            <!--              </div>-->
-
-            <!--            </div>-->
-
           </div>
-          <div class="left-bottom">
-            <div class="left-content-item">
-              <div class="box-title">
-                Transaction
+        </div>
+        <div class="right-content-box">
+          <div class="right-part1">
+            <div class="price" :class="{'down':dealNum(coinInfo.chg_24h_percent) <0}">
+              {{ dealNum(tokenPriceMap[coinInfo.contract_address]) }}
+            </div>
+            <div class="funding">
+              <div class="name">
+                Funding Rate / Next Funding
               </div>
-              <div class="transaction-info">
-                <div class="flex-box">
-                  <div class="name">
-                    Entry Price
-                  </div>
-                  <div class="value">
-                    ${{ dealNum(coinInfo.index_price) }}
-                  </div>
+              <div class="value">
+                <div class="rate">
+                  {{ coinInfo.funding_rate ? dealNum(coinInfo.funding_rate[0]) : 0 }}%
                 </div>
-                <div class="flex-box">
-                  <div class="name">
-                    Est. Liquidation Price
-                  </div>
-                  <div class="value">
-                    {{ dealNum(liquidationPrice) }}
-                  </div>
-                </div>
-                <div class="flex-box">
-                  <div class="name">
-                    Fee
-                  </div>
-                  <div class="value">
-                    ${{ feeRate && usdcAmount ? dealNum(feeRate * usdcAmount) : 0 }}
-                  </div>
-                </div>
-                <div class="flex-box">
-                  <div class="name">
-                    <span v-show="payValue>0">Income Amount</span>
-                    <span v-show="payValue<=0">Pay Amount </span>
-                  </div>
-                  <div class="value">
-                    ${{ dealNum(Math.abs(payValue)) }}
-                  </div>
+                <div class="time">
+                  {{ coinInfo.funding_time }}
                 </div>
               </div>
             </div>
-            <button class="operate approve" @click="approve" v-show="usdcAllowance<10||usdcAllowance<amount">
-              Approve
-            </button>
-            <!--            :disabled="!tradeActive"-->
-            <button class="operate trade" v-show="usdcAllowance>10||usdcAllowance>amount"
-                    :class="{'active':tradeActive}" @click="trade">
-              Trade
-            </button>
+            <div class="change">
+              <div class="name">
+                24h Change
+              </div>
+              <div class="value" :class="{'down':dealNum(coinInfo.chg_24h_percent) <0}">
+                {{ dealNum(coinInfo.chg_24h) }}
+                {{ dealNum(coinInfo.chg_24h_percent) }}%
+              </div>
+            </div>
           </div>
+          <div class="right-part2">
+            <div :id="widgetId" :style="{ height: widgetHeight + 'px' }"/>
+          </div>
+          <VaultRecord :configInfo="configInfo" :feeRate="feeRate" :coin-info="coinInfo"
+                       :isShowTempPosition="isShowTempPosition" :activeTokenName="activeTokenName"
+                       :positionArr="isShowTempPosition?tempPositionArr:positionArr"></VaultRecord>
         </div>
       </div>
-      <div class="right-content-box">
-        <div class="right-part1">
-          <div class="price" :class="{'down':dealNum(coinInfo.chg_24h_percent) <0}">
-            {{ dealNum(coinInfo.index_price) }}
-          </div>
-          <div class="funding">
-            <div class="name">
-              Funding Rate / Next Funding
-            </div>
-            <div class="value">
-              <div class="rate">
-                {{ coinInfo.funding_rate ? dealNum(coinInfo.funding_rate[0]) : 0 }}%
-              </div>
-              <div class="time">
-                {{ coinInfo.funding_time }}
-              </div>
-            </div>
-          </div>
-          <div class="change">
-            <div class="name">
-              24h Change
-            </div>
-            <div class="value" :class="{'down':dealNum(coinInfo.chg_24h_percent) <0}">
-              {{ dealNum(coinInfo.chg_24h) }}
-              {{ dealNum(coinInfo.chg_24h_percent) }}%
-            </div>
-          </div>
-        </div>
-        <div class="right-part2">
-          <div :id="widgetId" :style="{ height: widgetHeight + 'px' }"/>
-        </div>
-        <div class="right-part3">
-          <div class="right-part3-nav">
-            <div class="nav-item" :class="{'active':activeNav==0}" @click="activeNav=0">
-              Positions
-            </div>
-            <div class="nav-item" :class="{'active':activeNav==1}" @click="activeNav=1">
-              Close Positions
-            </div>
-            <div class="nav-item" :class="{'active':activeNav==2}" @click="activeNav=2">
-              Action History
-            </div>
-            <div class="nav-item" :class="{'active':activeNav==3}" @click="activeNav=3">
-              Funding Rate
-            </div>
-          </div>
-          <div class="nav1-content" v-show="activeNav==0">
-            <div class="table-header">
-              <div class="col">
-                Contract
-              </div>
-              <div class="col">
-                Side
-              </div>
-              <div class="col">
-                Size
-              </div>
-              <div class="col">
-                Leverage
-              </div>
-              <div class="col">
-                Entry Price
-              </div>
-              <div class="col">
-                Liquidation Price
-              </div>
-              <div class="col">
-                Margin/Margin Ratio
-              </div>
-              <div class="col">
-                Unrealized PNL
-              </div>
-              <div class="col">
-                Actions
-              </div>
-            </div>
-            <div class="row" :class="{'blink':direction && activeTokenName==item.name}"
-                 v-for="(item,index) in positionArr" :key="index">
-              <div class="col">
-                {{ item.name }}/USDC
-              </div>
-              <div class="col ">
-                <div class="side" :class="{'down':item.direction!=1 }">
-                  {{ item.direction == 1 ? "Long" : "Short" }}
-                </div>
-              </div>
-              <div class="col">
-                {{ dealD6Num(item.size) }}
-              </div>
-              <div class="col">
-                {{ item.leverage }}X
-              </div>
-              <div class="col">
-                {{ dealNum(item.average_price) }}
-              </div>
-              <div class="col">
-                {{ dealNum(item.collateral) }}
-              </div>
-              <div class="col">
-                <span v-if="item.name=='BTC'">
-                     {{
-                    dealNum(Math.abs(originalBtcValue))
-                  }} /{{ marginRatio(item) }}%
-                </span>
-                <span v-if="item.name=='ETH'">
-                     {{
-                    dealNum(Math.abs(originalEthValue))
-                  }} /{{ marginRatio(item) }}%
-                </span>
-              </div>
-              <div class="col">
-                {{ dealNum(item.pnl) }}
-              </div>
-              <div class="col operate-box">
-                <button class="operate" @click="isShowMarginManage=true,clickPosition = item,getPositionData">
-                  Margin Manage
-                </button>
-                <button class="operate" @click="isShowClosePosition=true ,clickPosition = item,getPositionData">
-                  Close
-                </button>
-              </div>
-            </div>
-          </div>
-          <div class="nav2-content" v-show="activeNav==1">
-            <div class="table-header">
-              <div class="col">
-                Contract
-              </div>
-              <div class="col">
-                Side
-              </div>
-              <div class="col">
-                Size
-              </div>
-              <div class="col">
-                Fill Price
-              </div>
-              <div class="col">
-                Fee
-              </div>
-              <div class="col">
-                Realized PNL
-              </div>
-              <div class="col">
-                Time
-              </div>
-            </div>
-            <div class="row" v-for="(item,index) in profitArr" :key="index">
-              <div class="col">
-                {{ item.name }}/USDC
-              </div>
-              <div class="col ">
-                <div class="side" :class="{'down':item.direction!=1 }">
-                  {{ item.direction == 1 ? "Long" : "Short" }}
-                </div>
-              </div>
-              <div class="col">
-                {{ dealNum(item.size_delta) }}
-              </div>
-              <div class="col">
-                {{ dealNum(item.index_price) }}
-              </div>
-              <div class="col">
-                {{ dealFeeNum(item.transaction_fee) }}
-              </div>
-              <div class="col">
-                {{ dealNum(item.pel) }}
-              </div>
-              <div class="col">
-                {{ moment(item.updated_at) }}
-              </div>
-            </div>
-          </div>
-          <div class="nav3-content" v-show="activeNav==2">
-            <div class="table-header">
-              <div class="col">
-                Time
-              </div>
-              <div class="col">
-                Contract
-              </div>
-              <div class="col">
-                Side
-              </div>
-              <div class="col">
-                Size
-              </div>
-              <div class="col">
-                Leverage
-              </div>
-              <div class="col">
-                Fill Price
-              </div>
-              <div class="col">
-                Fee
-              </div>
-            </div>
-            <div class="row" v-for="(item,index) in recordArr" :key="index">
-              <div class="col">
-                {{ moment(item.updated_at) }}
-              </div>
-              <div class="col">
-                {{ item.name }}/USDC
-              </div>
-              <div class="col">
-                <div class="side" :class="{'down':item.direction!=1 }">
-                  {{ item.direction == 1 ? "Long" : "Short" }}
-                </div>
-              </div>
-              <div class="col">
-                {{ dealD6Num(item.size_delta) }}
-              </div>
-              <div class="col">
-                {{ dealNum(item.index_price) }}X
-              </div>
-              <div class="col">
-                {{ dealNum(item.leverage) }}
-              </div>
-              <div class="col">
-                {{ dealFeeNum(item.transaction_fee / 10 ** 6) }}$
-              </div>
-            </div>
-          </div>
-          <div class="nav4-content" v-show="activeNav==3">
-            <div class="table-header">
-              <div class="col">
-                Contract
-              </div>
-              <div class="col">
-                Funding Rate
-              </div>
-              <div class="col">
-                Funding Payment
-              </div>
-              <div class="col">
-                Time
-              </div>
-            </div>
-            <div class="row" v-for="(item,index) in fundingFeeArr" :key="index">
-              <div class="col">
-                {{ item.name }}/USDC
-              </div>
-              <div class="col">
-                {{ dealNum(item.funding_fee) }}%
-              </div>
-              <div class="col">
-                0.0005
-              </div>
-              <div class="col">
-                2021-11-20 00:00:00 UTC
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <MarginManage v-show="isShowMarginManage" :coin-info="coinInfo" :positionObj="clickPosition"
-                  @closeMarginManage="isShowMarginManage = false"/>
-    <ClosePositions :feeRate="feeRate" v-show="isShowClosePosition" :coin-info="coinInfo" :positionObj="clickPosition"
-                    @closeClosePosition="isShowClosePosition = false"/>
+    </a-spin>
   </div>
 </template>
 
 <script>
-
-import MarginManage from "@/components/MarginManage";
-import ClosePositions from "@/components/ClosePositions";
-import {getTokenInfo, getTokenPrices} from "@/api/coinApi";
+import VaultRecord from "@/components/HomeComp/VaultRecord";
+import {getTranStatus} from "@/api/comon";
+import {getConfigInfo} from "@/api/coinApi";
 import addressMap from "@/abi/addressMap";
 import {getPositions, getRecord, getProfit, getFundingFee} from "@/api/vault";
 import {mapGetters} from "vuex";
 import MathCalculator from "../utils/bigNumberUtil"
 import BigNumber from "bignumber.js";
-import {MARGINRATIO} from "../utils/constantData"
+import {MARGINRATIO, USDCDECIMALS} from "../utils/constantData"
 import {DECIMALS6} from "../utils/constantData";
 import moment from "moment"
 
 let getPriceInterval = null
-var calculator = new MathCalculator();
+const calculator = new MathCalculator();
 export default {
   name: 'HomeView',
   components: {
-    MarginManage,
-    ClosePositions
+    VaultRecord
   },
   data() {
     return {
       moment,
-      tokenPriceMap: {},
+      isLoading:false,
       usdcAllowance: 0,
-      clickPosition: {},
       amount: undefined,
-      tokenInfo: {},
-      configeInfo: {},
-      isShowClosePosition: false,
-      isShowMarginManage: false,
+      configInfo: {},
       slideValue: 2,
       slipValue: 1,
       progress: 10,
@@ -543,7 +293,9 @@ export default {
       curSymbol: "BTC/USDC",
       activeTokenName: "BTC",
       coinInfo: {},
-      positionArr: [{
+      isShowTempPosition: false,
+      positionArr: [],
+      tempPositionArr: [{
         average_price: "20100",
         collateral: "0",
         direction: 1,
@@ -554,7 +306,7 @@ export default {
         pnl: "0",
         size: "0",
       }, {
-        average_price: "20100",
+        average_price: "1500",
         collateral: "0",
         direction: 1,
         icon: "https://cdn-icons-png.flaticon.com/128/7829/7829596.png",
@@ -564,9 +316,7 @@ export default {
         pnl: "0",
         size: "0",
       }],
-      recordArr: [],
-      fundingFeeArr: [],
-      profitArr: [],
+
       originalBtcValue: 0,//原有仓位价值
       originalEthValue: 0,//原有仓位价值
       originalBtcObj: 0,//原有仓位方向
@@ -577,11 +327,30 @@ export default {
   },
   filters: {},
   watch: {
+
     account() {
       this.initData()
+    },
+    amount(val) {//动态显示
+      if (val > 0) {
+        this.tempPositionArr.forEach(item => {
+          if (item.name == this.activeTokenName) {
+            item.average_price = this.tokenPriceMap[item.index_token]
+            item.size = this.endSize
+            item.direction = this.direction
+            item.collateral = this.endSize * this.tokenPriceMap[item.index_token] / this.slideValue
+          }
+        })
+        this.isShowTempPosition = true
+      } else {
+        this.isShowTempPosition = false
+      }
     }
   },
   computed: {
+    tokenPriceMap() {
+      return this.$store.state.perpetual.priceMap
+    },
     collateralDeltaInIO() {//增加还是减少保证金 （true:添加，false:减少）
       if (this.payValue >= 0) {
         return false
@@ -643,25 +412,23 @@ export default {
             if (!this.originalBtcValue) {
               return -this.curValue
             }
-            console.log(Math.abs(this.endSize),this.originalEthObj.size)
             if (this.endSize < 0 && (Math.abs(this.endSize) > this.originalBtcObj.size)) {
               changeValue = this.originalBtcValue - Math.abs(this.endSize) * this.tokenPriceMap[this.originalBtcObj.index_token] / this.slideValue
             } else {
               changeValue = this.originalBtcValue - Math.abs(this.endSize) * this.tokenPriceMap[this.originalBtcObj.index_token] / this.slideValue
             }
-            console.log(changeValue)
+
             return changeValue
           case "ETH":
             if (!this.originalEthValue) {
               return -this.curValue
             }
-            console.log(Math.abs(this.endSize),this.originalEthObj.size)
+
             if (this.endSize < 0 && (Math.abs(this.endSize) > this.originalEthObj.size)) {
               changeValue = this.originalEthValue - Math.abs(this.endSize) * this.tokenPriceMap[this.originalEthObj.index_token] / this.slideValue
             } else {
               changeValue = this.originalEthValue - Math.abs(this.endSize) * this.tokenPriceMap[this.originalEthObj.index_token] / this.slideValue
             }
-            console.log(changeValue)
             return changeValue
         }
       }
@@ -712,7 +479,7 @@ export default {
     onSliderChange() {
 
     },
-    calculatLiq(type, originObj) {
+    calculatLiq(type, originObj) { //计算清仓价格
       if (type === 1) {
         if (this.operateNav == 0) {
           let data1 = this.usdcAmount / this.slideValue - this.amount * this.coinInfo.index_price
@@ -759,20 +526,6 @@ export default {
         }
       }
     },
-    marginRatio(item) {
-      if (!this.configeInfo.tokens) {
-        return
-      }
-      let price = 0
-      this.configeInfo.tokens.forEach(coin => {
-        if (coin.name == item.name) {
-          price = coin.index_price
-        }
-      })
-      let worth = calculator.add(item.collateral, item.pnl)
-      return this.dealNum(worth / (price * item.size / item.leverage) * 100)
-
-    },
     async getProfitData() {
       let res = await getProfit(this.account)
       this.profitArr = res.data.data
@@ -792,8 +545,7 @@ export default {
         let positionArr = res.data.data
         this.positionArr = positionArr
 
-
-        //取出当前
+        //取出当前BTC/ETC数据
         this.positionArr.forEach(item => {
           if (item.name == "BTC") {
             this.originalBtcValue = calculator.add(parseFloat(item.collateral), parseFloat(item.pnl))
@@ -803,6 +555,16 @@ export default {
             this.originalEthValue = calculator.add(parseFloat(item.collateral), parseFloat(item.pnl))
             this.originalEthObj = item
           }
+          this.tempPositionArr.forEach(Titem => { //临时数组数据更新
+            if (Titem.name == item.name) {
+              Titem.size = item.size
+              Titem.direction = item.direction
+              Titem.leverage = item.leverage
+              Titem.average_price = item.average_price
+              Titem.collateral = item.collateral
+              Titem.pnl = item.pnl
+            }
+          })
         })
       } catch (e) {
         console.log(e)
@@ -865,7 +627,7 @@ export default {
         owner: this.account
       })
       if (res > 0) {
-        this.usdcAllowance = parseInt(res) / 10 ** 6
+        this.usdcAllowance = parseInt(res) / USDCDECIMALS
       }
     },
     approve() {
@@ -915,11 +677,19 @@ export default {
         _indexPrice: price,
         _direction: this.direction,
         _collateralDeltaInIO: this.collateralDeltaInIO
-      }).then(() => {
-        this.initData()
+      }).then(async (res) => {
         this.$message.info('Trade success');
         this.amount = undefined
         this.usdcAmount = undefined
+        this.isLoading=true
+        let statusRes = await getTranStatus(res.blockHash)
+        console.log(statusRes.data.data)
+        if(statusRes.data.data==1){
+          setTimeout(()=>{
+            this.initData()
+            this.isLoading=false
+          },1000)
+        }
       }).catch((e) => {
         console.log(e)
         this.$message.info(e);
@@ -972,8 +742,6 @@ export default {
           enable_publishing: false,
           container_id: this.widgetId,
         });
-        // symbol: "CME:ETH1!",
-
       }
     },
     initData() {
@@ -987,19 +755,15 @@ export default {
     },
     async getData() {
       try {
-        let priceRes = await getTokenPrices()
-        this.tokenPriceMap = priceRes.data.data
-        // let priceArr = priceRes.data.data
-        // console.log(priceArr)
+        this.$store.dispatch("perpetual/getPriceMap")
         this.getPositionData()
-        let tokenInfoRes = await getTokenInfo()
+        let tokenInfoRes = await getConfigInfo()
 
-        let tokenInfo = tokenInfoRes.data.data
-        this.feeRate = Number(tokenInfo.transaction_fee_rate)
-        this.tokenInfo = tokenInfo
-        this.configeInfo = tokenInfo
-        if (tokenInfo && tokenInfo.tokens) {
-          tokenInfo.tokens.forEach(token => {
+        this.configInfo = tokenInfoRes.data.data
+        this.feeRate = Number(this.configInfo.transaction_fee_rate)
+
+        if (this.configInfo && this.configInfo.tokens) {
+          this.configInfo.tokens.forEach(token => {
             if (token.name == this.activeTokenName) {
               this.coinInfo = token
             }
@@ -1015,8 +779,8 @@ export default {
     this.getData()
     this.initData()
     getPriceInterval = setInterval(() => {
-      this.getData()
-    }, 100000)
+      this.$store.dispatch("perpetual/getPriceMap")
+    }, 10000)
   },
   beforeDestroy() {
     clearInterval(getPriceInterval)
@@ -1031,25 +795,7 @@ export default {
 .home {
   overflow: auto;
   background: #F3F7FF;
-  @keyframes blink {
-    0% {
-      background-color: #fff;
-      transform: scale(1);
-    }
-    50% {
-      background-color: #ccc;
-      transform: scale(0.99);
-      box-shadow: 0 0 3px inset;
-    }
-    100% {
-      background-color: #fff;
-      transform: scale(1);
-    }
-  }
 
-  .blink {
-    animation: blink 10s ease forwards;
-  }
 
   //@media only screen and (-webkit-min-device-pixel-ratio: 2),
   //only screen and (min--moz-device-pixel-ratio: 2),
@@ -1568,7 +1314,7 @@ export default {
       padding-left: 15px;
       min-width: 900px;
 
-      .right-part1, .right-part2, .right-part3 {
+      .right-part1, .right-part2, {
         border-radius: 8px;
         background: #FFFFFF;
         box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.1);
@@ -1645,256 +1391,6 @@ export default {
         }
       }
 
-      .right-part3 {
-        margin-top: 15px;
-
-        .right-part3-nav {
-          display: flex;
-          padding: 15px 0 10px;
-
-          .nav-item {
-            padding: 6px 15px;
-            font-size: var(--font-size14);
-            font-family: AvertaStd-Regular, AvertaStd, sans-serif;
-            font-weight: 400;
-            color: rgba(14, 29, 81, 0.5);
-            line-height: var(--line-height17);
-            cursor: pointer;
-
-            &:first-child {
-              //padding-left: 0;
-            }
-
-            &.active {
-              font-weight: bold;
-              color: #0E1D51;
-            }
-          }
-        }
-
-        .nav1-content, .nav2-content, .nav3-content, .nav4-content {
-          .col {
-            text-align: center;
-
-            &:nth-child(1) {
-              padding-left: 0;
-              text-align: left;
-            }
-
-            &:last-child {
-              text-align: left;
-            }
-
-            &:nth-child(1) {
-              width: 60px;
-            }
-
-            &:nth-child(2) {
-              width: 50px;
-            }
-
-            &:nth-child(3) {
-              width: 50px;
-            }
-
-            &:nth-child(4) {
-              width: 50px;
-            }
-
-            &:nth-child(5) {
-              width: 95px;
-            }
-
-            &:nth-child(6) {
-              width: 126px;
-            }
-
-            &:nth-child(7) {
-              width: 152px;
-            }
-
-            &:nth-child(8) {
-              width: 110px;
-            }
-
-            &:nth-child(9) {
-              min-width: 110px;
-            }
-          }
-
-          .row {
-            border-bottom: 1px solid #ECECEE;
-            padding: 6px 15px;
-            display: flex;
-            align-items: center;
-            font-size: var(--font-size12);
-            font-family: AvertaStd-Regular, AvertaStd, sans-serif;
-            font-weight: 400;
-            color: #0E1D51;
-            line-height: 15px;
-
-            &:last-child {
-              border-bottom: none
-            }
-
-            .side {
-              width: 40px;
-              margin: 0 auto;
-              text-align: center;
-              padding: 2px 4px;
-              background: #63CE63;
-              border-radius: 2px;
-              color: #fff;
-
-              &.down {
-                background: #E32A20;
-              }
-            }
-
-            .operate-box {
-              display: flex;
-
-              .operate {
-                width: auto;
-                padding: 3px 6px;
-                height: auto;
-                border-radius: 10px;
-                border: 1px solid #0E1D51;
-                font-size: var(--font-size12) !important;
-                font-family: AvertaStd-Regular, AvertaStd;
-                font-weight: 400;
-                color: #0E1D51;
-                line-height: 15px;
-                background: #fff;
-
-                &:last-child {
-                  margin-left: 6px;
-                }
-              }
-
-            }
-          }
-
-          .table-header {
-            display: flex;
-            padding: 10px 15px;
-            border-bottom: 1px solid #ECECEE;
-
-            .col {
-              font-size: var(--font-size12);
-              font-family: AvertaStd-Regular, AvertaStd, sans-serif;
-              font-weight: 400;
-              color: #9CA3B4;
-              line-height: 15px;
-
-              &:last-child {
-                text-align: left;
-              }
-            }
-          }
-        }
-
-        .nav2-content {
-          .col {
-            &:nth-child(1) {
-              width: 70px;
-            }
-
-            &:nth-child(2) {
-              width: 60px;
-            }
-
-            &:nth-child(3) {
-              width: 60px;
-            }
-
-            &:nth-child(4) {
-              width: 100px;
-            }
-
-            &:nth-child(5) {
-              width: 100px;
-            }
-
-            &:nth-child(6) {
-              width: 130px;
-            }
-
-            &:nth-child(7) {
-              width: 160px;
-            }
-
-            &:nth-child(8) {
-              width: 120px;
-            }
-
-            &:nth-child(9) {
-              min-width: 160px;
-            }
-          }
-        }
-
-        .nav3-content {
-          .col {
-            &:nth-child(1) {
-              width: 200px;
-            }
-
-            &:nth-child(2) {
-              width: 80px;
-            }
-
-            &:nth-child(3) {
-              width: 60px;
-            }
-
-            &:nth-child(4) {
-              width: 100px;
-            }
-
-            &:nth-child(5) {
-              width: 100px;
-            }
-
-            &:nth-child(6) {
-              width: 130px;
-            }
-
-            &:nth-child(7) {
-              width: 160px;
-            }
-
-            &:nth-child(8) {
-              width: 120px;
-            }
-
-            &:nth-child(9) {
-              min-width: 160px;
-            }
-          }
-        }
-
-        .nav4-content {
-          .col {
-            &:nth-child(1) {
-              width: 80px;
-            }
-
-            &:nth-child(2) {
-              width: 120px;
-            }
-
-            &:nth-child(3) {
-              width: 160px;
-            }
-
-            &:nth-child(4) {
-              width: 300px;
-            }
-
-          }
-        }
-      }
     }
 
 

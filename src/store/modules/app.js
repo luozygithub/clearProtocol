@@ -1,11 +1,13 @@
+
 const state = {
     web3:null,
     account:'',
     isConnected:false,
     chainId: 666,
     ethBalance:0,
-    collapsed:true
+    collapsed:true,
 }
+
 const mutations = {
     SET_ACCOUNT(state, account){
         state.account = account
@@ -22,14 +24,16 @@ const mutations = {
     SET_SIDEBAR(state, isCollapse){
         state.collapsed= isCollapse
     },
-    SET_COLLAPSED(state, isCollapse){
-        state.collapsed= isCollapse
+    SET_PRICE(state, val){
+        state.priceMap= val
     },
+
 }
 const actions = {
     toggleSideBar({commit},isCollapse){
         commit("SET_SIDEBAR",isCollapse)
-    }
+    },
+
 }
 export default {
     namespaced: true,

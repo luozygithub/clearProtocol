@@ -3,7 +3,7 @@ import Vuex from 'vuex'
 import getters from './getters'
 import app from "./modules/app";
 import abisMethods from "./modules/abisMethods/index"
-
+import perpetual from "@/store/modules/perpetual";
 Vue.use(Vuex)
 
 export default new Vuex.Store({
@@ -18,6 +18,7 @@ export default new Vuex.Store({
     getters,
     modules: {
         app,
+        perpetual,
         ...abisMethods
     }
 })

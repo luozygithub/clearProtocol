@@ -100,10 +100,10 @@
 
 <script>
 import {mapGetters} from "vuex";
-import MathCalculator from "../utils/bigNumberUtil"
-import {getPositions} from "../api/vault"
+import MathCalculator from "../../utils/bigNumberUtil"
+import {getPositions} from "../../api/vault"
 import BigNumber from "bignumber.js";
-import {USDCDECIMALS,POORACCURACY} from "@/utils/constantData";
+import {USDCDECIMALS,POORACCURACY,DECIMALS18} from "@/utils/constantData";
 import addressMap from "@/abi/addressMap";
 
 var calculator = new MathCalculator();
@@ -189,7 +189,7 @@ export default {
       })
       console.log(this.positionObj)
       let direction = true, pnl =0
-      let newWorth = calculator.multiply(calculator.divide(price,10**18) , this.positionObj.size)
+      let newWorth = calculator.multiply(calculator.divide(price,DECIMALS18) , this.positionObj.size)
       let oldWOrth = calculator.multiply(this.positionObj.average_price,this.positionObj.size)
       if(this.positionObj.direction==1){
         direction = true

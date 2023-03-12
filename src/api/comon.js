@@ -6,10 +6,8 @@ const instance = axios.create({
     headers: { 'Content-Type': 'application/json' }
 });
 
-export const getTokenPrices = () => {
-    return instance.get(`/api/token/prices?chain=1`);
+export const getTranStatus = (hash) => {
+    return instance.get(`/api/tran-status?trans_hash=${hash}`);
 };
-export const getConfigInfo = () => {
-    return instance.get(`/api/config?chain=1`);
-};
+
 
