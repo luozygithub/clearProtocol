@@ -27,6 +27,7 @@ function getWeb3(provider) {
             reject(new Error('Unable to connect'))
         }
     }).then(result => {
+        console.log(result.web3())
         return new Promise(function (resolve) {
             // 提取有用信息
             const web3 = result.web3()
@@ -36,18 +37,23 @@ function getWeb3(provider) {
                 networkId: curProvider.networkId,
                 account: curProvider.accounts && curProvider.accounts.length > 0 ? curProvider.accounts[0] : null
             }
-            web3.eth.net.getId().then(netWarkId => {
-                webRes.networkId = netWarkId
-                web3.eth.getCoinbase().then(coinbase => {
-                    coinbase ? webRes.account = coinbase : ''
-                    console.log(webRes)
-                    web3.eth.getBalance(webRes.account).then(res=>{
-                        webRes.ethBalance = res
-                        resolve(webRes)
-                    })
+            try{
+                web3.eth.net.getId().then(netWarkId => {
+                    webRes.networkId = netWarkId
+                    web3.eth.getCoinbase().then(coinbase => {
+                        coinbase ? webRes.account = coinbase : ''
+                        console.log(webRes)
+                        web3.eth.getBalance(webRes.account).then(res=>{
+                            webRes.ethBalance = res
+                            resolve(webRes)
+                        })
 
+                    })
                 })
-            })
+            }catch (e){
+                console.log(e)
+                resolve(webRes)
+            }
         })
     })
 }

@@ -158,8 +158,10 @@ export default {
       if (this.connectIdx != 1) {
         if (this.provider) this.provider.disconnect()
         this.isShowConnectStatus = false
-        this.$store.dispatch("app/loginOutWeb3")
-        this.connectIdx = 0
+        this.$store.commit("app/SET_ACCOUNT",undefined)
+        this.$store.commit("app/SET_ISCONNECT", false)
+        this.$store.commit("app/SET_Balance", 0)
+        this.$store.commit("app/SET_Web3", null)
       }
     }
   },

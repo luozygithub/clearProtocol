@@ -214,7 +214,7 @@ export default {
       }
       let res = await this.$store.dispatch("erc20/balanceOf", {
         address: addressMap.usdt,
-        account: this.$store.state.app.account,
+        account: this.account,
       })
       this.balance = BigNumber(res / USDCDECIMALS).toFixed(2)
     },

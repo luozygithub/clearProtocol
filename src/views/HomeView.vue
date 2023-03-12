@@ -205,7 +205,8 @@
                   </div>
                 </div>
               </div>
-              <button class="operate approve" :class="{'sell':operateNav==1}" @click="approve" v-show="usdcAllowance<10||usdcAllowance<amount">
+              <button class="operate approve" :class="{'sell':operateNav==1}" @click="approve"
+                      v-show="usdcAllowance<10||usdcAllowance<amount">
                 Approve
               </button>
               <!--            :disabled="!tradeActive"-->
@@ -297,27 +298,7 @@ export default {
       coinInfo: {},
       isShowTempPosition: false,
       positionArr: [],
-      tempPositionArr: [{
-        average_price: "20100",
-        collateral: "0",
-        direction: 1,
-        icon: "https://cdn-icons-png.flaticon.com/128/5968/5968260.png",
-        index_token: "0x6550bc2301936011c1334555e62A87705A81C12C",
-        leverage: 2,
-        name: "BTC",
-        pnl: "0",
-        size: "0",
-      }, {
-        average_price: "1500",
-        collateral: "0",
-        direction: 1,
-        icon: "https://cdn-icons-png.flaticon.com/128/7829/7829596.png",
-        index_token: "0x62CAe0FA2da220f43a51F86Db2EDb36DcA9A5A08",
-        leverage: 2,
-        name: "ETH",
-        pnl: "0",
-        size: "0",
-      }],
+      tempPositionArr: [],
 
       originalBtcValue: 0,//原有仓位价值
       originalEthValue: 0,//原有仓位价值
@@ -329,12 +310,12 @@ export default {
   },
   filters: {},
   watch: {
-
     account() {
       this.initData()
     },
     amount(val) {//动态显示
-      if (val > 0) {
+      if (val >= 0) {
+
         this.tempPositionArr.forEach(item => {
           if (item.name == this.activeTokenName) {
             item.average_price = this.tokenPriceMap[item.index_token]
@@ -350,6 +331,7 @@ export default {
         this.isShowTempPosition = true
       } else {
         this.isShowTempPosition = false
+        this.dealPositionData()
       }
     }
   },
@@ -533,7 +515,50 @@ export default {
       }
     },
 
-
+    dealPositionData() {
+      this.tempPositionArr = [{
+        average_price: "20100",
+        collateral: "0",
+        direction: 1,
+        icon: "https://cdn-icons-png.flaticon.com/128/5968/5968260.png",
+        index_token: "0x6550bc2301936011c1334555e62A87705A81C12C",
+        leverage: 2,
+        name: "BTC",
+        pnl: "0",
+        size: "0",
+      }, {
+        average_price: "1500",
+        collateral: "0",
+        direction: 1,
+        icon: "https://cdn-icons-png.flaticon.com/128/7829/7829596.png",
+        index_token: "0x62CAe0FA2da220f43a51F86Db2EDb36DcA9A5A08",
+        leverage: 2,
+        name: "ETH",
+        pnl: "0",
+        size: "0",
+      }]
+      this.positionArr.forEach(item => {
+        if (item.name == "BTC") {
+          this.originalBtcValue = calculator.add(parseFloat(item.collateral), parseFloat(item.pnl))
+          this.originalBtcObj = item
+        }
+        if (item.name == "ETH") {
+          this.originalEthValue = calculator.add(parseFloat(item.collateral), parseFloat(item.pnl))
+          this.originalEthObj = item
+        }
+        this.tempPositionArr.forEach(Titem => { //临时数组数据更新
+          if (Titem.name == item.name) {
+            Titem.size = item.size
+            Titem.direction = item.direction
+            Titem.leverage = item.leverage
+            Titem.average_price = item.average_price
+            Titem.collateral = item.collateral
+            Titem.pnl = item.pnl
+          }
+        })
+        console.log(this.tempPositionArr)
+      })
+    },
     async getPositionData() {
       try {
         let res = await getPositions(this.account)
@@ -541,26 +566,7 @@ export default {
         this.positionArr = positionArr
 
         //取出当前BTC/ETC数据
-        this.positionArr.forEach(item => {
-          if (item.name == "BTC") {
-            this.originalBtcValue = calculator.add(parseFloat(item.collateral), parseFloat(item.pnl))
-            this.originalBtcObj = item
-          }
-          if (item.name == "ETH") {
-            this.originalEthValue = calculator.add(parseFloat(item.collateral), parseFloat(item.pnl))
-            this.originalEthObj = item
-          }
-          this.tempPositionArr.forEach(Titem => { //临时数组数据更新
-            if (Titem.name == item.name) {
-              Titem.size = item.size
-              Titem.direction = item.direction
-              Titem.leverage = item.leverage
-              Titem.average_price = item.average_price
-              Titem.collateral = item.collateral
-              Titem.pnl = item.pnl
-            }
-          })
-        })
+        this.dealPositionData()
       } catch (e) {
         console.log(e)
       }
@@ -589,7 +595,7 @@ export default {
       }
       return 0
     },
-    setLoading(val){
+    setLoading(val) {
       this.isLoading = val
     },
     formatTip(value) {
@@ -626,7 +632,7 @@ export default {
       })
       if (res > 0) {
         this.usdcAllowance = parseInt(res) / USDCDECIMALS
-      }else{
+      } else {
         this.usdcAllowance = 0
       }
     },
@@ -995,12 +1001,14 @@ export default {
         transform: translate(1px, 1px);
       }
     }
-    .approve{
+
+    .approve {
       &.sell {
         background: #E32A20 !important;
         color: #fff !important;
       }
     }
+
     .trade {
       background: rgba(99, 206, 99, 0.7);
 
