@@ -200,7 +200,7 @@
                       <span v-show="payValue<=0">Pay Amount </span>
                     </div>
                     <div class="value">
-                      ${{ dealNum(Math.abs(payValue)) }}
+                      ${{ dealNum(Math.abs(payValue)+fee) }}
                     </div>
                   </div>
                 </div>
@@ -412,6 +412,9 @@ export default {
       }
       return 0
 
+    },
+    fee(){
+      return this.usdcAmount *this.feeRate
     },
     payValue() {//需要支付或者获得 u
       if (this.usdcAmount > 0 && this.amount > 0) {
@@ -700,7 +703,7 @@ export default {
         _indexToken: this.coinInfo.contract_address,
         _leverage: this.slideValue,
         _sizeDelta: Math.abs(sizeDelta),
-        _collateralDelta: BigNumber(Math.abs(this.payValue) * DECIMALS6).toFixed(0),
+        _collateralDelta: BigNumber(calculator.add(Math.abs(this.payValue),this.fee) * DECIMALS6).toFixed(0),
         _indexPrice: price,
         _direction: this.direction,
         _collateralDeltaInIO: this.collateralDeltaInIO
