@@ -205,7 +205,7 @@
                   </div>
                 </div>
               </div>
-              <button class="operate approve" @click="approve" v-show="usdcAllowance<10||usdcAllowance<amount">
+              <button class="operate approve" :class="{'sell':operateNav==1}" @click="approve" v-show="usdcAllowance<10||usdcAllowance<amount">
                 Approve
               </button>
               <!--            :disabled="!tradeActive"-->
@@ -634,6 +634,8 @@ export default {
       })
       if (res > 0) {
         this.usdcAllowance = parseInt(res) / USDCDECIMALS
+      }else{
+        this.usdcAllowance = 0
       }
     },
     approve() {
@@ -1004,7 +1006,12 @@ export default {
         transform: translate(1px, 1px);
       }
     }
-
+    .approve{
+      &.sell {
+        background: #E32A20 !important;
+        color: #fff !important;
+      }
+    }
     .trade {
       background: rgba(99, 206, 99, 0.7);
 
