@@ -268,7 +268,12 @@ export default {
     },
 
   },
-  created() {
+  watch:{
+    account(){
+      this.initData()
+    }
+  },
+  mounted() {
     this.initData()
   },
   methods: {
@@ -327,7 +332,6 @@ export default {
       this.getRecordData()
       this.getFundingFeeData()
       this.getProfitData()
-
     },
     dealD6Num(val) {
       if ((val)) {
