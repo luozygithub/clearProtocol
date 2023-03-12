@@ -1,7 +1,7 @@
 <template>
   <div class="home" :style="'left:'+(!collapsed? 200 : 66) +'px;'+ 'width:calc(100vw - '+(collapsed?66:200)+'px)'">
     <a-spin :spinning="isLoading">
-      <div class="content-box">
+      <div class="content-box"  >
         <div class="left-content-box">
           <div class="left-content-container">
             <div class="left-header">
@@ -207,8 +207,8 @@
                 Approve
               </button>
               <!--            :disabled="!tradeActive"-->
-              <button class="operate trade" v-show="usdcAllowance>10||usdcAllowance>amount"
-                      :class="{'active':tradeActive}" @click="trade">
+              <button class="operate trade " v-show="usdcAllowance>10||usdcAllowance>amount"
+                      :class="{'active':tradeActive,'sell':operateNav==1}" @click="trade">
                 Trade
               </button>
             </div>
@@ -336,9 +336,13 @@ export default {
         this.tempPositionArr.forEach(item => {
           if (item.name == this.activeTokenName) {
             item.average_price = this.tokenPriceMap[item.index_token]
-            item.size = this.endSize
-            item.direction = this.direction
-            item.collateral = this.endSize * this.tokenPriceMap[item.index_token] / this.slideValue
+            item.size = Math.abs(this.endSize)
+            item.collateral = Math.abs(this.endSize) * this.tokenPriceMap[item.index_token] / this.slideValue
+            if (item.direction == this.operateNav) {//direction：方向不同
+              if(val>parseFloat(item.size)){
+                item.direction = !item.direction
+              }
+            }
           }
         })
         this.isShowTempPosition = true
@@ -1001,6 +1005,10 @@ export default {
 
       &.active {
         background: #63CE63;
+      }
+      &.sell{
+        background: #E32A20!important;
+        color: #fff!important;
       }
     }
 

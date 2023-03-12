@@ -45,7 +45,7 @@
             Actions
           </div>
         </div>
-        <div class="row" v-show="item.size>0" :class="{'blink': isShowTempPosition && activeTokenName==item.name}"
+        <div class="row" v-show="parseFloat(item.size)>0" :class="{'blink': isShowTempPosition && activeTokenName==item.name}"
              v-for="(item,index) in positionArr" :key="index">
           <div class="col">
             {{ item.name }}/USDC
