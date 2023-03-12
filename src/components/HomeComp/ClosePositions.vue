@@ -217,7 +217,7 @@ export default {
       }).then(async (res)=> {
         this.$message.info('Close success');
         let statusRes = await getTranStatus(res.blockHash)
-        this.setLoading(true)
+        this.$emit("setLoading", true)
         if (statusRes.data.data == 1) {
           setTimeout(() => {
             this.$emit("initData")

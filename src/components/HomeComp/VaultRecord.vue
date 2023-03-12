@@ -74,7 +74,6 @@
                 <span>
                      {{ getMargin(item) }}/{{ marginRatio(item) }}%
                 </span>
-
             </div>
             <div class="col">
               {{ getPNL(item) }}
@@ -223,10 +222,10 @@
         </div>
       </div>
     </a-spin>
-    <MarginManage v-show="isShowMarginManage" :setLoading="setLoading" :coin-info="coinInfo" :positionObj="clickPosition"
-                  @closeMarginManage="isShowMarginManage = false" :initData="initData"/>
+    <MarginManage v-show="isShowMarginManage" @setLoading="setLoading" :coin-info="coinInfo" :positionObj="clickPosition"
+                  @closeMarginManage="isShowMarginManage = false" @initData="updateData"/>
     <ClosePositions :feeRate="feeRate" v-show="isShowClosePosition" :coin-info="coinInfo" :positionObj="clickPosition"
-                    @closeClosePosition="isShowClosePosition = false" :setLoading="setLoading" :initData="initData"/>
+                    @closeClosePosition="isShowClosePosition = false" @setLoading="setLoading" @initData="updateData"/>
   </div>
 </template>
 
@@ -244,7 +243,7 @@ import BigNumber from "bignumber.js";
 
 export default {
   name: "vaultReacord",
-  props: ["positionArr", "coinInfo", "feeRate", "configInfo", "activeTokenName", "isShowTempPosition"],
+  props: ["positionArr", "coinInfo", "feeRate", "configInfo", "activeTokenName", "isShowTempPosition","updatePosition"],
   components: {
     ClosePositions,
     MarginManage
@@ -275,12 +274,17 @@ export default {
   watch: {
     account() {
       this.initData()
-    }
+    },
+
   },
   mounted() {
     this.initData()
   },
   methods: {
+    updateData(){
+      this.$emit("updatePosition")
+      this.initData()
+    },
     setLoading(val) {
       this.isLoading = val
     },

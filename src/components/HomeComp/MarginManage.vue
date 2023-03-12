@@ -23,7 +23,7 @@
             Add Margin
           </button>
           <button class="operate " :class="{'remove':activeNav!=1}" @click="activeNav=1">
-            Remove Margint
+            Remove Margin
           </button>
         </div>
         <div class="title">
@@ -37,7 +37,7 @@
         </div>
         <div class="input-box">
           <input type="number" step="any" v-model="amount" placeholder="0.000">
-          <div class="max-btn" @click="amount=balance">
+          <div class="max-btn" @click="setMax">
             MAX
           </div>
         </div>
@@ -96,7 +96,7 @@ export default {
       activeNav: 0
     }
   },
-  props: ["positionObj", "coinInfo","initData","setLoading"],
+  props: ["positionObj", "coinInfo", "initData", "setLoading"],
   computed: {
     ...mapGetters([
       'isConnected',
@@ -125,6 +125,14 @@ export default {
       }
       return 0
     },
+    setMax() {
+      if(this.activeNav==0){
+        this.amount = this.balance
+      }else{
+        this.amount=this.positionObj.collateral
+      }
+
+    },
     async trade() {
       this.$store.dispatch("vault/updateCollateral", {
         _indexToken: this.positionObj.index_token,
@@ -134,14 +142,15 @@ export default {
         this.$message.info((this.activeNav == 0 ? 'Add' : 'Remove') + ' success');
         this.amount = 0
         let statusRes = await getTranStatus(res.blockHash)
-        this.setLoading(true)
+        this.$emit("setLoading", true)
         if (statusRes.data.data == 1) {
           setTimeout(() => {
             this.$emit("initData")
-            this.$emit("setLoading",false)
+            this.$emit("setLoading", false)
           }, 1000)
         }
       }).catch((e) => {
+        console.log(e)
         this.$message.info(e);
       })
     },
