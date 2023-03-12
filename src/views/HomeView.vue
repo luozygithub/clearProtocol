@@ -1,7 +1,7 @@
 <template>
   <div class="home" :style="'left:'+(!collapsed? 200 : 66) +'px;'+ 'width:calc(100vw - '+(collapsed?66:200)+'px)'">
     <a-spin :spinning="isLoading">
-      <div class="content-box"  >
+      <div class="content-box">
         <div class="left-content-box">
           <div class="left-content-container">
             <div class="left-header">
@@ -108,10 +108,12 @@
             </div>
             <div class="left-content">
               <div class="flex-box">
-                <button class="operate buy" :class="{'active':operateNav==0}" @click="operateNav=0">
+                <button class="operate buy" :class="{'active':operateNav==0}"
+                        @click="operateNav=0,amount=undefined,usdcAmount=undefined">
                   Buy (Long)
                 </button>
-                <button class="operate  sell" :class="{'active':operateNav==1}" @click="operateNav=1">
+                <button class="operate  sell" :class="{'active':operateNav==1}"
+                        @click="operateNav=1,amount=undefined,usdcAmount=undefined">
                   Sell (Short)
                 </button>
               </div>
@@ -277,7 +279,7 @@ export default {
   data() {
     return {
       moment,
-      isLoading:false,
+      isLoading: false,
       usdcAllowance: 0,
       amount: undefined,
       configInfo: {},
@@ -339,7 +341,7 @@ export default {
             item.size = Math.abs(this.endSize)
             item.collateral = Math.abs(this.endSize) * this.tokenPriceMap[item.index_token] / this.slideValue
             if (item.direction == this.operateNav) {//direction：方向不同
-              if(val>parseFloat(item.size)){
+              if (val > parseFloat(item.size)) {
                 item.direction = !item.direction
               }
             }
@@ -685,14 +687,14 @@ export default {
         this.$message.info('Trade success');
         this.amount = undefined
         this.usdcAmount = undefined
-        this.isLoading=true
+        this.isLoading = true
         let statusRes = await getTranStatus(res.blockHash)
         console.log(statusRes.data.data)
-        if(statusRes.data.data==1){
-          setTimeout(()=>{
+        if (statusRes.data.data == 1) {
+          setTimeout(() => {
             this.initData()
-            this.isLoading=false
-          },1000)
+            this.isLoading = false
+          }, 1000)
         }
       }).catch((e) => {
         console.log(e)
@@ -701,6 +703,7 @@ export default {
     },
     handleMenuClick(e) {
       let curTVSymbol = "", curSymbol = "", coinName = ""
+
       if (e.key == 1) {
         curTVSymbol = "BINANCE:BTCUSDT"
         curSymbol = "BTC/USDC"
@@ -717,6 +720,8 @@ export default {
         this.getData()
         this.createWidget()
       }
+      this.amount = undefined
+      this.usdcAmount = undefined
     },
     loadTradingViewScript() {
       if (document.getElementById('tradingview-widget-loading-script')) {
@@ -1006,9 +1011,10 @@ export default {
       &.active {
         background: #63CE63;
       }
-      &.sell{
-        background: #E32A20!important;
-        color: #fff!important;
+
+      &.sell {
+        background: #E32A20 !important;
+        color: #fff !important;
       }
     }
 
