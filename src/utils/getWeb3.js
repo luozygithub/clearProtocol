@@ -48,7 +48,6 @@ function getWeb3(provider) {
                             webRes.ethBalance = res
                             resolve(webRes)
                         })
-
                     })
                 })
             }catch (e){

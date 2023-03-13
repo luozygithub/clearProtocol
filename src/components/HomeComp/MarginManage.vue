@@ -112,12 +112,29 @@ export default {
   },
   methods: {
     getMargin(item) {
+      let amount = 0
+      if(this.amount){
+        amount = this.amount
+      }
+      if(this.activeNav==1){
+        amount = -amount
+      }
       let margin = calculator.add(item.collateral, item.pnl)
+      margin = calculator.add(margin,amount)
       return this.dealNum(margin)
     },
     marginRatio(item) { //计算保证金
+      let amount = 0
+      if(this.amount){
+        amount = this.amount
+      }
+      if(this.activeNav==1){
+        amount = -amount
+      }
       const price = this.tokenPriceMap[item.index_token]
       let worth = calculator.add(item.collateral, item.pnl)
+      worth = calculator.add(worth, amount)
+
       return this.dealNum(worth / (price * item.size / item.leverage) * 100)
     },
     async getBalance() {
@@ -137,12 +154,14 @@ export default {
       return 0
     },
     setMax() {
+      console.log(this.positionObj)
       if(this.activeNav==0){
         this.amount = this.balance
       }else{
-        this.amount=this.positionObj.collateral * (1-MARGINRATIO)
+        console.log(this.getMargin(this.positionObj))
+        console.log(this.tokenPriceMap[this.positionObj.index_token] *this.positionObj.size/this.positionObj.leverage)
+        this.amount=this.getMargin(this.positionObj) - this.tokenPriceMap[this.positionObj.index_token] *this.positionObj.size/this.positionObj.leverage * MARGINRATIO
       }
-
     },
     async trade() {
       this.$store.dispatch("vault/updateCollateral", {
