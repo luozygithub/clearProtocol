@@ -8,6 +8,7 @@ const state = {};
 const mutations = {};
 const actions = {
     mint({rootState}, {_usdAmount}) {
+
         judgeToken(rootState)
         return new Promise((resolve, reject) => {
             state.token.methods.mint(_usdAmount).estimateGas({
@@ -21,12 +22,12 @@ const actions = {
                     resolve(res)
                 })
             }).catch(err => {
+                console.log(err)
                 reject(JSON.parse(err.message.substr(24, err.message.length)).message)
             })
         })
     },
     burn({rootState}, {_clpAmount}) {
-        console.log(_clpAmount)
         judgeToken(rootState)
         return new Promise((resolve, reject) => {
             state.token.methods.burn(_clpAmount).estimateGas({

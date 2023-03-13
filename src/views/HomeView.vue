@@ -1050,11 +1050,10 @@ export default {
   .content-box {
     min-width: 1200px;
 
-
     min-height: 100vh;
     width: 100%;
     display: flex;
-    padding: 10px 0;
+    padding: 10px;
     justify-content: center;
 
     .operate {
@@ -1104,7 +1103,8 @@ export default {
     }
 
     .left-content-box {
-      width: 370px;
+      min-width: 280px;
+      width: 25%;
       display: flex;
       flex-direction: column;
 

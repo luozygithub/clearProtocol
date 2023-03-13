@@ -121,7 +121,7 @@
         </div>
       </div>
     </div>
-    <Withdraw v-show="isShowWithdraw" @getData="getData" :CLPBlance="CLPBlance" :canWN="canWithdrawNum" @closeWithdraw="isShowWithdraw = false"></Withdraw>
+    <Withdraw v-show="isShowWithdraw" @getData="getData" :CLPBalance="CLPBalance" :canWN="canWithdrawNum" @closeWithdraw="isShowWithdraw = false"></Withdraw>
   </div>
 </template>
 
@@ -144,7 +144,7 @@ export default {
       balance: 0,
       isShowWithdraw: false,
       CLPTotalSupply: 0,
-      CLPBlance: 0,
+      CLPBalance: 0,
       Aum: 0
     }
   },
@@ -156,7 +156,7 @@ export default {
     canWithdrawNum() {
       let num = 0
       if (this.CLPTotalSupply > 0) {
-        num = BigNumber(calculator.divide(calculator.divide(calculator.multiply(this.CLPBlance, this.Aum), POORACCURACY), this.CLPTotalSupply)).toFixed(4)
+        num = BigNumber(calculator.divide(calculator.divide(calculator.multiply(this.CLPBalance, this.Aum), POORACCURACY), this.CLPTotalSupply)).toFixed(4)
       }
       return num
     }
@@ -173,14 +173,13 @@ export default {
     },
     async getTotalSupply() {
       let res = await this.$store.dispatch("CLP/totalSupply",)
-      console.log(res)
       this.CLPTotalSupply = res
     },
-    async CLPBlanceOf() {
+    async CLPBalanceOf() {
       let res = await this.$store.dispatch("CLP/balanceOf", {
         account: this.account
       })
-      this.CLPBlance = res
+      this.CLPBalance = res/ USDCDECIMALS
     },
     async allowance() {
       if (!this.isConnected) {
@@ -224,7 +223,7 @@ export default {
         return
       }
       this.$store.dispatch("CLP/mint", {
-        _usdAmount: this.amount
+        _usdAmount: this.amount * USDCDECIMALS
       }).then(() => {
         this.$message.success('Add success');
         this.getData()
@@ -238,7 +237,7 @@ export default {
         this.getBalance()
         this.getAum()
         this.getTotalSupply()
-        this.CLPBlanceOf()
+        this.CLPBalanceOf()
       }
     }
   },

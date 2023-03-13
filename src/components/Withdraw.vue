@@ -30,6 +30,8 @@
 <script>
 import BigNumber from "bignumber.js";
 import MathCalculator from "@/utils/bigNumberUtil";
+import {USDCDECIMALS} from "@/utils/constantData";
+
 var calculator = new MathCalculator();
 export default {
   name: "withdrawView",
@@ -39,14 +41,14 @@ export default {
       balance:0
     }
   },
-  props:["canWN","CLPBlance"],
+  props:["canWN","CLPBalance","getData"],
   methods:{
     withdraw(){
       if(!this.amount||this.amount<=0){
         this.$message.info('Please input amount');
         return
       }
-      let num = calculator.divide(calculator.multiply(this.CLPBlance , this.amount) , this.canWN)
+      let num = calculator.divide(calculator.multiply(this.CLPBalance , this.amount) , this.canWN) *USDCDECIMALS
       this.$store.dispatch("CLP/burn",{
         _clpAmount:BigNumber(num).toFixed(0)
       }).then(() => {
