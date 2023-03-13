@@ -176,8 +176,8 @@ export default {
       }
     },
     async trade() {
-      if(this.marginRatio(this.positionObj) < 60){
-        message.error("Margin Ratio should > 60")
+      if(this.marginRatio(this.positionObj) < MARGINRATIO*100){
+        message.error("Margin Ratio should > "+ MARGINRATIO*100)
         return
       }
       this.$store.dispatch("vault/updateCollateral", {

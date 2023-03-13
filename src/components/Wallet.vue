@@ -49,6 +49,7 @@ import getWeb3 from "../utils/getWeb3"
 import {mapGetters} from "vuex"
 import {Network} from '@/config/constants';
 import message from "ant-design-vue"
+import getProvider from "@/utils/getProvider";
 
 export default {
   name: "ConnectWallet",
@@ -80,14 +81,14 @@ export default {
       return text.substring(0, 6) + '...' + text.substring(38, 42);
     },
   },
-  watch:{
+  watch: {
     chainId(chainId) {
       if (chainId == this.desireChainId) {
-        this.wrongNetWork =false
+        this.wrongNetWork = false
       }
       if (chainId == 421613) {
-        this.wrongNetWork =false
-      } else{
+        this.wrongNetWork = false
+      } else {
         this.wrongNetWork = true
       }
     },
@@ -134,7 +135,18 @@ export default {
     },
     async connectWallet(idx) {
       this.connectIdx = idx
+      getProvider().then(result => {
+        this.$store.commit("app/SET_Web3", result.web3)
+        result.web3.eth.getAccounts().then(async res=>{
+          console.log(res)
+          result.web3.eth.getCoinbase().then(account => {
+            if(account) {
+              this.$store.commit("app/SET_ACCOUNT", account)
+            }
 
+          })
+        })
+      })
       if (idx == 1) {
         if (typeof window.ethereum == 'undefined') {
           message.error('install MetaMask first!');

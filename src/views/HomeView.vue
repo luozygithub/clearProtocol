@@ -541,7 +541,6 @@ export default {
     ]),
   },
   methods: {
-
     getPNL(item) {//计算盈亏
       const price = this.tokenPriceMap[item.index_token]
       const worth = calculator.multiply(item.average_price, item.size)//抵押物价值 (*杠杆)
