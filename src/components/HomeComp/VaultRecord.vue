@@ -325,14 +325,17 @@ export default {
     this.initData()
   },
   methods: {
-    onShowSizeChange1(size){
-      this.pageSize1 = size
+    onShowSizeChange1(current, pageSize){
+      this.pageSize1 = pageSize
+      this.getProfitData(current)
     },
-    onShowSizeChange2(size){
-      this.pageSize2 = size
+    onShowSizeChange2(current, pageSize){
+      this.pageSize2 = pageSize
+      this.getRecordData(current)
     },
-    onShowSizeChange3(size){
-      this.pageSize3 = size
+    onShowSizeChange3(current, pageSize){
+      this.pageSize3 = pageSize
+      this.getFundingFeeData(current)
     },
     updateData(){
       this.$emit("updatePosition")

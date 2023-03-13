@@ -85,6 +85,7 @@ import BigNumber from "bignumber.js";
 import {USDCDECIMALS,MARGINRATIO} from "@/utils/constantData";
 import {getTranStatus} from "@/api/comon";
 import MathCalculator from "@/utils/bigNumberUtil";
+import {message} from "ant-design-vue";
 const calculator = new MathCalculator();
 export default {
   name: "MarginManage",
@@ -154,16 +155,20 @@ export default {
       return 0
     },
     setMax() {
-      console.log(this.positionObj)
+      this.amount = 0
       if(this.activeNav==0){
         this.amount = this.balance
       }else{
-        console.log(this.getMargin(this.positionObj))
-        console.log(this.tokenPriceMap[this.positionObj.index_token] *this.positionObj.size/this.positionObj.leverage)
-        this.amount=this.getMargin(this.positionObj) - this.tokenPriceMap[this.positionObj.index_token] *this.positionObj.size/this.positionObj.leverage * MARGINRATIO
+        const price = this.tokenPriceMap[this.positionObj.index_token]
+        const worth = calculator.divide(calculator.multiply(price ,this.positionObj.size),this.positionObj.leverage)* MARGINRATIO
+        this.amount= calculator.subtract(this.getMargin(this.positionObj) , worth)
       }
     },
     async trade() {
+      if(this.marginRatio(this.positionObj) < 60){
+        message.error("Margin Ratio should > 60")
+        return
+      }
       this.$store.dispatch("vault/updateCollateral", {
         _indexToken: this.positionObj.index_token,
         _collateralDelta: BigNumber(this.amount * USDCDECIMALS).toFixed(0),

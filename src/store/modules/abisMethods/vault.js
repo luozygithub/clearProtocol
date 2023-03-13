@@ -408,6 +408,9 @@ const actions = {
         })
     },
     updateCollateral({rootState}, {_indexToken, _collateralDelta, _collateralDeltaInIO}) {
+        console.log({
+            _indexToken, _collateralDelta, _collateralDeltaInIO
+        })
         judgeToken(rootState)
         return new Promise((resolve, reject) => {
             state.token.methods.updateCollateral(_indexToken, _collateralDelta, _collateralDeltaInIO).estimateGas({
