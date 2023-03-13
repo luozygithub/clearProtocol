@@ -36,7 +36,7 @@
           Margin Amount
         </div>
         <div class="input-box">
-          <input type="number" step="any" v-model="amount" placeholder="0.000">
+          <input type="number" step="any" v-model="amount" placeholder="0.000" @input="updateAmount">
           <div class="max-btn" @click="setMax">
             MAX
           </div>
@@ -112,6 +112,17 @@ export default {
     }
   },
   methods: {
+    updateAmount() {
+      let value = this.amount.replace(/[^\d.]/g, '');
+      const parts = value.split('.');
+      let integerPart = parts[0];
+      let decimalPart = parts[1];
+      if (decimalPart && decimalPart.length > 2) {
+        decimalPart = decimalPart.slice(0, 2);
+      }
+      value = decimalPart ? `${integerPart}.${decimalPart}` : integerPart;
+      this.amount = value;
+    },
     getMargin(item) {
       let amount = 0
       if(this.amount){
@@ -157,11 +168,11 @@ export default {
     setMax() {
       this.amount = 0
       if(this.activeNav==0){
-        this.amount = this.balance
+        this.amount = BigNumber(this.balance).toFixed(2,BigNumber.ROUND_DOWN)
       }else{
         const price = this.tokenPriceMap[this.positionObj.index_token]
         const worth = calculator.divide(calculator.multiply(price ,this.positionObj.size),this.positionObj.leverage)* MARGINRATIO
-        this.amount= calculator.subtract(this.getMargin(this.positionObj) , worth)
+        this.amount= BigNumber(calculator.subtract(this.getMargin(this.positionObj) , worth)).toFixed(2,BigNumber.ROUND_DOWN)
       }
     },
     async trade() {
@@ -182,7 +193,7 @@ export default {
           setTimeout(() => {
             this.$emit("initData")
             this.$emit("setLoading", false)
-          }, 1000)
+          }, 2000)
         }
       }).catch((e) => {
         console.log(e)

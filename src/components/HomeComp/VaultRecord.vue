@@ -252,7 +252,7 @@
     <MarginManage v-show="isShowMarginManage" @setLoading="setLoading" :coin-info="coinInfo" :positionObj="clickPosition"
                   @closeMarginManage="isShowMarginManage = false" @initData="updateData"/>
     <ClosePositions :feeRate="feeRate" v-show="isShowClosePosition" :coin-info="coinInfo" :positionObj="clickPosition"
-                    @closeClosePosition="isShowClosePosition = false" @setLoading="setLoading" @initData="updateData"/>
+                    @closeClosePosition="isShowClosePosition = false" @setLoading="setLoading" @updateData="updateData"/>
   </div>
 </template>
 

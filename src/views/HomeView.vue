@@ -793,7 +793,7 @@ export default {
             this.initData()
             this.$refs.vaultRR.initData();
             this.isLoading = false
-          }, 1000)
+          }, 2000)
         }
       }).catch((e) => {
         console.log(e)

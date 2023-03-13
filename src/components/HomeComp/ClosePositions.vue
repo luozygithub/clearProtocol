@@ -132,7 +132,7 @@ export default {
       this.getBalance()
     }
   },
-  props:["positionObj","coinInfo","feeRate","initData","setLoading"],
+  props:["positionObj","coinInfo","feeRate","updateData","setLoading"],
   created() {
     this.getBalance()
   },
@@ -220,9 +220,9 @@ export default {
         this.$emit("setLoading", true)
         if (statusRes.data.data == 1) {
           setTimeout(() => {
-            this.$emit("initData")
+            this.$emit("updateData")
             this.$emit("setLoading",false)
-          }, 1000)
+          }, 2000)
         }
       }).catch((e)=>{
         this.$message.info(e);
