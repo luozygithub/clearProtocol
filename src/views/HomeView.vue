@@ -249,6 +249,7 @@
             <div :id="widgetId" :style="{ height: widgetHeight + 'px' }"/>
           </div>
           <VaultRecord @updatePosition="getPositionData"
+                       ref="vaultRR"
                        :configInfo="configInfo" :feeRate="feeRate" :coin-info="coinInfo"
                        :isShowTempPosition="isShowTempPosition" :activeTokenName="activeTokenName"
                        :positionArr="isShowTempPosition?tempPositionArr:positionArr"></VaultRecord>
@@ -790,6 +791,7 @@ export default {
         if (statusRes.data.data == 1) {
           setTimeout(() => {
             this.initData()
+            this.$refs.vaultRR.initData();
             this.isLoading = false
           }, 1000)
         }
