@@ -50,7 +50,7 @@
               Margin
             </div>
             <div class="value">
-              {{ positionObj.collateral ? positionObj.collateral : 0 }}
+              {{getMargin(positionObj)}}
             </div>
           </div>
           <div class="row">
@@ -58,9 +58,7 @@
               Margin Ratio
             </div>
             <div class="value">
-              {{
-                dealNum((parseFloat(positionObj.collateral) + parseFloat(positionObj.pnl)) / positionObj.collateral)
-              }}%
+              {{ marginRatio(positionObj) }}%
             </div>
           </div>
           <div class="row">
@@ -84,9 +82,10 @@
 import addressMap from "@/abi/addressMap";
 import {mapGetters} from "vuex";
 import BigNumber from "bignumber.js";
-import {USDCDECIMALS} from "@/utils/constantData";
+import {USDCDECIMALS,MARGINRATIO} from "@/utils/constantData";
 import {getTranStatus} from "@/api/comon";
-
+import MathCalculator from "@/utils/bigNumberUtil";
+const calculator = new MathCalculator();
 export default {
   name: "MarginManage",
   data() {
@@ -102,6 +101,9 @@ export default {
       'isConnected',
       'account'
     ]),
+    tokenPriceMap() {
+      return this.$store.state.perpetual.priceMap
+    },
   },
   watch: {
     account() {
@@ -109,6 +111,15 @@ export default {
     }
   },
   methods: {
+    getMargin(item) {
+      let margin = calculator.add(item.collateral, item.pnl)
+      return this.dealNum(margin)
+    },
+    marginRatio(item) { //计算保证金
+      const price = this.tokenPriceMap[item.index_token]
+      let worth = calculator.add(item.collateral, item.pnl)
+      return this.dealNum(worth / (price * item.size / item.leverage) * 100)
+    },
     async getBalance() {
       if (!this.isConnected) {
         return
@@ -129,7 +140,7 @@ export default {
       if(this.activeNav==0){
         this.amount = this.balance
       }else{
-        this.amount=this.positionObj.collateral
+        this.amount=this.positionObj.collateral * (1-MARGINRATIO)
       }
 
     },

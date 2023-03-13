@@ -127,9 +127,9 @@
                   <div class="input-part">
                     <input type="number" step="any" v-model="usdcAmount" @input="updateAmount" placeholder="0.0000">
                     <span>USDC</span>
-                    <div class="tip-box" v-show="usdcAmount<10">
-                      Amount is not less than 10U.
-                    </div>
+<!--                    <div class="tip-box" v-show="usdcAmount<10">-->
+<!--                      Amount is not less than 10U.-->
+<!--                    </div>-->
                   </div>
                 </div>
               </div>
@@ -228,10 +228,10 @@
               </div>
               <div class="value">
                 <div class="rate">
-                  {{ coinInfo.funding_rate ? dealNum(coinInfo.funding_rate[0]) : 0 }}%
+                  {{ coinInfo.funding_rate ? dealNum(coinInfo.funding_rate[this.operateNav]) : 0 }}%
                 </div>
                 <div class="time">
-                  {{ coinInfo.funding_time }}
+                  {{ countdown }}
                 </div>
               </div>
             </div>
@@ -259,6 +259,7 @@
 </template>
 
 <script>
+
 import VaultRecord from "@/components/HomeComp/VaultRecord";
 import {getTranStatus} from "@/api/comon";
 import {getConfigInfo} from "@/api/coinApi";
@@ -272,6 +273,7 @@ import {DECIMALS6} from "../utils/constantData";
 import moment from "moment"
 
 let getPriceInterval = null
+let countdownInterval = null
 const calculator = new MathCalculator();
 export default {
   name: 'HomeView',
@@ -281,6 +283,7 @@ export default {
   data() {
     return {
       moment,
+      startTime: '00:00:00',
       isLoading: false,
       usdcAllowance: 0,
       amount: undefined,
@@ -290,7 +293,6 @@ export default {
       progress: 10,
       widgetId: 'tradingview_8c9b3',
       widgetHeight: 330,
-      activeNav: 0,
       operateNav: 0,//操作方向 0Long 1Short
       feeRate: 0,
       curTVSymbol: "BINANCE:BTCUSDT",
@@ -310,6 +312,9 @@ export default {
   filters: {},
   watch: {
     account() {
+      this.initData()
+    },
+    isConnected() {
       this.initData()
     },
     slideValue() {
@@ -364,6 +369,28 @@ export default {
     }
   },
   computed: {
+    countdown() {
+      const now = new Date();
+      const start = new Date(this.startTime);
+      let nextStart = new Date(
+          start.getFullYear(),
+          start.getMonth(),
+          start.getDate(),
+          8
+      );
+      while (now > nextStart) {
+        nextStart = new Date(nextStart.getTime() + 8 * 60 * 60 * 1000);
+      }
+      const diff = nextStart - now;
+      const seconds = Math.ceil(diff / 1000);
+      let hours = Math.floor(seconds / 3600);
+      hours = hours < 10 ? "0" + hours : hours;
+      let minutes = Math.floor((seconds - hours * 3600) / 60);
+      minutes = minutes < 10 ? "0" + minutes : minutes;
+      let secs = seconds - hours * 3600 - minutes * 60;
+      secs = secs < 10 ? "0" + secs : secs;
+      return hours + ":" + minutes + ":" + secs;
+    },
     originalEthValue() {//原有仓位价值
       if (this.originalEthObj.size) {
         const curPrice = BigNumber(this.tokenPriceMap[this.originalEthObj.index_token]).toFixed(2, BigNumber.ROUND_DOWN)
@@ -490,7 +517,6 @@ export default {
       if (!this.fee || !this.payValue) {
         return 0
       }
-      console.log(this.collateralDeltaInIO)
       if (this.collateralDeltaInIO) {//增加保证金（花费）
         return BigNumber(calculator.add(Math.abs(this.payValue), this.fee)).toFixed(2)
       } else {//减少保证金（提取）
@@ -514,6 +540,7 @@ export default {
     ]),
   },
   methods: {
+
     getPNL(item) {//计算盈亏
       const price = this.tokenPriceMap[item.index_token]
       const worth = calculator.multiply(item.average_price, item.size)//抵押物价值 (*杠杆)
@@ -671,8 +698,8 @@ export default {
       const parts = value.split('.');
       let integerPart = parts[0];
       let decimalPart = parts[1];
-      if (decimalPart && decimalPart.length > 6) {
-        decimalPart = decimalPart.slice(0, 6);
+      if (decimalPart && decimalPart.length > 4) {
+        decimalPart = decimalPart.slice(0, 4);
       }
       value = decimalPart ? `${integerPart}.${decimalPart}` : integerPart;
       this.amount = value;
@@ -690,7 +717,7 @@ export default {
       value = decimalPart ? `${integerPart}.${decimalPart}` : integerPart;
       this.usdcAmount = value;
 
-      this.amount = BigNumber((calculator.divide(this.usdcAmount, this.tokenPriceMap[this.coinInfo.contract_address]))).toFixed(6, BigNumber.ROUND_DOWN)
+      this.amount = BigNumber((calculator.divide(this.usdcAmount, this.tokenPriceMap[this.coinInfo.contract_address]))).toFixed(4, BigNumber.ROUND_DOWN)
     },
     async allowance() {
       if (!this.isConnected) {
@@ -824,6 +851,9 @@ export default {
       }
     },
     initData() {
+      this.amount=0
+      this.slideValue=2
+      this.usdcAmount = 0
       this.getPositionData()
       if (this.isConnected) {
         this.allowance()
@@ -848,7 +878,24 @@ export default {
       } catch (e) {
         console.log(e)
       }
-    }
+    },
+    countdownMethod(){
+      const start = new Date();
+      start.setHours(0, 0, 0, 0);
+      let nextStart = new Date(
+          start.getFullYear(),
+          start.getMonth(),
+          start.getDate(),
+          8
+      );
+      while (start > nextStart) {
+        nextStart = new Date(nextStart.getTime() + 8 * 60 * 60 * 1000);
+      }
+      this.startTime = nextStart;
+      setInterval(() => {
+        this.startTime = new Date(this.startTime.getTime() + 1000);
+      }, 1000);
+    },
   },
   mounted() {
     this.loadTradingViewScript();
@@ -857,10 +904,13 @@ export default {
     getPriceInterval = setInterval(() => {
       this.$store.dispatch("perpetual/getPriceMap")
     }, 10000)
+    this.countdownMethod()
   },
   beforeDestroy() {
     clearInterval(getPriceInterval)
     getPriceInterval = null
+    clearInterval(countdownInterval)
+    countdownInterval = null
   }
 }
 </script>
@@ -1240,7 +1290,7 @@ export default {
 
             .tip-box {
               padding: 0 6px;
-              left: 80px;
+              left: 60px;
               top: 6px;
               position: absolute;
               font-size: var(--font-size12);

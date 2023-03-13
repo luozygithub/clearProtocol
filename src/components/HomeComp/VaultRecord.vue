@@ -134,8 +134,17 @@
               {{ dealNum(item.pel) }}
             </div>
             <div class="col">
-              {{ moment(item.updated_at) }}
+              {{ moment(item.updated_at).format('MMMM Do YYYY, h:mm:ss a') }}
             </div>
+          </div>
+          <div class="pagination">
+            <a-pagination
+                size="small"
+                show-size-changer
+                v-model="current1"
+                :total="total1"
+                @showSizeChange="onShowSizeChange1"
+            />
           </div>
         </div>
         <div class="nav3-content" v-show="activeNav==2">
@@ -164,7 +173,7 @@
           </div>
           <div class="row" v-for="(item,index) in recordArr" :key="index">
             <div class="col">
-              {{ moment(item.updated_at) }}
+              {{ moment(item.updated_at).format('MMMM Do YYYY, h:mm:ss a')  }}
             </div>
             <div class="col">
               {{ item.name }}/USDC
@@ -188,6 +197,15 @@
             <div class="col">
               {{ dealFeeNum(item.transaction_fee / 10 ** 6) }}$
             </div>
+          </div>
+          <div class="pagination">
+            <a-pagination
+                size="small"
+                show-size-changer
+                v-model="current2"
+                :total="total2"
+                @showSizeChange="onShowSizeChange2"
+            />
           </div>
         </div>
         <div class="nav4-content" v-show="activeNav==3">
@@ -218,6 +236,15 @@
             <div class="col">
               {{item.time }}
             </div>
+          </div>
+          <div class="pagination">
+            <a-pagination
+                size="small"
+                show-size-changer
+                v-model="current3"
+                :total="total3"
+                @showSizeChange="onShowSizeChange3"
+            />
           </div>
         </div>
       </div>
@@ -251,6 +278,15 @@ export default {
   data() {
     return {
       moment,
+      total1:10,
+      total2:10,
+      total3:10,
+      current1:0,
+      pageSize1:10,
+      current2:0,
+      pageSize2:10,
+      current3:0,
+      pageSize3:10,
       isLoading: false,
       isShowClosePosition: false,
       isShowMarginManage: false,
@@ -275,12 +311,29 @@ export default {
     account() {
       this.initData()
     },
-
+    current1(val) {
+      this.getProfitData(val)
+    },
+    current2(val) {
+      this.getRecordData(val)
+    },
+    current3(val) {
+      this.getFundingFeeData(val)
+    },
   },
   mounted() {
     this.initData()
   },
   methods: {
+    onShowSizeChange1(size){
+      this.pageSize1 = size
+    },
+    onShowSizeChange2(size){
+      this.pageSize2 = size
+    },
+    onShowSizeChange3(size){
+      this.pageSize3 = size
+    },
     updateData(){
       this.$emit("updatePosition")
       this.initData()
@@ -310,9 +363,13 @@ export default {
       let worth = calculator.add(item.collateral, item.pnl)
       return this.dealNum(worth / (price * item.size / item.leverage) * 100)
     },
-    async getProfitData() {
-      let res = await getProfit(this.account)
+    async getProfitData(val) {
+      if(val){
+        this.current1 = val
+      }
+      let res = await getProfit(this.account,this.current1*this.pageSize1,this.pageSize1)
       this.profitArr = res.data.data
+      this.total1 = res.data.extra.total
     },
 
     getLQP(item) {
@@ -332,13 +389,21 @@ export default {
         return liqV >= 0 ? BigNumber(liqV).toFixed(2) : 0
       }
     },
-    async getRecordData() {
-      let res = await getRecord(this.account)
+    async getRecordData(val) {
+      if(val){
+        this.current2 = val
+      }
+      let res = await getRecord(this.account,this.current2*this.pageSize2,this.pageSize2)
       this.recordArr = res.data.data
+      this.total2 = res.data.extra.total
     },
-    async getFundingFeeData() {
-      let res = await getFundingFee(this.account)
+    async getFundingFeeData(val) {
+      if(val){
+        this.current3 = val
+      }
+      let res = await getFundingFee(this.account,this.current3*this.pageSize3,this.pageSize3)
       this.fundingFeeArr = res.data.data
+      this.total3 = res.data.extra.total
     },
     initData() {
       this.getRecordData()
@@ -532,7 +597,10 @@ export default {
 
       }
     }
-
+    .pagination{
+      padding: 10px 0;
+      text-align: center;
+    }
     .table-header {
       display: flex;
       padding: 10px 15px;

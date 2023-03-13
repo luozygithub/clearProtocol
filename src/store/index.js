@@ -8,7 +8,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
     state:{
-        collapsed:false
+        collapsed:false,
     },
     mutations:{
         SET_COLLAPSED(state, isCollapse){

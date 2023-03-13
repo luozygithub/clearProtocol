@@ -6,6 +6,7 @@ const state = {
     chainId: 666,
     ethBalance:0,
     collapsed:true,
+    desireChainId: null,
 }
 
 const mutations = {
@@ -21,6 +22,12 @@ const mutations = {
     SET_Balance(state, amount){
         state.ethBalance= amount
     },
+    SET_CHAINID: (state, chainId) => {
+        state.chainId = chainId;
+    },
+    SET_DESIRE_CHAINID: (state, desireChainId) => {
+        state.desireChainId = desireChainId;
+    },
     SET_SIDEBAR(state, isCollapse){
         state.collapsed= isCollapse
     },
@@ -29,15 +36,26 @@ const mutations = {
     },
 
 }
+const getters= {
+    wrongNetWork(state) {
+        return state.chainId !== state.desireChainId;
+    },
+}
 const actions = {
     toggleSideBar({commit},isCollapse){
         commit("SET_SIDEBAR",isCollapse)
     },
-
+    updateDesireChainId({ commit }, chainId) {
+        commit('SET_DESIRE_CHAINID', chainId);
+    },
+    updateChainId({commit}, chainId){
+        commit("SET_CHAINID", chainId)
+    },
 }
 export default {
     namespaced: true,
     state,
     mutations,
-    actions
+    actions,
+    getters
 }

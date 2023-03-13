@@ -1,4 +1,5 @@
 import Web3 from 'web3'
+import {message} from "ant-design-vue";
 
 let curProvider = null
 
@@ -27,7 +28,7 @@ function getWeb3(provider) {
             reject(new Error('Unable to connect'))
         }
     }).then(result => {
-        console.log(result.web3())
+
         return new Promise(function (resolve) {
             // 提取有用信息
             const web3 = result.web3()
@@ -52,6 +53,7 @@ function getWeb3(provider) {
                 })
             }catch (e){
                 console.log(e)
+                message.error(e)
                 resolve(webRes)
             }
         })

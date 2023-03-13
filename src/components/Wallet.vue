@@ -1,9 +1,9 @@
 <template>
   <div class="connectWallet">
 
-    <button  v-show="isConnected" class="operate connect">
+    <button v-show="isConnected" class="operate connect">
       <template v-if="wrongNetWork">
-        <div @click="switchNetwork(desireChainId)" > Wrong Network </div>
+        <div @click="switchNetwork(desireChainId)"> Wrong Network</div>
       </template>
       <template v-else>
         <a-popover placement="bottomRight">
@@ -11,12 +11,14 @@
             {{ account | showAddress }}
           </a-button>
           <template slot="content">
-            <p @click="disConnect" class="color-0E1D51 ts-16 cursor"><a-icon type="disconnect" /><span class="pd-l8">Disconnect wallet</span></p>
+            <p @click="disConnect" class="color-0E1D51 ts-16 cursor">
+              <a-icon type="disconnect"/>
+              <span class="pd-l8">Disconnect wallet</span></p>
           </template>
         </a-popover>
       </template>
     </button>
-    <button size="mini"  v-show="!isConnected" @click="isWalletModal=true" class="operate connect">
+    <button size="mini" v-show="!isConnected" @click="isWalletModal=true" class="operate connect">
       <span>
         Connect Wallet
       </span>
@@ -24,7 +26,8 @@
 
     <a-modal title="Connect your wallet" v-model="isWalletModal" :footer="null" class="walletDialog" :width="400">
       <div class="walletDialog-content">
-        <a-row  style="z-index: 1001;cursor:pointer;padding: 0 28px;margin-bottom: 26px" type="flex" justify="space-between">
+        <a-row style="z-index: 1001;cursor:pointer;padding: 0 28px;margin-bottom: 26px" type="flex"
+               justify="space-between">
           <div class="connect-item" @click.prevent="  connectWallet(1)">
             <a-col>
               <img src="../assets/mm-logo.svg" height="30" width="30"/>
@@ -44,22 +47,23 @@
 
 import getWeb3 from "../utils/getWeb3"
 import {mapGetters} from "vuex"
-import { Network } from '@/config/constants';
+import {Network} from '@/config/constants';
+import message from "ant-design-vue"
+
 export default {
   name: "ConnectWallet",
   data() {
     return {
-      desireChainId:97,
-      connectedLoading:false,
+      desireChainId: "0x66eed",
+      connectedLoading: false,
       networkObj: Network,
       curChain: "bscTest",
       connectIdx: 0,
       connectArr: ['', 'MetaMask', 'WalletConnect', 'Fortmatic'],
       isShowConnectStatus: false,
-      isLoading: false,
       isShowConnect: false,
       isWalletModal: false,
-      wrongNetWork:false
+      wrongNetWork: false,
     }
   },
   computed: {
@@ -67,12 +71,28 @@ export default {
       'isConnected',
       'account'
     ]),
+    chainId() {
+      return this.$store.state.app.chainId
+    }
   },
   filters: {
     showAddress: function (text) {
       return text.substring(0, 6) + '...' + text.substring(38, 42);
     },
   },
+  watch:{
+    chainId(chainId) {
+      if (chainId == this.desireChainId) {
+        this.wrongNetWork =false
+      }
+      if (chainId == 421613) {
+        this.wrongNetWork =false
+      } else{
+        this.wrongNetWork = true
+      }
+    },
+  },
+
   created() {
     const chain = localStorage.getItem('curChain')
     if (chain && chain.length > 0) {
@@ -80,19 +100,17 @@ export default {
     }
 
   },
-  mounted(){
+  mounted() {
     this.connectWallet(1)
   },
   methods: {
     async switchNetwork(value) {
-      this.$store.dispatch('updateDesireChainId', value);
       try {
         await window.ethereum.request({
           method: 'wallet_switchEthereumChain',
-          params: [{ chainId: value }],
+          params: [{chainId: value}],
         });
       } catch (switchError) {
-        console.log({ switchError });
         // This error code indicates that the chain has not been added to MetaMask.
         try {
           let paramsArry = [
@@ -108,43 +126,52 @@ export default {
             method: 'wallet_addEthereumChain',
             params: paramsArry,
           });
+          this.connectWallet(1)
         } catch (addError) {
-          console.log({ addError });
+          console.log({addError});
         }
       }
     },
-    loginOut() {
-      this.$store.dispatch('app/loginOutWeb3')
-    },
     async connectWallet(idx) {
       this.connectIdx = idx
-      this.isLoading = true
 
       if (idx == 1) {
         if (typeof window.ethereum == 'undefined') {
-          this.$message.error("down metamask")
+          message.error('install MetaMask first!');
         }
         await window.ethereum.enable()
         window.ethereum.on('accountsChanged', (accounts) => {
           this.$store.commit('app/SET_ACCOUNT', accounts[0])
         });
-
-        this.registerWeb3().then(() => {
-          this.isWalletModal = false
-        })
+        try {
+          this.registerWeb3().then(() => {
+            this.isWalletModal = false
+          })
+        } catch (e) {
+          console.log(e)
+          window.ethereum
+              .request({method: 'eth_requestAccounts'})
+              .then((account) => {
+                this.$store.commit('app/SET_ACCOUNT', account[0]);
+              })
+        }
         this.isWalletModal = false
+        this.connectedLoading = false
       }
     },
     registerWeb3(provider) {
       return new Promise(resolve => {
-        getWeb3(provider).then(result => {
-          localStorage.setItem("daoFactoryAccount", result.account)
-          this.$store.commit("app/SET_ACCOUNT", result.account)
-          this.$store.commit("app/SET_ISCONNECT", true)
-          this.$store.commit("app/SET_Balance", result.ethBalance)
-          this.$store.commit("app/SET_Web3", result.web3Instance.web3())
-          resolve(result)
-        })
+        try {
+          getWeb3(provider).then(result => {
+            this.$store.commit("app/SET_ACCOUNT", result.account)
+            this.$store.commit("app/SET_ISCONNECT", true)
+            this.$store.commit("app/SET_Balance", result.ethBalance)
+            this.$store.commit("app/SET_Web3", result.web3Instance.web3())
+            resolve(result)
+          })
+        } catch (e) {
+          console.log(e)
+        }
       })
     },
     showWallet() {
@@ -158,11 +185,11 @@ export default {
       if (this.connectIdx != 1) {
         if (this.provider) this.provider.disconnect()
         this.isShowConnectStatus = false
-        this.$store.commit("app/SET_ACCOUNT",undefined)
-        this.$store.commit("app/SET_ISCONNECT", false)
-        this.$store.commit("app/SET_Balance", 0)
-        this.$store.commit("app/SET_Web3", null)
       }
+      this.$store.commit("app/SET_ACCOUNT", "")
+      this.$store.commit("app/SET_ISCONNECT", false)
+      this.$store.commit("app/SET_Balance", 0)
+      this.$store.commit("app/SET_Web3", null)
     }
   },
 }
@@ -173,8 +200,8 @@ export default {
 @import "../styles/mixin";
 
 .walletDialog {
-  .walletDialog-content{
-    .connect-item{
+  .walletDialog-content {
+    .connect-item {
       display: flex;
       justify-content: space-between;
       width: 100%;
@@ -182,6 +209,7 @@ export default {
       align-items: center;
     }
   }
+
   ::v-deep .ant-row-flex {
     border-radius: 12px;
     border-width: 1px;
@@ -234,19 +262,18 @@ export default {
 }
 
 .connectWallet {
-  .account-button{
+  .account-button {
     background: none;
     color: #FFFFFF;
     border: none;
     font-size: var(--font-size16);
   }
-  .operate {
+
+  .operate, .ant-btn {
     font-weight: 400;
     cursor: pointer;
-    padding: 0 10px;
     height: 40px;
     font-family: AvertaStd-Semibold;
-    background: #63CE63;
     border-radius: 19px;
     color: #fff;
     border: none;
@@ -260,7 +287,7 @@ export default {
     }
   }
 
-  .connect {
+  .connect, .ant-btn {
     background: linear-gradient(135deg, #0E1D51 0%, #093373 0%, #0156A7 32%, #0E1D51 100%);
     border-radius: 20px;
     width: 196px;
