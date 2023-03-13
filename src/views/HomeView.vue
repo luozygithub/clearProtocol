@@ -406,6 +406,16 @@ export default {
       }
       return 0
     },
+    hasCurNamePosition(){
+      let hasCurNamePos = false
+      for(let i=0;i<this.positionArr.length;i++){
+        const position = this.positionArr[i]
+        if (position.name == this.activeTokenName) {
+          hasCurNamePos = true
+        }
+      }
+      return hasCurNamePos
+    },
     endSize() {//操作后仓位大小
       if (this.usdcAmount > 0 && this.amount > 0) {
         let totalSize = 0
@@ -499,6 +509,9 @@ export default {
     tradeActive() {
       if (!this.amount || this.amount <= 0) {
         return false
+      }
+      if(!this.hasCurNamePosition && Math.abs(this.payValue)<10){
+        return
       }
       return true
     },
@@ -722,6 +735,10 @@ export default {
       }
       if (this.usdcAmount < 10) {
         this.$message.info('Amount less than 10u');
+        return
+      }
+      if(!this.hasCurNamePosition && Math.abs(this.payValue)<10){
+        this.$message.info('Pay Amount less than 10u');
         return
       }
       let price = await this.$store.dispatch("vault/getPrice", {
@@ -1096,7 +1113,11 @@ export default {
       }
 
       &.sell {
-        background: #E32A20 !important;
+        background: rgba(227,42,32,0.7)!important;
+        color: #fff !important;
+      }
+      &.sell.active{
+        background: #e32a20 !important;
         color: #fff !important;
       }
     }
