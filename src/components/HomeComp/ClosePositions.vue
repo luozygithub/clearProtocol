@@ -101,7 +101,6 @@
 <script>
 import {mapGetters} from "vuex";
 import MathCalculator from "../../utils/bigNumberUtil"
-import {getPositions} from "../../api/vault"
 import BigNumber from "bignumber.js";
 import {USDCDECIMALS,POORACCURACY,DECIMALS18} from "@/utils/constantData";
 import addressMap from "@/abi/addressMap";
@@ -148,26 +147,6 @@ export default {
       })
       this.balance = res / USDCDECIMALS
     },
-    async getPositionData() {
-      let positionArr = await getPositions(this.account)
-      this.positionArr = positionArr.data.data
-      this.positionArr.forEach(item => {
-        if (item.name == "BTC") {
-          if (item.direction == true) {
-            this.originalBtcValue = parseFloat(item.collateral) + parseFloat(item.pnl)
-          } else {
-            this.originalBtcValue = -(parseFloat(item.collateral) + parseFloat(item.pnl))
-          }
-        }
-        if (item.name == "ETH") {
-          if (item.direction == true) {
-            this.originalEthValue = parseFloat(item.collateral) + parseFloat(item.pnl)
-          } else {
-            this.originalEthValue = -(parseFloat(item.collateral) + parseFloat(item.pnl))
-          }
-        }
-      })
-    },
     dealNum(val) {
       if ((val)) {
         return val ? (parseInt(Number(val) * 100) / 100) : 0
@@ -184,7 +163,6 @@ export default {
         this.$message.info('Please connect');
         return
       }
-      /*eslint-disable*/
       let price = await this.$store.dispatch("vault/getPrice", {
         _indexToken: this.positionObj.index_token
       })

@@ -19,8 +19,8 @@
     </div>
     <div class="operate-box">
       <div class="faucet-btn operate" @click="toFaucet">
-        <img v-if="currentTheme" src="../assets/images/fa-bath-white.svg" width="22" height="22" alt/>
-        <img v-else src="@/assets/images/fa-bath.svg" width="22" height="22" alt/>
+        <img class="icon" v-if="currentTheme" src="../assets/images/fa-bath-white.svg" width="22" height="22" alt/>
+        <img class="icon" v-else src="@/assets/images/fa-bath.svg" width="22" height="22" alt/>
         <span class="pd-l8">Faucet</span>
       </div>
       <a-dropdown :trigger="['click']">
@@ -212,7 +212,7 @@ export default {
   .nav-item {
     padding: 10px 20px;
     font-size: 16px;
-    font-family: AvertaStd-Semibold, AvertaStd;
+    font-family: AvertaStd-Semibold;
     font-weight: 600;
     color: #8F97AA;
     cursor: pointer;
@@ -242,7 +242,7 @@ export default {
   text-align: center;
   margin-right: 20px;
   justify-content: center;
-  font-family: AvertaStd-Bold, AvertaStd;
+  font-family: AvertaStd-Semibold;
   display: flex;
   align-items: center;
 
@@ -256,6 +256,9 @@ export default {
   font-weight: 600;
   color: #0E1D51;
   border: 1px solid #0E1D51;
+  .icon{
+    margin-right: 6px;
+  }
 }
 
 .faucet-btn {

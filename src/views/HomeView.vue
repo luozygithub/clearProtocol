@@ -127,9 +127,9 @@
                   <div class="input-part">
                     <input type="number" step="any" v-model="usdcAmount" @input="updateAmount" placeholder="0.0000">
                     <span>USDC</span>
-<!--                    <div class="tip-box" v-show="usdcAmount<10">-->
-<!--                      Amount is not less than 10U.-->
-<!--                    </div>-->
+                    <!--                    <div class="tip-box" v-show="usdcAmount<10">-->
+                    <!--                      Amount is not less than 10U.-->
+                    <!--                    </div>-->
                   </div>
                 </div>
               </div>
@@ -304,8 +304,6 @@ export default {
       positionArr: [],
       tempPositionArr: [],
 
-      originalBtcObj: 0,//原有仓位方向
-      originalEthObj: 0,//原有仓位方向
       usdcAmount: undefined,
       //  BINANCE:ETHUSDT
     }
@@ -392,20 +390,6 @@ export default {
       secs = secs < 10 ? "0" + secs : secs;
       return hours + ":" + minutes + ":" + secs;
     },
-    originalEthValue() {//原有仓位价值
-      if (this.originalEthObj.size) {
-        const curPrice = BigNumber(this.tokenPriceMap[this.originalEthObj.index_token]).toFixed(2, BigNumber.ROUND_DOWN)
-        return calculator.divide(calculator.multiply(this.originalEthObj.size, curPrice), this.originalEthObj.leverage)
-      }
-      return 0
-    },
-    originalBtcValue() {//原有仓位价值
-      if (this.originalBtcObj.size) {
-        const curPrice = BigNumber(this.tokenPriceMap[this.originalBtcObj.index_token]).toFixed(2, BigNumber.ROUND_DOWN)
-        return calculator.divide(calculator.multiply(this.originalBtcObj.size, curPrice), this.originalBtcObj.leverage)
-      }
-      return 0
-    },
     tokenPriceMap() {
       return this.$store.state.perpetual.priceMap
     },
@@ -422,41 +406,25 @@ export default {
       }
       return 0
     },
-    totalAmount() { // 总价值
-      if (this.usdcAmount > 0 && this.amount > 0) {
-        if (this.operateNav == 0) {
-          return this.usdcAmount / this.slideValue + this.originalBtcValue
-        } else {
-          return this.usdcAmount / this.slideValue + this.originalEthValue
-        }
-      }
-      return 0
-    },
     endSize() {//操作后仓位大小
       if (this.usdcAmount > 0 && this.amount > 0) {
         let totalSize = 0
-        switch (this.activeTokenName) {
-          case "BTC":
-            if (!this.originalBtcValue) {
-              return this.amount
-            }
-            if (this.originalBtcObj.direction != this.operateNav) {//direction：方向相同
-              totalSize = calculator.add(this.originalBtcObj.size, this.amount)
-            } else {
-              totalSize = calculator.subtract(this.originalBtcObj.size, this.amount)
-            }
-            return totalSize
-          case "ETH":
-            if (!this.originalEthValue) {
-              return this.amount
-            }
+        let hasCurNamePos = false
 
-            if (this.originalEthObj.direction != this.operateNav) {//direction：方向相同
-              totalSize = calculator.add(this.originalEthObj.size, this.amount)
-            } else {//反向相反
-              totalSize = calculator.subtract(this.originalEthObj.size, this.amount)
+        for(let i=0;i<this.positionArr.length;i++){
+          const position = this.positionArr[i]
+          if (position.name == this.activeTokenName) {
+            hasCurNamePos = true
+            if (position.direction != this.operateNav) {//direction：方向相同
+              totalSize = calculator.add(position.size, this.amount)
+            } else {
+              totalSize = calculator.subtract(position.size, this.amount)
             }
             return totalSize
+          }
+        }
+        if (!hasCurNamePos) {
+          return this.amount
         }
       }
       return 0
@@ -468,38 +436,38 @@ export default {
     payValue() {//需要支付或者获得 u (正数提取，负数代表支付)
       if (this.usdcAmount > 0 && this.amount > 0) {
         let changeValue = 0, originCollateral = 0
-        switch (this.activeTokenName) {
-          case "BTC":
-            if (!this.originalBtcValue) {
-              return -this.curValue
-            }
-            originCollateral = calculator.add(this.originalBtcObj.collateral, this.getPNL(this.originalBtcObj))
-            changeValue = originCollateral - Math.abs(this.endSize) * this.tokenPriceMap[this.originalBtcObj.index_token] / this.slideValue
+
+        let hasCurNamePos = false
+
+        for(let i=0;i<this.positionArr.length;i++){
+          const position = this.positionArr[i]
+          if (position.name == this.activeTokenName) {
+            hasCurNamePos=true
+            originCollateral = calculator.add(position.collateral, this.getPNL(position))
+            changeValue = originCollateral - Math.abs(this.endSize) * this.tokenPriceMap[position.index_token] / this.slideValue
             return changeValue
-          case "ETH":
-            if (!this.originalEthValue) {
-              return -this.curValue
-            }
-            originCollateral = calculator.add(this.originalEthObj.collateral, this.getPNL(this.originalEthObj))
-            changeValue = originCollateral - Math.abs(this.endSize) * this.tokenPriceMap[this.originalEthObj.index_token] / this.slideValue
-            return changeValue
+          }
         }
+        if (!hasCurNamePos) {
+          return -this.curValue
+        }
+
+
       }
       return 0
     },
     liquidationPrice() { //爆仓价格
       if (this.usdcAmount > 0 && this.amount > 0) {
-        switch (this.activeTokenName) {
-          case "BTC":
-            if (!this.originalBtcValue) {
-              return this.calculatLiq(1)
-            }
-            return this.calculatLiq(2, this.originalBtcObj)
-          case "ETH":
-            if (!this.originalEthValue) {
-              return this.calculatLiq(1)
-            }
-            return this.calculatLiq(2, this.originalEthObj)
+        let hasCurNamePos = false
+        for(let i=0;i<this.positionArr.length;i++){
+          const position = this.positionArr[i]
+          if (position.name == this.activeTokenName) {
+            hasCurNamePos = true
+            return this.calculatLiq(2, position)
+          }
+        }
+        if (!hasCurNamePos) {
+          return this.calculatLiq(1)
         }
       }
       return 0
@@ -521,8 +489,7 @@ export default {
       if (this.collateralDeltaInIO) {//增加保证金（花费）
         return BigNumber(calculator.add(Math.abs(this.payValue), this.fee)).toFixed(2)
       } else {//减少保证金（提取）
-        const res = BigNumber(calculator.subtract(Math.abs(this.payValue), this.fee)).toFixed(2,BigNumber.ROUND_DOWN)
-        console.log(res,Math.abs(this.payValue),this.fee )
+        const res = BigNumber(calculator.subtract(Math.abs(this.payValue), this.fee)).toFixed(2, BigNumber.ROUND_DOWN)
         return res
       }
     },
@@ -554,9 +521,7 @@ export default {
       item.pnl = pnl
       return pnl
     },
-    onSliderChange() {
 
-    },
     calculatLiq(type, originObj) { //计算清仓价格
       if (type === 1) {
         if (this.operateNav == 0) {
@@ -628,12 +593,7 @@ export default {
         size: "0",
       }]
       this.positionArr.forEach(item => {
-        if (item.name == "BTC") {
-          this.originalBtcObj = item
-        }
-        if (item.name == "ETH") {
-          this.originalEthObj = item
-        }
+
         this.tempPositionArr.forEach(Titem => { //临时数组数据更新
           if (Titem.name == item.name) {
             Titem.size = item.size
@@ -764,7 +724,6 @@ export default {
         this.$message.info('Amount less than 10u');
         return
       }
-      /*eslint-disable*/
       let price = await this.$store.dispatch("vault/getPrice", {
         _indexToken: this.coinInfo.contract_address
       })
@@ -852,9 +811,9 @@ export default {
       }
     },
     initData() {
-      this.amount=0
-      this.slideValue=2
-      this.usdcAmount = 0
+      this.amount = undefined
+      this.slideValue = 2
+      this.usdcAmount = undefined
       this.getPositionData()
       if (this.isConnected) {
         this.allowance()
@@ -880,7 +839,7 @@ export default {
         console.log(e)
       }
     },
-    countdownMethod(){
+    countdownMethod() {
       const start = new Date();
       start.setHours(0, 0, 0, 0);
       let nextStart = new Date(

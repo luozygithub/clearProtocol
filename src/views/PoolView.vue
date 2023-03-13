@@ -162,6 +162,9 @@ export default {
     }
   },
   watch: {
+    isConnected(){
+      this.getBalance()
+    },
     account() {
       this.getData()
     }
