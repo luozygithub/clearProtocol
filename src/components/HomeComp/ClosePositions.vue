@@ -90,9 +90,9 @@
 <!--            2%-->
 <!--          </div>-->
 <!--        </div>-->
-        <button class="operate confim" @click="trade">
+        <a-button class="operate confim" @click="trade" :loading="closeOnloading">
           Close
-        </button>
+        </a-button>
       </div>
     </div>
   </div>
@@ -114,16 +114,21 @@ export default {
     return {
       slipValue: undefined,
       amount:undefined,
-      balance:0
+      balance:0,
+      closeOnloading:false,
     }
   },
   computed: {
+    tokenPriceMap(){
+      return this.$store.state.perpetual.priceMap
+    },
     ...mapGetters([
       'isConnected',
       'account'
     ]),
     fee(){
-      return BigNumber(calculator.multiply(calculator.multiply(this.positionObj.size,this.feeRate),this.coinInfo.index_price)).toFixed(6)
+      let puAmount = calculator.multiply(this.positionObj.size, this.tokenPriceMap[this.positionObj.index_token])
+      return BigNumber(calculator.multiply(this.feeRate,puAmount)).toFixed(6)
     }
   },
   watch:{
@@ -183,7 +188,7 @@ export default {
       let worth = calculator.add(this.positionObj.collateral,pnl)
       let fee = calculator.divide(calculator.multiply(calculator.multiply(this.positionObj.size,this.feeRate),price),POORACCURACY)
       let _collateralDelta = calculator.subtract(calculator.multiply(worth,USDCDECIMALS)  ,fee)
-
+      this.closeOnloading = true
       this.$store.dispatch("vault/updatePosition", {
         _indexToken: this.positionObj.index_token,
         _leverage: this.positionObj.leverage,
@@ -196,6 +201,7 @@ export default {
         this.$message.info('Close success');
         let statusRes = await getTranStatus(res.blockHash)
         this.$emit("setLoading", true)
+        this.closeOnloading = false
         if (statusRes.data.data == 1) {
           setTimeout(() => {
             this.$emit("updateData")
@@ -203,7 +209,12 @@ export default {
           }, 2000)
         }
       }).catch((e)=>{
-        this.$message.info(e);
+        this.closeOnloading = false
+        if(e&&e.message){
+          this.$message.info(e.message);
+        }else{
+          this.$message.info(e);
+        }
       })
     },
   }

@@ -18,12 +18,22 @@ const actions = {
                     from: rootState.app.account,
                     gas: parseInt(gas * 1.2)
                 }).then(res => {
-
                     resolve(res)
+                }).catch(err => {
+                    try {
+                        let errRes = JSON.parse(err.message.substr(24, err.message.length)).message
+                        reject(errRes)
+                    }catch {
+                        reject(err)
+                    }
                 })
             }).catch(err => {
-                console.log(err)
-                reject(JSON.parse(err.message.substr(24, err.message.length)).message)
+                try {
+                    let errRes = JSON.parse(err.message.substr(24, err.message.length)).message
+                    reject(errRes)
+                }catch {
+                    reject(err)
+                }
             })
         })
     },
@@ -39,12 +49,20 @@ const actions = {
                 }).then(res => {
                     resolve(res)
                 }).catch(err => {
-                    console.log(err)
-                    reject(JSON.parse(err.message.substr(24, err.message.length)).message)
+                    try {
+                        let errRes = JSON.parse(err.message.substr(24, err.message.length)).message
+                        reject(errRes)
+                    }catch {
+                        reject(err)
+                    }
                 })
             }).catch(err => {
-                console.log(err)
-                reject(JSON.parse(err.message.substr(24, err.message.length)).message)
+                try {
+                    let errRes = JSON.parse(err.message.substr(24, err.message.length)).message
+                    reject(errRes)
+                }catch {
+                    reject(err)
+                }
             })
         })
     },

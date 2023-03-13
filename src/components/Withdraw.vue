@@ -19,9 +19,9 @@
         <div class="balance">
           Max:{{ canWN }}
         </div>
-        <button class="operate confim" @click="withdraw">
+        <a-button :loading="burnOnloading" class="operate confim" @click="withdraw">
           Confirm
-        </button>
+        </a-button>
       </div>
     </div>
   </div>
@@ -37,6 +37,7 @@ export default {
   name: "withdrawView",
   data(){
     return {
+      burnOnloading:false,
       amount:undefined,
       balance:0
     }
@@ -49,15 +50,22 @@ export default {
         return
       }
       let num = calculator.divide(calculator.multiply(this.CLPBalance , this.amount) , this.canWN) *USDCDECIMALS
+      this.burnOnloading = true
       this.$store.dispatch("CLP/burn",{
         _clpAmount:BigNumber(num).toFixed(0)
       }).then(() => {
         this.$message.success('Withdraw success');
         this.amount=0
+        this.burnOnloading = false
         this.$emit("getData")
       }).catch((e) => {
         console.log(e)
-        this.$message.info(e);
+        this.burnOnloading = false
+        if(e&&e.message){
+          this.$message.info(e.message);
+        }else{
+          this.$message.info(e);
+        }
       })
     },
   }

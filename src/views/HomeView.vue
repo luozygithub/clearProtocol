@@ -210,10 +210,10 @@
                 Approve
               </button>
               <!--            :disabled="!tradeActive"-->
-              <button class="operate trade " v-show="usdcAllowance>10||usdcAllowance>amount"
+              <a-button :loading="tradeOnloading" class="operate trade " v-show="usdcAllowance>10||usdcAllowance>amount"
                       :class="{'active':tradeActive,'sell':operateNav==1}" @click="trade">
                 Trade
-              </button>
+              </a-button>
             </div>
           </div>
         </div>
@@ -303,7 +303,7 @@ export default {
       isShowTempPosition: false,
       positionArr: [],
       tempPositionArr: [],
-
+      tradeOnloading: false,
       usdcAmount: undefined,
       //  BINANCE:ETHUSDT
     }
@@ -406,9 +406,9 @@ export default {
       }
       return 0
     },
-    hasCurNamePosition(){
+    hasCurNamePosition() {
       let hasCurNamePos = false
-      for(let i=0;i<this.positionArr.length;i++){
+      for (let i = 0; i < this.positionArr.length; i++) {
         const position = this.positionArr[i]
         if (position.name == this.activeTokenName) {
           hasCurNamePos = true
@@ -421,7 +421,7 @@ export default {
         let totalSize = 0
         let hasCurNamePos = false
 
-        for(let i=0;i<this.positionArr.length;i++){
+        for (let i = 0; i < this.positionArr.length; i++) {
           const position = this.positionArr[i]
           if (position.name == this.activeTokenName) {
             hasCurNamePos = true
@@ -449,10 +449,10 @@ export default {
 
         let hasCurNamePos = false
 
-        for(let i=0;i<this.positionArr.length;i++){
+        for (let i = 0; i < this.positionArr.length; i++) {
           const position = this.positionArr[i]
           if (position.name == this.activeTokenName) {
-            hasCurNamePos=true
+            hasCurNamePos = true
             originCollateral = calculator.add(position.collateral, this.getPNL(position))
             changeValue = originCollateral - Math.abs(this.endSize) * this.tokenPriceMap[position.index_token] / this.slideValue
             return changeValue
@@ -469,7 +469,7 @@ export default {
     liquidationPrice() { //爆仓价格
       if (this.usdcAmount > 0 && this.amount > 0) {
         let hasCurNamePos = false
-        for(let i=0;i<this.positionArr.length;i++){
+        for (let i = 0; i < this.positionArr.length; i++) {
           const position = this.positionArr[i]
           if (position.name == this.activeTokenName) {
             hasCurNamePos = true
@@ -510,7 +510,7 @@ export default {
       if (!this.amount || this.amount <= 0) {
         return false
       }
-      if(!this.hasCurNamePosition && Math.abs(this.payValue)<10){
+      if (!this.hasCurNamePosition && Math.abs(this.payValue) < 10) {
         return
       }
       return true
@@ -737,7 +737,7 @@ export default {
         this.$message.info('Amount less than 10u');
         return
       }
-      if(!this.hasCurNamePosition && Math.abs(this.payValue)<10){
+      if (!this.hasCurNamePosition && Math.abs(this.payValue) < 10) {
         this.$message.info('Pay Amount less than 10u');
         return
       }
@@ -748,32 +748,46 @@ export default {
       //开仓金额花费
       let sizeDelta = 0
       sizeDelta = BigNumber(Math.abs(this.amount) * DECIMALS6).toFixed(0)
+      this.tradeOnloading = true
+      try{
+        this.$store.dispatch("vault/updatePosition", {
+          _indexToken: this.coinInfo.contract_address,
+          _leverage: this.slideValue,
+          _sizeDelta: Math.abs(sizeDelta),
+          _collateralDelta: BigNumber(this.userPayAmount * DECIMALS6).toFixed(0),
+          _indexPrice: price,
+          _direction: this.direction,
+          _collateralDeltaInIO: this.collateralDeltaInIO
+        }).then(async (res) => {
+          this.$message.info('Trade success');
+          this.amount = undefined
+          this.usdcAmount = undefined
+          this.isLoading = true
+          let statusRes = await getTranStatus(res.blockHash)
 
-      this.$store.dispatch("vault/updatePosition", {
-        _indexToken: this.coinInfo.contract_address,
-        _leverage: this.slideValue,
-        _sizeDelta: Math.abs(sizeDelta),
-        _collateralDelta: BigNumber(this.userPayAmount * DECIMALS6).toFixed(0),
-        _indexPrice: price,
-        _direction: this.direction,
-        _collateralDeltaInIO: this.collateralDeltaInIO
-      }).then(async (res) => {
-        this.$message.info('Trade success');
-        this.amount = undefined
-        this.usdcAmount = undefined
-        this.isLoading = true
-        let statusRes = await getTranStatus(res.blockHash)
-        if (statusRes.data.data == 1) {
-          setTimeout(() => {
-            this.initData()
-            this.$refs.vaultRR.initData();
-            this.isLoading = false
-          }, 2000)
-        }
-      }).catch((e) => {
+          this.tradeOnloading = false
+          if (statusRes.data.data == 1) {
+            setTimeout(() => {
+              this.initData()
+              this.$refs.vaultRR.initData();
+              this.isLoading = false
+            }, 2000)
+          }
+        }).catch((e) => {
+          console.log(e)
+          this.tradeOnloading = false
+          if(e&&e.message){
+            this.$message.info(e.message);
+          }else{
+            this.$message.info(e);
+          }
+        }).finally(()=>{
+          this.tradeOnloading = false
+        })
+      }catch (e) {
         console.log(e)
-        this.$message.info(e);
-      })
+        this.tradeOnloading = false
+      }
     },
     handleMenuClick(e) {
       let curTVSymbol = "", curSymbol = "", coinName = ""
@@ -1113,10 +1127,11 @@ export default {
       }
 
       &.sell {
-        background: rgba(227,42,32,0.7)!important;
+        background: rgba(227, 42, 32, 0.7) !important;
         color: #fff !important;
       }
-      &.sell.active{
+
+      &.sell.active {
         background: #e32a20 !important;
         color: #fff !important;
       }

@@ -70,9 +70,9 @@
             </div>
           </div>
         </div>
-        <button class="operate confim" @click="confirm">
+        <a-button :loading="tradeOnloading" class="operate confim" @click="confirm">
           Confirm
-        </button>
+        </a-button>
       </div>
     </div>
   </div>
@@ -91,6 +91,7 @@ export default {
   name: "MarginManage",
   data() {
     return {
+      tradeOnloading:false,
       amount: undefined,
       balance: 0,
       activeNav: 0
@@ -183,11 +184,14 @@ export default {
         message.error("Margin Ratio should > "+ MARGINRATIO*100)
         return
       }
+      this.tradeOnloading = true
       this.$store.dispatch("vault/updateCollateral", {
         _indexToken: this.positionObj.index_token,
         _collateralDelta: BigNumber(this.amount * USDCDECIMALS).toFixed(0),
         _collateralDeltaInIO: this.activeNav == 0 ? true : false,
       }).then(async (res) => {
+        this.tradeOnloading = false
+
         this.$message.info((this.activeNav == 0 ? 'Add' : 'Remove') + ' success');
         this.amount = 0
         let statusRes = await getTranStatus(res.blockHash)
@@ -200,7 +204,12 @@ export default {
         }
       }).catch((e) => {
         console.log(e)
-        this.$message.info(e);
+        this.tradeOnloading = false
+        if(e&&e.message){
+          this.$message.info(e.message);
+        }else{
+          this.$message.info(e);
+        }
       })
     },
     confirm() {

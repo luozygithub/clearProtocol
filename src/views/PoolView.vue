@@ -40,10 +40,10 @@
           <button class="operate " @click="approve" v-show="usdcAllowance<10||usdcAllowance<amount">
             Approve
           </button>
-          <button class="operate " v-show="usdcAllowance>10||usdcAllowance>amount"
+          <a-button :loading="addOnloading" class="operate " v-show="usdcAllowance>10||usdcAllowance>amount"
                   @click="add">
             Add
-          </button>
+          </a-button>
         </div>
         <div class="pool-content-right">
           <div class="info-box">
@@ -139,6 +139,7 @@ export default {
   components: {Withdraw},
   data() {
     return {
+      addOnloading:false,
       usdcAllowance: 0,
       amount: undefined,
       balance: 0,
@@ -225,13 +226,20 @@ export default {
         this.$message.info('Please input amount');
         return
       }
+      this.addOnloading = true
       this.$store.dispatch("CLP/mint", {
         _usdAmount: this.amount * USDCDECIMALS
       }).then(() => {
+        this.addOnloading = false
         this.$message.success('Add success');
         this.getData()
       }).catch((e) => {
-        this.$message.info(e);
+        this.addOnloading = false
+        if(e&&e.message){
+          this.$message.info(e.message);
+        }else{
+          this.$message.info(e);
+        }
       })
     },
     getData() {
