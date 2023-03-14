@@ -122,7 +122,7 @@
               </div>
             </div>
             <div class="col">
-              {{ dealNum(item.size_delta) }}
+              {{ dealD6Num(item.size_delta) }}
             </div>
             <div class="col">
               {{ dealNum(item.index_price) }}
@@ -131,7 +131,7 @@
               {{ dealFeeNum(item.transaction_fee) }}
             </div>
             <div class="col">
-              {{ dealNum(item.pel) }}
+              {{ dealD6Num(item.pnl) }}
             </div>
             <div class="col">
               {{ moment(item.updated_at).format('MMMM Do YYYY, h:mm:ss a') }}
