@@ -195,7 +195,7 @@
 
             </div>
             <div class="col">
-              ${{ dealFeeNum(item.transaction_fee / 10 ** 6) }}
+              {{ dealFeeNum(item.transaction_fee / 10 ** 6) }}
             </div>
           </div>
           <div class="pagination">

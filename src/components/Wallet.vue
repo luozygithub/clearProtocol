@@ -102,7 +102,7 @@ export default {
 
   },
   mounted() {
-    this.connectWallet(1)
+    this.connectWallet()
   },
   methods: {
     async switchNetwork(value) {
@@ -133,57 +133,70 @@ export default {
         }
       }
     },
-    async connectWallet(idx) {
-      this.connectIdx = idx
-      // getProvider().then(result => {
-      //   this.$store.commit("app/SET_Web3", result.web3)
-      //   result.web3.eth.getAccounts().then(async res=>{
-      //     console.log(res)
-      //     result.web3.eth.getCoinbase().then(account => {
-      //       if(account) {
-      //         this.$store.commit("app/SET_ACCOUNT", account)
-      //       }
-      //
-      //     })
-      //   })
-      // })
-      if (idx == 1) {
-        if (typeof window.ethereum == 'undefined') {
-          message.error('install MetaMask first!');
-        }
-        await window.ethereum.enable()
-        window.ethereum.on('accountsChanged', (accounts) => {
-          this.$store.commit('app/SET_ACCOUNT', accounts[0])
-        });
-        try {
-          this.registerWeb3().then(() => {
-            this.isWalletModal = false
-          })
-        } catch (e) {
-          console.log(e)
-          window.ethereum
-              .request({method: 'eth_requestAccounts'})
-              .then((account) => {
-                this.$store.commit('app/SET_ACCOUNT', account[0]);
-              })
-        }
-        this.isWalletModal = false
-        this.connectedLoading = false
+    async connectWallet() {
+      if (typeof window.ethereum == 'undefined') {
+        message.error('install MetaMask first!');
       }
+      this.registerWeb3()
     },
-    registerWeb3(provider) {
+    registerWeb3() {
       return new Promise(resolve => {
-        try {
-          getWeb3(provider).then(result => {
-            this.$store.commit("app/SET_ACCOUNT", result.account)
-            this.$store.commit("app/SET_ISCONNECT", true)
-            this.$store.commit("app/SET_Balance", result.ethBalance)
-            this.$store.commit("app/SET_Web3", result.web3Instance.web3())
-            resolve(result)
-          })
-        } catch (e) {
-          console.log(e)
-        }
+        getWeb3().then(result => {
+          console.log(result)
+          this.$store.commit("app/SET_Web3", result.web3)
+          try{
+            window.ethereum
+                .request({ method: 'eth_requestAccounts' })
+                .then((accounts) => {
+                  this.$store.commit("app/SET_ACCOUNT", accounts[0])
+                })
+            window.ethereum.on('accountsChanged', (accounts) => {
+              this.$store.commit("app/SET_ACCOUNT", accounts[0])
+              result.web3.eth.getAccounts().then(async res=>{
+                let balance =await result.web3.eth.getBalance(res[0])
+                this.$store.commit("app/SET_Balance", balance)
+              })
+            });
+            window.ethereum.on('chainChanged', () => {
+              result.web3.eth.getAccounts().then(async res=>{
+                let balance =await result.web3.eth.getBalance(res[0])
+                this.$store.commit("app/SET_Balance", balance)
+              })
+            });
+          }catch (e) {
+            message.error(e)
+          }
+
+          try{
+            result.web3.eth.net.getId().then(async netWarkId => {
+              this.$store.commit("app/SET_CHAINID", netWarkId)
+            })
+
+            result.web3.eth.getAccounts().then(async res=>{
+              this.$store.commit("app/SET_ACCOUNT", res[0])
+            })
+
+            result.web3.eth.getCoinbase().then(account => {
+              if(account){
+                this.$store.commit("app/SET_ACCOUNT", account)
+                if(account){
+                  this.$store.commit("app/SET_ISCONNECT", true)
+
+                }
+              }else{
+                // openNotification("connect failed")
+              }
+
+            })
+          }catch (e) {
+            console.log(e)
+            this.isWalletModal=false
+          }
+          this.isWalletModal=false
+          resolve(result)
+        })
+      }).catch(err=>{
+        alert(err)
       })
     },
     showWallet() {

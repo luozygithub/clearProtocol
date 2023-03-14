@@ -96,7 +96,6 @@
                     </svg>
                     {{ curSymbol }}
 
-
                   </div>
                   <div class="contract">
                     Contract
@@ -265,7 +264,6 @@ import VaultRecord from "@/components/HomeComp/VaultRecord";
 import {getTranStatus} from "@/api/comon";
 import {getConfigInfo} from "@/api/coinApi";
 import addressMap from "@/abi/addressMap";
-import {getPositions,} from "@/api/vault";
 import {mapGetters} from "vuex";
 import MathCalculator from "../utils/bigNumberUtil"
 import BigNumber from "bignumber.js";
@@ -299,7 +297,7 @@ export default {
       activeTokenName: "BTC",
       coinInfo: {},
       isShowTempPosition: false,
-      positionArr: [],
+
       tempPositionArr: [],
       tradeOnloading: false,
       usdcAmount: undefined,
@@ -368,6 +366,9 @@ export default {
     }
   },
   computed: {
+    positionArr(){
+      return this.$store.state.perpetual.positionArr
+    },
     countdown() {
       const now = new Date();
       const start = new Date(this.startTime);
@@ -622,11 +623,8 @@ export default {
     },
     async getPositionData() {
       try {
-        let res = await getPositions(this.account)
-        let positionArr = res.data.data
-        this.positionArr.splice(0, 2)
-        this.positionArr = positionArr
 
+        this.$store.dispatch("perpetual/getPositionAction")
         //取出当前BTC/ETC数据
         this.dealPositionData()
       } catch (e) {
@@ -797,10 +795,12 @@ export default {
         curTVSymbol = "BINANCE:BTCUSDT"
         curSymbol = "BTC/USDC"
         coinName = "BTC"
+        localStorage.setItem("CurCoin","BTC")
       } else if (e.key == 2) {
         curTVSymbol = "BINANCE:ETHUSDT"
         curSymbol = "ETH/USDC"
         coinName = "ETH"
+        localStorage.setItem("CurCoin","ETH")
       }
       if (curTVSymbol != this.curTVSymbol) {
         this.curTVSymbol = curTVSymbol
@@ -888,6 +888,18 @@ export default {
         this.startTime = new Date(this.startTime.getTime() + 1000);
       }, 1000);
     },
+  },
+  created(){
+    let curCoin = localStorage.getItem("CurCoin")
+    if (curCoin == "BTC") {
+      this.curTVSymbol = "BINANCE:BTCUSDT"
+      this.curSymbol = "BTC/USDC"
+      this.activeTokenName = "BTC"
+    } else if (curCoin == "ETH") {
+      this.curTVSymbol = "BINANCE:ETHUSDT"
+      this.curSymbol = "ETH/USDC"
+      this.activeTokenName = "ETH"
+    }
   },
   mounted() {
     this.loadTradingViewScript();

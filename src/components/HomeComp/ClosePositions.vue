@@ -70,26 +70,7 @@
             </div>
           </div>
         </div>
-<!--        <div class="title">-->
-<!--          Slippage Tolerance-->
-<!--        </div>-->
-<!--        <div class="slip-box">-->
-<!--          <div class="input-box">-->
-<!--            <input type="number" v-model="slipValue" placeholder="0.000">-->
-<!--            <div class="rate-icon">-->
-<!--              %-->
-<!--            </div>-->
-<!--          </div>-->
-<!--          <div class="rate-btn" @click="slipValue=1">-->
-<!--            1%-->
-<!--          </div>-->
-<!--          <div class="rate-btn"  @click="slipValue=1.5">-->
-<!--            1.5%-->
-<!--          </div>-->
-<!--          <div class="rate-btn"  @click="slipValue=2">-->
-<!--            2%-->
-<!--          </div>-->
-<!--        </div>-->
+
         <a-button class="operate confim" @click="trade" :loading="closeOnloading">
           Close
         </a-button>
