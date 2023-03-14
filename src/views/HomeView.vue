@@ -211,7 +211,7 @@
               </button>
               <!--            :disabled="!tradeActive"-->
               <a-button :loading="tradeOnloading" class="operate trade " v-show="usdcAllowance>10||usdcAllowance>amount"
-                      :class="{'active':tradeActive,'sell':operateNav==1}" @click="trade">
+                        :class="{'active':tradeActive,'sell':operateNav==1}" @click="trade">
                 Trade
               </a-button>
             </div>
@@ -271,7 +271,6 @@ import MathCalculator from "../utils/bigNumberUtil"
 import BigNumber from "bignumber.js";
 import {MARGINRATIO, USDCDECIMALS} from "../utils/constantData"
 import {DECIMALS6} from "../utils/constantData";
-import moment from "moment"
 
 let getPriceInterval = null
 let countdownInterval = null
@@ -283,7 +282,6 @@ export default {
   },
   data() {
     return {
-      moment,
       startTime: '00:00:00',
       isLoading: false,
       usdcAllowance: 0,
@@ -308,8 +306,10 @@ export default {
       //  BINANCE:ETHUSDT
     }
   },
-  filters: {},
   watch: {
+    chainId(){
+      this.initData()
+    },
     account() {
       this.initData()
     },
@@ -517,7 +517,8 @@ export default {
     },
     ...mapGetters([
       'isConnected',
-      'account'
+      'account',
+      'chainId'
     ]),
   },
   methods: {
@@ -749,7 +750,7 @@ export default {
       let sizeDelta = 0
       sizeDelta = BigNumber(Math.abs(this.amount) * DECIMALS6).toFixed(0)
       this.tradeOnloading = true
-      try{
+      try {
         this.$store.dispatch("vault/updatePosition", {
           _indexToken: this.coinInfo.contract_address,
           _leverage: this.slideValue,
@@ -776,15 +777,15 @@ export default {
         }).catch((e) => {
           console.log(e)
           this.tradeOnloading = false
-          if(e&&e.message){
+          if (e && e.message) {
             this.$message.info(e.message);
-          }else{
+          } else {
             this.$message.info(e);
           }
-        }).finally(()=>{
+        }).finally(() => {
           this.tradeOnloading = false
         })
-      }catch (e) {
+      } catch (e) {
         console.log(e)
         this.tradeOnloading = false
       }
@@ -1094,7 +1095,7 @@ export default {
     min-height: 100vh;
     width: 100%;
     display: flex;
-    padding: 10px;
+    padding: 0 10px;
     justify-content: center;
 
     .operate {

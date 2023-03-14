@@ -134,7 +134,7 @@
               {{ dealD6Num(item.pnl) }}
             </div>
             <div class="col">
-              {{ moment(item.updated_at).format('MMMM Do YYYY, h:mm:ss a') }}
+              {{ formatTime(item.updated_at) }}
             </div>
           </div>
           <div class="pagination">
@@ -173,7 +173,7 @@
           </div>
           <div class="row" v-for="(item,index) in recordArr" :key="index">
             <div class="col">
-              {{ moment(item.updated_at).format('MMMM Do YYYY, h:mm:ss a')  }}
+              {{ formatTime(item.updated_at)  }}
             </div>
             <div class="col">
               {{ item.name }}/USDC
@@ -195,7 +195,7 @@
 
             </div>
             <div class="col">
-              {{ dealFeeNum(item.transaction_fee / 10 ** 6) }}$
+              ${{ dealFeeNum(item.transaction_fee / 10 ** 6) }}
             </div>
           </div>
           <div class="pagination">
@@ -257,7 +257,7 @@
 </template>
 
 <script>
-import moment from "moment";
+import {formatTime} from "@/utils/timeUtil";
 import {getFundingFee, getProfit, getRecord} from "@/api/vault";
 import {mapGetters} from "vuex";
 import MathCalculator from "@/utils/bigNumberUtil";
@@ -277,7 +277,7 @@ export default {
   },
   data() {
     return {
-      moment,
+      formatTime,
       total1:10,
       total2:10,
       total3:10,
