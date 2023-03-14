@@ -52,7 +52,7 @@
                 Pool Size
               </div>
               <div class="value">
-                <span>0.0000</span>
+                <span>{{ AumNumber }}</span>
                 USDC
               </div>
               <div class="add">
@@ -129,7 +129,7 @@
 import Withdraw from "@/components/Withdraw";
 import {mapGetters} from "vuex";
 import addressMap from "@/abi/addressMap";
-import {USDCDECIMALS, POORACCURACY} from "../utils/constantData"
+import {USDCDECIMALS, POORACCURACY,DECIMALS18} from "../utils/constantData"
 import BigNumber from "bignumber.js";
 import MathCalculator from "@/utils/bigNumberUtil";
 
@@ -146,7 +146,8 @@ export default {
       isShowWithdraw: false,
       CLPTotalSupply: 0,
       CLPBalance: 0,
-      Aum: 0
+      Aum: 0,
+      AumNumber:0
     }
   },
   computed: {
@@ -174,6 +175,7 @@ export default {
     async getAum() {
       let res = await this.$store.dispatch("vaultUtil/getAum",)
       this.Aum = res
+      this.AumNumber = BigNumber(calculator.divide(res, DECIMALS18)).toFixed(2)
     },
     async getTotalSupply() {
       let res = await this.$store.dispatch("CLP/totalSupply",)

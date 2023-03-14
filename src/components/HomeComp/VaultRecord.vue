@@ -50,7 +50,7 @@
                :class="{'blink': isShowTempPosition && activeTokenName==item.name}"
                v-for="(item,index) in positionArr" :key="index">
             <div class="col">
-              {{ item.name }}/USDC
+              {{ item.name }}<span class="usdc">/USDC</span>
             </div>
             <div class="col ">
               <div class="side" :class="{'down':item.direction!=1 }">
@@ -114,7 +114,7 @@
           </div>
           <div class="row" v-for="(item,index) in profitArr" :key="index">
             <div class="col">
-              {{ item.name }}/USDC
+              {{ item.name }}<span class="usdc">/USDC</span>
             </div>
             <div class="col ">
               <div class="side" :class="{'down':item.direction!=1 }">
@@ -176,7 +176,7 @@
               {{ formatTime(item.updated_at)  }}
             </div>
             <div class="col">
-              {{ item.name }}/USDC
+              {{ item.name }} <span class="usdc">/USDC</span>
             </div>
             <div class="col">
               <div class="side" :class="{'down':item.direction!=1 }">
@@ -225,7 +225,7 @@
           </div>
           <div class="row" v-for="(item,index) in fundingFeeArr" :key="index">
             <div class="col">
-              {{ item.name }}/USDC
+              {{ item.name }}<span class="usdc">/USDC</span>
             </div>
             <div class="col">
               {{ dealD6Num(item.funding_fee_rate) }}%
@@ -559,7 +559,10 @@ export default {
       &:last-child {
         border-bottom: none
       }
-
+      .usdc{
+        transform: scale(0.8);
+        color: #aaa;
+      }
       .side {
         width: 40px;
         margin: 0 auto;
