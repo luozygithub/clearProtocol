@@ -42,7 +42,7 @@ export default {
       balance:0
     }
   },
-  props:["canWN","CLPBalance","getData"],
+  props:["canWN","CLPBalance","getData","closeWithdraw"],
   methods:{
     withdraw(){
       if(!this.amount||this.amount<=0){
@@ -58,6 +58,7 @@ export default {
         this.amount=0
         this.burnOnloading = false
         this.$emit("getData")
+        this.$emit("closeWithdraw")
       }).catch((e) => {
         console.log(e)
         this.burnOnloading = false

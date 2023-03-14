@@ -97,7 +97,7 @@ export default {
       activeNav: 0
     }
   },
-  props: ["positionObj", "coinInfo", "initData", "setLoading"],
+  props: ["positionObj", "coinInfo", "initData", "setLoading","closeMarginManage"],
   computed: {
     ...mapGetters([
       'isConnected',
@@ -200,6 +200,7 @@ export default {
           setTimeout(() => {
             this.$emit("initData")
             this.$emit("setLoading", false)
+            this.$emit("closeMarginManage")
           }, 2000)
         }
       }).catch((e) => {

@@ -136,7 +136,7 @@ export default {
       this.getBalance()
     }
   },
-  props:["positionObj","coinInfo","feeRate","updateData","setLoading"],
+  props:["positionObj","coinInfo","feeRate","updateData","setLoading","closeClosePosition"],
   created() {
     this.getBalance()
   },
@@ -206,6 +206,7 @@ export default {
           setTimeout(() => {
             this.$emit("updateData")
             this.$emit("setLoading",false)
+            this.$emit("closeClosePosition")
           }, 2000)
         }
       }).catch((e)=>{
